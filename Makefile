@@ -4,7 +4,7 @@ NAME_SCH=downlink-configure
 NAME_AGENT=pmodernell-conformance-agent
 DOCKER_NAME_SCH=eu.gcr.io/engineering-test-197116/$(NAME_SCH)
 DOCKER_NAME_AGENT=eu.gcr.io/engineering-test-197116/$(NAME_AGENT)
-VERSION=0.0.1-cmt_rejoin_fix
+VERSION=0.1.0-cmt_rejoin_fix
 DOCKER_NAME_SCH_FULL=$(DOCKER_NAME_SCH):$(VERSION)
 DOCKER_NAME_AGENT_FULL=$(DOCKER_NAME_AGENT):$(VERSION)
 DOCKER_VOLUME=$(shell pwd)
@@ -37,6 +37,7 @@ build_scheduler: clean
 	docker build -f Dockerfile.agent -t $(DOCKER_NAME_AGENT_FULL) .
 	@rm -r .ssh
 
+
 bootstrap_test_session:
 	docker-compose up -d message-broker
 	@echo "Preparing test environment..."
@@ -59,5 +60,5 @@ publish_scheduler: build_scheduler
 	@docker push $(DOCKER_NAME_AGENT_FULL)
 
 config_scheduler:
-	docker-compose up -d agent-scheduler config-scheduler
+	docker-compose up -d message-broker agent-scheduler config-scheduler
 

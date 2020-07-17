@@ -94,7 +94,7 @@ services:
   config-scheduler:
     depends_on:
       - message-broker
-    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.0.1-cmt_rejoin_fix
+    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.0-cmt_rejoin_fix
     env_file:
       - env_var
     restart: on-failure
@@ -103,12 +103,12 @@ services:
   agent-scheduler:
     depends_on:
       - message-broker
-    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.0.1-cmt_rejoin_fix
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.0-cmt_rejoin_fix
     env_file:
       - env_var
     expose:
       - "1700"
     ports:
-      - "1700:1700"
+      - "1700:1700/udp"
     restart: on-failure
-    command: ["cl_start_bridge"]
+    command: ["python3", "/agent_mock/lorawan/user_agent/bridge/bridge_main.py"]

@@ -27,11 +27,14 @@ This module manages the interaction with the message queueing broker.
 import os
 import pika
 import pika.exceptions
+from queue_client import QueueConsumer
+from queue_client import QueueSender
+import logging
 
+logger = logging.getLogger(__name__)
 
 mq_broker_url = os.environ.get('AMQP_URL')
 params = pika.URLParameters(mq_broker_url)
-
 
 DEFAULT_EXCHANGE = 'amq.topic'
 
@@ -72,7 +75,8 @@ class MqInterface(object):
         :param auto_delete:
         :return: queue result
         """
-        queue_result = self.channel.queue_declare(queue=queue_name, exclusive=exclusive, auto_delete=auto_delete)
+        queue_result = self.channel.queue_declare(queue=queue_name, exclusive=exclusive,
+                                                  auto_delete=auto_delete)
         if queue_name not in self._knownQueues:
             self._knownQueues.append(queue_name)
         return queue_result
@@ -88,7 +92,8 @@ class MqInterface(object):
                                           no_ack=auto_ack,
                                           consumer_tag=tag)
 
-    def declare_and_consume(self, queue_name, routing_key, callback, exclusive=True, auto_delete=False, auto_ack=True):
+    def declare_and_consume(self, queue_name, routing_key, callback, exclusive=True,
+                            auto_delete=False, auto_ack=True):
         queue_result = self.declare_queue(queue_name, exclusive=exclusive, auto_delete=auto_delete)
         self.bind_queue(exchange_name=DEFAULT_EXCHANGE,
                         queue_name=queue_name,
@@ -118,3 +123,35 @@ class MqInterface(object):
         self.channel.stop_consuming()
 
 
+class MqSelectConnectionInterface(QueueConsumer):
+    RECONNECT_TIMEOUT_IN_SECS = 10
+
+    def __init__(self, queue_name, routing_key, on_message_callback):
+        self.amqp_url = mq_broker_url
+        super().__init__(amqp_url=self.amqp_url)
+
+        self.exchange = DEFAULT_EXCHANGE
+        self.exchange_type = "topic"
+        self.queue = queue_name
+        self.routing_key = routing_key
+        self.on_message_callback = on_message_callback
+
+    def on_message(self, channel, basic_deliver, properties, body):
+        body_str = body.decode()
+        logger.info(f"Message received {body_str}.")
+        self.on_message_callback(body_str=body_str)
+
+    def consume_start(self):
+        """
+        Start consuming messages.
+        :return:
+        """
+        self.run()
+
+
+class MqPublisher(QueueSender):
+    def __init__(self, routing_key):
+        super().__init__(url=mq_broker_url,
+                         exchange=DEFAULT_EXCHANGE,
+                         exchange_type="topic",
+                         routing_key=routing_key)

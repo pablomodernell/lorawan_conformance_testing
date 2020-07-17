@@ -11,11 +11,18 @@ RUN apt-get update; apt-get install --yes git \
 WORKDIR "/config_scheduler"
 RUN mkdir logs
 
+# Adding credentials for git cloning
+ENV HOME /root
+COPY .netrc $HOME/
+
 # Application deps
 COPY requirements.txt requirements.txt
 RUN python3 -m pip install -r requirements.txt
 
 RUN rm -rf requirements.txt
+
+# Removing credentials
+RUN rm -rf $HOME/.netrc
 
 COPY lorawan lorawan
 COPY conformance_testing conformance_testing

@@ -16,25 +16,26 @@ class DownlinkScheduler(object):
                  accept_dlsettings=lorawan_parameters.DLSETTINGS.RX1OFFSET0_RX2DR0,
                  accept_rxdelay=lorawan_parameters.JOIN_ACCEPT_RXDELAY.DELAY0,
                  accept_cflist=lorawan_parameters.JOIN_ACCEPT_CFLIST.NO_CHANNELS):
-        self.mq_interface = message_queueing.MqInterface()
+        self.uplink_mq_interface = message_queueing.MqSelectConnectionInterface(
+            queue_name='up_downlink_scheduler',
+            routing_key=routing_keys.fromAgentToScheduler,
+            on_message_callback=self.up_message_handler)
+        self.downlink_mq_interface = message_queueing.MqPublisher(
+            routing_key=routing_keys.fromAgentToScheduler)
 
         self.sessions_handler = devices_sessions.DevicesSessionHandler()
         self.accept_dlsettings = accept_dlsettings
         self.accept_rxdelay = accept_rxdelay
         self.accept_cflist = accept_cflist
 
-        self.mq_interface.declare_and_consume(queue_name='up_downlink_scheduler',
-                                              routing_key=routing_keys.fromAgentToScheduler,
-                                              callback=self.up_message_handler)
-
     def start_scheduler(self):
         logger.info("Starting Config Scheduler")
-        self.mq_interface.consume_start()
+        self.uplink_mq_interface.consume_start()
 
-    def up_message_handler(self, ch, method, properties, body):
+    def up_message_handler(self, body_str):
 
         received_testscript_msg = flora_messages.GatewayMessage(
-            json_ttm_str=body.decode())
+            json_ttm_str=body_str)
         lorawan_msg = received_testscript_msg.parse_lorawan_message()
         logger.info("--------------------------------------------------------\n")
         logger.info(f"Received Uplink: {str(lorawan_msg)}")
@@ -48,18 +49,19 @@ class DownlinkScheduler(object):
                 if not self.sessions_handler.is_registered(dev_eui_hex=deveui_hex):
                     logger.info(f"Device Not Registered: {deveui_hex}")
                     return
-                jaccept_phypayload = self.sessions_handler.otta_join(deveui_hex, devnonce=devnonce,
-                                                                     dlsettings=self.accept_dlsettings,
-                                                                     rxdelay=self.accept_rxdelay,
-                                                                     cflist=self.accept_cflist)
+                jaccept_phypayload = self.sessions_handler.otta_join(
+                    deveui_hex, devnonce=devnonce,
+                    dlsettings=self.accept_dlsettings,
+                    rxdelay=self.accept_rxdelay,
+                    cflist=self.accept_cflist)
                 json_nwk_response = received_testscript_msg.create_nwk_response_str(
                     phypayload=jaccept_phypayload,
                     delay=lorawan_parameters.TIMING.JOIN_ACCEPT_DELAY1,
                     datr_offset=lorawan_parameters.DR_OFFSET.RX1_DEFAULT)
                 logger.info(f"Sending Join Accept: {str(json_nwk_response)}")
 
-                self.mq_interface.publish(routing_key=routing_keys.fromSchedulerToAgent,
-                                          msg=json_nwk_response)
+                self.downlink_mq_interface.send(routing_key=routing_keys.fromSchedulerToAgent,
+                                                data=json_nwk_response)
             except scheduler_errors.DuplicatedNonce as dne:
                 logger.info(f"Ignoring Duplicated nonce {devnonce}")
         elif lorawan_msg.mhdr.mhdr_bytes == lorawan_parameters.MHDR.UNCONFIRMED_UP:
@@ -73,6 +75,8 @@ class DownlinkScheduler(object):
             if not lorawan_msg.mic_bytes == calculated_mic:
                 logger.info(
                     f"Wrong MIC. Expecting {calculated_mic}, Device {dev_eui_hex} ({devaddrhex}).")
+            logger.info(f"Verified MIC using NwkSKey: {utils.bytes_to_text(network_key)}")
+
             frmpayload_command = bytes.fromhex(
                 self.sessions_handler.get_command_hex(dev_addr_hex=devaddrhex))
             lw_response = self.sessions_handler.prepare_lorawan_data(dev_eui_hex=dev_eui_hex,
@@ -82,5 +86,5 @@ class DownlinkScheduler(object):
                 delay=lorawan_parameters.TIMING.RECEIVE_DELAY1,
                 datr_offset=lorawan_parameters.DR_OFFSET.RX1_DEFAULT)
             logger.info(f"Sending Downlink Data: {str(json_nwk_response)}")
-            self.mq_interface.publish(routing_key=routing_keys.fromSchedulerToAgent,
-                                      msg=json_nwk_response)
+            self.downlink_mq_interface.send(routing_key=routing_keys.fromSchedulerToAgent,
+                                            data=json_nwk_response)

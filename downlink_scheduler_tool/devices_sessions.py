@@ -191,6 +191,7 @@ class DevicesSessionHandler(object):
     def otta_join(self, deveui_hex, devnonce, dlsettings, rxdelay, cflist):
         deveui = bytes.fromhex(deveui_hex)
         appkey = bytes.fromhex(self._devices[deveui_hex]["appkey"])
+        logger.info(f"Activating device: {deveui_hex}")
         if not self.has_active_session(dev_eui_hex=deveui_hex):
             self._active_sessions[deveui_hex] = DeviceSession(dev_eui=deveui,
                                                               appkey=appkey)

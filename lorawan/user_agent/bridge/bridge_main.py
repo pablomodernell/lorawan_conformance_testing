@@ -30,7 +30,7 @@ import click
 from lorawan.user_agent.bridge.agent_bridge import SPFBridge
 from logger_configurator import LoggerConfigurator
 
-LoggerConfigurator(level="DEBUG")
+LoggerConfigurator(level="INFO")
 logger = logging.getLogger(__name__)
 
 
