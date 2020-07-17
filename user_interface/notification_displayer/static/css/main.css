@@ -1,0 +1,65 @@
+
+#main_window {
+    position: relative;
+    background-color: #fafafa;
+    border: solid 2px #9e70ba;
+    font-size: 16px;
+    text-align: left;
+}
+
+#test_control {
+    position: relative;
+    width: 1200px;
+    height: 300px;
+    background-color: #fafafa;
+    border: solid 2px #9e70ba;
+    font-size: 16px;
+    text-align: center;
+}
+
+#device_config {
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background-color: #fafafa;
+    border: solid 2px #9e70ba;
+    text-align: center;
+    left: 400px;
+}
+
+#device_show {
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background-color: #fafafa;
+    border: solid 2px #9e70ba;
+    text-align: left;
+}
+
+#start_testing {
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background-color: #fafafa;
+    border: solid 2px #9e70ba;
+    text-align: center;
+    left: 800px;
+}
+
+#left_bar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  width: 8em;
+  margin-top: -2.5em;
+}
+
+#test_details div {
+    border: solid 1px #9e70ba;
+    width: 1200px;
+}
+
+#test_details p {
+    border: dotted 1px #9e70ba;
+    width: 1200px;
+}

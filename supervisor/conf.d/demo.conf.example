@@ -1,0 +1,20 @@
+[program:agent]
+directory = /home/sieben/workspace/finterop/agent
+command = python agent.py connect
+killasgroup = true
+stopasgroup = true
+stdout_logfile=logs/agent_stdout.log        ; stdout log path, NONE for none; default AUTO
+stderr_logfile=logs/agent_stderr.log        ; stderr log path, NONE for none; default AUTO
+stdout_logfile_maxbytes=0
+stderr_logfile_maxbytes=0
+
+[program:openvisualizer]
+directory = /home/sieben/workspace/finterop/openwsn-sw/software/openvisualizer
+command = sudo scons runweb --sim --rover
+stopsignal = KILL
+killasgroup = true
+stopasgroup = true
+stdout_logfile=logs/openvisualizer_stdout.log        ; stdout log path, NONE for none; default AUTO
+stderr_logfile=logs/openvisualizer_stderr.log        ; stderr log path, NONE for none; default AUTO
+stdout_logfile_maxbytes=0
+stderr_logfile_maxbytes=0

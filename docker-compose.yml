@@ -1,0 +1,77 @@
+version: '3'
+
+volumes:
+  volume_message-broker:
+
+services:
+  message-broker:
+    image: rabbitmq:3-management
+    volumes:
+      - ./docker_images/rabbitmq/config:/etc/rabbitmq/:ro
+      - volume_message-broker:/var/lib/rabbitmq
+    hostname: message-broker
+    expose:
+      - "1883"
+      - "8883"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: on-failure
+
+  test-application-server:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/test_application_server/Dockerfile
+    env_file:
+      - env_var
+    restart: on-failure
+    command: ["python3", "/test_application_server/tas_application_server_main.py"]
+
+  command-manager:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/command_manager/Dockerfile
+    env_file:
+      - env_var
+    restart: on-failure
+    command: ["python3", "/command_manager/main.py"]
+
+  notification-displayer:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/notification_displayer/Dockerfile
+    env_file:
+      - env_var
+    expose:
+      - "5000"
+    ports:
+      - "8081:5000"
+    restart: on-failure
+    command: ["python3", "user_interface/notification_displayer/displayer_app.py"]
+
+  agent-mock:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/agent_mock/Dockerfile
+    env_file:
+      - env_var
+    restart: on-failure
+    command: ["cl_msg_forging"]
+
+  cli:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/agent_mock/Dockerfile
+    env_file:
+      - env_var
+    restart: on-failure

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="static/js/application.js"></script>
+    <!--    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<hr>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<hr>
+<div class="container">
+    <div class="jumbotron">
+        <h1>LoRaWAN Conformance Testing</h1>
+    </div>
+</div>
+
+
+<div class="container" id="content">
+    <div class="row" id="main_window">
+        <div class="row" id="center_alerts">
+            <hr>
+            <h3>Alerts:</h3>
+
+            <div class="row" id="user_alerts">
+            </div>
+            <hr>
+        </div>
+
+        <div class="row" id="main_messages">
+            <hr>
+            <h3>Tests details:</h3>
+
+            <div class="row" id="test_details">
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

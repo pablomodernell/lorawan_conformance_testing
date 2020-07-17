@@ -1,0 +1,31 @@
+; A user can write comments here to document how the processes are launched and interact with
+; each others.
+; amqp_url pattern : amqp://user:password@host:port/virtual_host
+; {{ my_variable|default('my_variable is not defined') }}
+
+
+; DOCKER PARAMS:
+; --rm : Automatically remove the container when it exits
+; --name : Assign a name to the container
+; --privileged=true : Allows processes to create tun and modify network params
+; --sysctl net.ipv6.conf.all.disable_ipv6=0 : ipv6 must be enabled (if tun interface of agent is used)
+
+; IMPORTANT
+; Groups/programs created and appended automatically when session request includes testing_tool
+; Groups/programs created and appended automatically when session request includes iut.location==central-server-docker
+
+
+[program:{{ session }}|testing_tool]
+stopsignal=TERM
+killasgroup=true
+autostart=false
+stdout_logfile = %(here)s/logs/{{ session }}-flora_testing_tool-stdout.log
+stderr_logfile = %(here)s/logs/{{ session }}-flora_testing_tool-stderr.log
+command = docker run
+    --env AMQP_URL={{ amqp_url }}
+    --env AMQP_EXCHANGE={{ amqp_exchange }}
+    --rm
+    --privileged=true
+    --sysctl net.ipv6.conf.all.disable_ipv6=0
+    --name="session_{{ session }}-testing_tool-conformance-flora"
+    flora_test_application_server supervisord -n -c supervisord.conf.ini

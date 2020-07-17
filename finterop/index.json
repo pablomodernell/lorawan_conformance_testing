@@ -1,0 +1,114 @@
+{
+  "_type": "testsuite.manifest",
+  "testing_tool": "F-LoRa LoRaWAN",
+  "ansible_playbook": "ansible/main.yml",
+  "owner": "F-Interop",
+  "maintainer": "Pablo Modernell",
+  "maintainer_email": "pablomodernell@gmail.com",
+  "version": "1.0.0",
+  "test_type": "conformance",
+  "protocols_under_test": [
+    "LoRaWAN v1.0.2"
+  ],
+  "TestDescription_version":"https://lora-alliance.org/",
+  "protocols_info": [
+    {
+      "protocol": "LoRaWAN v1.0.2",
+      "specification_id": "LoRaWAN v1.0.2",
+      "specification_ref": "https://lora-alliance.org/",
+      "test_description_id": "TD_LORAWAN_1_0_2",
+      "test_description_ref": "https://lora-alliance.org/"
+    }
+  ],
+  "underlying_supported_protocol": [
+    "LoRaWAN v1.0.2"
+  ],
+  "agent_names": [
+    "agent_flora"
+  ],
+  "iut_roles": [
+    "end_device"
+  ],
+  "ui_information": [
+    {
+      "name": "Select the testing tool version and test cases",
+      "type": "p",
+      "value": "The implementation of the tests are based on test description xxxx"
+    },
+    {
+      "name": "testingtool.version",
+      "description": "Testing tool version (optional)",
+      "type": "select",
+      "multiple": false,
+      "options": [
+        {
+          "value": "1.0.1"
+        }
+      ],
+      "required": false
+    },
+    {
+      "name": "testcases",
+      "description": "Test cases selection",
+      "type": "select",
+      "multiple": true,
+      "options": [
+        {
+          "value": "td_lorawan_fun_01"
+        },
+        {
+          "value": "td_lorawan_act_02"
+        },
+        {
+          "value": "td_lorawan_act_03"
+        },
+        {
+          "value": "td_lorawan_act_04"
+        },
+        {
+          "value": "td_lorawan_act_05"
+        },
+        {
+          "value": "td_lorawan_sec_01"
+        },
+        {
+          "value": "td_lorawan_sec_02"
+        },
+        {
+          "value": "td_lorawan_fun_01"
+        },
+        {
+          "value": "td_lorawan_fun_02"
+        },
+        {
+          "value": "td_lorawan_fun_03"
+        },
+        {
+          "value": "td_lorawan_fun_04"
+        },
+        {
+          "value": "td_lorawan_fun_05"
+        },
+        {
+          "value": "td_lorawan_fun_06"
+        },
+        {
+          "value": "td_lorawan_mac_01"
+        },
+        {
+          "value": "td_lorawan_mac_02"
+        },
+        {
+          "value": "td_lorawan_mac_03"
+        },
+        {
+          "value": "td_lorawan_mac_04"
+        },
+        {
+          "value": "td_lorawan_mac_05"
+        }
+      ],
+      "required": false
+    }
+  ]
+}
