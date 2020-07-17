@@ -83,8 +83,8 @@ class SPFBridge(object):
         self.uplink_mq_interface = message_queueing.MqInterface()
         self.downlink_mq_interface = message_queueing.MqInterface()
         self.downlink_mq_interface.declare_and_consume(
-            queue_name='down_nwk',
-            routing_key=message_broker.routing_keys.toAgent + '.#',
+            queue_name='down_sch_nwk',
+            routing_key=message_broker.routing_keys.fromSchedulerToAgent,
             callback=self.process_dlmsg)
 
     @property
@@ -166,7 +166,7 @@ class SPFBridge(object):
                     # packet[0]: the decoded data
                     # packet[1]: the json string with the decoded data in it's data field.
                     self.uplink_mq_interface.publish(msg=packet[1],
-                                                     routing_key=routing_keys.fromAgent + '.gw1')
+                                                     routing_key=routing_keys.fromAgentToScheduler)
                     print("Sending UpLink: {0}\n".format(packet[1]))
                     print(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
             received_msg.print_stats()

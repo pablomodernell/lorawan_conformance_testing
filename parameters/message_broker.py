@@ -29,8 +29,10 @@ import collections
 
 RoutingKeys = collections.namedtuple("RoutingKeys", '''
                                      fromAgent,
+                                     fromAgentToScheduler,
                                      up_tas,
                                      toAgent,
+                                     fromSchedulerToAgent,
                                      config_tas,
                                      testing_ready,
                                      testing_configured,
@@ -47,6 +49,8 @@ RoutingKeys = collections.namedtuple("RoutingKeys", '''
 
 routing_keys = RoutingKeys(
     fromAgent="fromAgent",
+    fromAgentToScheduler="fromAgentToScheduler",
+    fromSchedulerToAgent="fromSchedulerToAgent",
     up_tas="up.tas",
     toAgent="toAgent",
     config_tas="config.tas",

@@ -90,3 +90,25 @@ services:
     env_file:
       - env_var
     restart: on-failure
+
+  config-scheduler:
+    depends_on:
+      - message-broker
+    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.0.1-cmt_rejoin_fix
+    env_file:
+      - env_var
+    restart: on-failure
+    command: ["python3", "/config_scheduler/downlink_scheduler_tool/config_scheduler_main.py"]
+
+  agent-scheduler:
+    depends_on:
+      - message-broker
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.0.1-cmt_rejoin_fix
+    env_file:
+      - env_var
+    expose:
+      - "1700"
+    ports:
+      - "1700:1700"
+    restart: on-failure
+    command: ["cl_start_bridge"]
