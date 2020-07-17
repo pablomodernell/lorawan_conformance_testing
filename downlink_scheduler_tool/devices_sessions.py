@@ -152,7 +152,7 @@ class DeviceSession(object):
 
 class DevicesSessionHandler(object):
     def __init__(self):
-        self._devices = dev_data.amberg_devices
+        self._devices = dev_data.devices_to_configure
         self._active_sessions = {}
 
     def is_registered(self, dev_eui_hex):
