@@ -94,7 +94,7 @@ services:
   config-scheduler:
     depends_on:
       - message-broker
-    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.0-cmt_rejoin_fix
+    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.1-cmt_rejoin_fix_dev
     env_file:
       - env_var
     restart: on-failure
@@ -103,7 +103,7 @@ services:
   agent-scheduler:
     depends_on:
       - message-broker
-    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.0-cmt_rejoin_fix
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.1-cmt_rejoin_fix_dev
     env_file:
       - env_var
     expose:
