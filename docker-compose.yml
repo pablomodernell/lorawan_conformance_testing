@@ -66,6 +66,21 @@ services:
     restart: on-failure
     command: ["cl_msg_forging"]
 
+  agent:
+    depends_on:
+      - message-broker
+    build:
+      context: .
+      dockerfile: docker_images/agent_mock/Dockerfile
+    env_file:
+      - env_var
+    expose:
+      - "1700"
+    ports:
+      - "1700:1700"
+    restart: on-failure
+    command: ["cl_start_bridge"]
+
   cli:
     depends_on:
       - message-broker

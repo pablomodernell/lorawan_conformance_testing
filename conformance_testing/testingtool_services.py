@@ -55,6 +55,8 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self.requested_tests = None
         self._next_test_index = 0
         self._reset_dut = False
+        self._reset_count = 0
+        self._reset_limit = 3
         self.downlink_counter = 0
         self.testingtool_on = True
         self.last_deviceid = None
@@ -80,12 +82,18 @@ class TestSessionCoordinator(message_queueing.MqInterface):
 
     @property
     def reset_dut(self):
-        """ Indicates that the test needs to reset the Device Under Test (DUT) to set it to a known state."""
+        """
+        Indicates that the test needs to reset the Device Under Test (DUT) to
+        set it to a known state.
+        """
         return self._reset_dut
 
     @reset_dut.setter
     def reset_dut(self, reset_value):
-        """ Indicates that the test needs to reset the Device Under Test (DUT) to set it to a known state."""
+        """
+        Indicates that the test needs to reset the Device Under Test (DUT) to
+        set it to a known state.
+        """
         if reset_value is True:
             self._reset_dut = True
         else:
@@ -98,14 +106,25 @@ class TestSessionCoordinator(message_queueing.MqInterface):
 
     def pop_next_test_name(self):
         """ Returns the name of the next test to be executed."""
-        if self.test_available():
-            if self.reset_dut:
-                self.reset_dut = False
-                return "td_lorawan_reset"
-            else:
-                idx = self._next_test_index
-                self._next_test_index += 1
-                return self.requested_tests[idx]
+        if not self.test_available():
+            print(f"No test available.")
+            return None
+        if self.reset_dut:
+            if self._reset_count >= self._reset_limit:
+                print(
+                    f"Reset attempts exceeded ({self._reset_count}/{self._reset_limit}).")
+                self._next_test_index = len(self.requested_tests)
+                return None
+            print("Resetting device.")
+            self.reset_dut = False
+            self._reset_count += 1
+            return "td_lorawan_reset"
+        else:
+            print("Returning new test.")
+            self._reset_count = 0
+            idx = self._next_test_index
+            self._next_test_index += 1
+            return self.requested_tests[idx]
 
     def publish(self, msg, routing_key, exchange_name=message_queueing.DEFAULT_EXCHANGE):
         """
@@ -137,14 +156,16 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self.declare_and_consume(queue_name='testingtool_terminate_tas',
                                  routing_key=routing_keys.testing_terminate,
                                  callback=self.session_terminate_handler)
-        ui_publisher.testingtool_log(msg_str="Starting current test case...",
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.testingtool_log(
+            msg_str="Starting current test case...",
+            key_prefix=message_broker.service_names.test_session_coordinator)
         self.current_test.start_test()
 
     def session_terminate_handler(self, ch, method, properties, body):
         """ Handles a Sesstion Termination message."""
-        ui_publisher.testingtool_log(msg_str="SESSION TERMINATED BY THE USER.",
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.testingtool_log(
+            msg_str="SESSION TERMINATED BY THE USER.",
+            key_prefix=message_broker.service_names.test_session_coordinator)
         self.consume_stop()
         self.testingtool_on = False
         raise test_errors.SessionTerminatedError("Terminated by UI request.")
@@ -169,7 +190,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
             except ValueError:
                 raise InvalidHexStringInFieldError('{} is an invalid field'.format(field_str))
 
-        ####################################################################################################
+        ###########################################################################################
         while "The user doesn't enter a valid device information":
             try:
                 device_id = configuration_parser.DeviceID()
@@ -178,9 +199,10 @@ class TestSessionCoordinator(message_queueing.MqInterface):
                 device_request_body.add_field(ui_reports.TextInputField(name="DevEUI",
                                                                         label="Device EUI",
                                                                         value="0004a30b001adbe5"))
-                device_request_body.add_field(ui_reports.TextInputField(name="AppKey",
-                                                                        label="Application Key",
-                                                                        value='2b7e151628aed2a6abf7158809cf4f3c'))
+                device_request_body.add_field(ui_reports.TextInputField(
+                    name="AppKey",
+                    label="Application Key",
+                    value='2b7e151628aed2a6abf7158809cf4f3c'))
                 device_request_body.add_field(ui_reports.TextInputField(name="DevAddr",
                                                                         label="Short address",
                                                                         value="26011cf1"))
@@ -213,8 +235,9 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         device_display.add_field(ui_reports.ParagraphField(
             name=" ",
             value=device_id.to_print_str()))
-        ui_publisher.display_on_gui(msg_str=str(device_display),
-                                    key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.display_on_gui(
+            msg_str=str(device_display),
+            key_prefix=message_broker.service_names.test_session_coordinator)
         return device_id
 
     def get_testcases(self):
@@ -242,8 +265,9 @@ class TestSessionCoordinator(message_queueing.MqInterface):
             -DUT personalization parameters
         """
         self.channel.start_consuming()
-        ui_publisher.testingtool_log(msg_str="Asking the GUI for configuration.",
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.testingtool_log(
+            msg_str="Asking the GUI for configuration.",
+            key_prefix=message_broker.service_names.test_session_coordinator)
 
         request_config = ui_reports.RPCRequest(request_key=routing_keys.configuration_request,
                                                channel=self.channel,
@@ -271,7 +295,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         ui_publisher.display_on_gui(msg_str=str(testcases_display),
                                     key_prefix=message_broker.service_names.test_session_coordinator)
         device_id = self.get_device_from_gui()
-        ####################################################################################################
+        #########################################################################################
         self.device_under_test = device_sessions.EndDevice(ctx_test_tool_service=self,
                                                            deveui=device_id.deveui,
                                                            devaddr=device_id.devaddr,
@@ -281,25 +305,31 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self.last_deviceid = device_id
 
     def handle_error(self, raised_exception, test_name, result_report=None):
-        """ Handles a raised exception, setting a flag to reset the DUT in case of a test failure"""
+        """
+        Handles a raised exception, setting a flag to reset the DUT in case of a test failure.
+        """
+
         error_name = type(raised_exception).__name__
         error_details = str(raised_exception)
         if isinstance(raised_exception, test_errors.TestFailError):
             self.reset_dut = True
-        fail_message = "\nTest {0} failed with {1} error.".format(test_name,
-                                                                  error_name)
+        fail_message = f"Test {test_name} failed with {error_name} error."
         fail_message_paragraph = ui_reports.ParagraphField(name=test_name, value=fail_message)
-        fail_details_paragraph = ui_reports.ParagraphField(name="Details:", value=error_details)
+        fail_details_paragraphs = [ui_reports.ParagraphField(name=":", value=line) for line in
+                                   error_details.split("\n")]
         if result_report:
             result_report.add_field(fail_message_paragraph)
-            result_report.add_field(fail_details_paragraph)
+            for detail_paragraph in fail_details_paragraphs:
+                result_report.add_field(detail_paragraph)
             result_report.level = ui_reports.LEVEL_ERR
         step_error = ui_reports.InputFormBody(
             title="{TC}: Step Fail".format(TC=test_name),
             tag_key=test_name,
             tag_value=" ")
         step_error.add_field(fail_message_paragraph)
-        step_error.add_field(fail_details_paragraph)
+        for detail_paragraph in fail_details_paragraphs:
+            step_error.add_field(detail_paragraph)
         step_error.level = ui_reports.LEVEL_ERR
-        ui_publisher.display_on_gui(msg_str=str(step_error),
-                                    key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.display_on_gui(
+            msg_str=str(step_error),
+            key_prefix=message_broker.service_names.test_session_coordinator)

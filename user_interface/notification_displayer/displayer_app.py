@@ -3,6 +3,7 @@ import pika
 import logging
 
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
 from flask_socketio import SocketIO
@@ -33,6 +34,8 @@ thread_stop_event = Event()
 refresh_count = 0
 config_received = 0
 
+command_sender = message_queueing.MqInterface()
+
 
 class UiListener(Thread):
     def __init__(self):
@@ -42,15 +45,18 @@ class UiListener(Thread):
         self.mq_interface.declare_and_consume(queue_name="notifier_display_gui",
                                               routing_key=parameters.message_broker.routing_keys.ui_all_users + '.display',
                                               callback=self.process_received_display_msg,
-                                              exclusive=False)
+                                              exclusive=False,
+                                              auto_delete=True)
         self.mq_interface.declare_and_consume(queue_name="notifier_configuration_request",
                                               routing_key=parameters.message_broker.routing_keys.configuration_request,
                                               callback=self.process_configuration_request_msg,
-                                              exclusive=False)
+                                              exclusive=False,
+                                              auto_delete=True)
         self.mq_interface.declare_and_consume(queue_name="notifier_request_action_gui",
                                               routing_key=parameters.message_broker.routing_keys.ui_all_users + '.request',
                                               callback=self.process_gui_action_request_msg,
-                                              exclusive=False)
+                                              exclusive=False,
+                                              auto_delete=True)
         super(UiListener, self).__init__()
 
     def process_received_display_msg(self, ch, method, properties, body):
@@ -80,7 +86,8 @@ class UiListener(Thread):
         elif {"START"} == {field['name'] for field in input_form.fields}:
             print(f"Start button received: {body}")
             logger.debug(f"Start button received: {body}")
-            socketio.emit('user_alerts', "<p>Press start after the Agent is running.</p>", namespace='/test')
+            socketio.emit('user_alerts', "<p>Press start after the Agent is running.</p>",
+                          namespace='/test')
         else:
             print(f"UI input requested: {body}")
             logger.debug(f"UI input requested: {body}")
@@ -123,5 +130,66 @@ def test_disconnect():
     print('Client disconnected')
 
 
-if __name__ == '__main__':
+@socketio.on('send_config', namespace='/test')
+def send_config(config):
+    print(f"Received config {config} {type(config)}.")
+    logger.info(f"Received config {config} {type(config)}.")
+    command_sender.publish(
+        exchange_name='amq.topic',
+        routing_key=parameters.message_broker.routing_keys.command_configuration_reply,
+        msg=json.dumps({"api_version": "1.0.1",
+                        "testcases": config}))
+
+
+@socketio.on('personalize_dut', namespace='/test')
+def personalize_dut(config):
+    print(f"Received config {config} {type(config)}.")
+    logger.info(f"Received config {config} {type(config)}.")
+    dut_info_dict = json.loads(config)
+    device_info = {
+        'fields': [{"DevAddr": dut_info_dict["devaddr"]},
+                   {"AppKey": dut_info_dict["appkey"]},
+                   {"DevEUI": dut_info_dict["deveui"]}]}
+
+    command_sender.publish(
+        exchange_name='amq.topic',
+        routing_key=parameters.message_broker.routing_keys.command_ui_reply,
+        msg=json.dumps(device_info))
+
+
+@socketio.on('start_test', namespace='/test')
+def send_config(value):
+    print(f"Starting test: {value}")
+    logger.info(f"Starting test {value}")
+    command_sender.publish(
+        exchange_name='amq.topic',
+        routing_key=parameters.message_broker.routing_keys.command_ui_reply,
+        msg="START SIGNAL")
+
+
+def main():
+    command_sender.declare_queue(queue_name="notifier_display_gui",
+                                 exclusive=False,
+                                 auto_delete=True)
+    command_sender.bind_queue(
+        queue_name="notifier_display_gui",
+        routing_key=parameters.message_broker.routing_keys.ui_all_users + '.display', )
+    command_sender.declare_queue(queue_name="notifier_configuration_request",
+                                 exclusive=False,
+                                 auto_delete=True)
+    command_sender.bind_queue(
+        queue_name="notifier_configuration_request",
+        routing_key=parameters.message_broker.routing_keys.configuration_request)
+    command_sender.declare_queue(queue_name="notifier_request_action_gui",
+                                 exclusive=False,
+                                 auto_delete=True)
+    command_sender.bind_queue(
+        queue_name="notifier_request_action_gui",
+        routing_key=parameters.message_broker.routing_keys.ui_all_users + '.request')
+    print(f"Starting Displayer APP.")
+    logger.info(f"Starting Displayer APP.")
     socketio.run(app, host="0.0.0.0", port=5000)
+
+
+if __name__ == '__main__':
+    main()

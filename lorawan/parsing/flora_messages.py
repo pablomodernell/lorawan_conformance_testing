@@ -175,8 +175,9 @@ class GatewayMessage(test_messages.TestingToolMessage):
         """
         if not self.__lorawan_message:
             b64decoded_data = base64.b64decode(self.testingtool_msg_dict["data"])
-            self.__lorawan_message = lorawan.parsing.lorawan.LoRaWANMessage(phypayload=b64decoded_data,
-                                                                            ignore_format_errors=ignore_format_errors)
+            self.__lorawan_message = lorawan.parsing.lorawan.LoRaWANMessage(
+                phypayload=b64decoded_data,
+                ignore_format_errors=ignore_format_errors)
         return self.__lorawan_message
 
     def create_nwk_response_str(self,
@@ -197,7 +198,8 @@ class GatewayMessage(test_messages.TestingToolMessage):
         """
 
         # one and only one of the variables data_rate or datr_offset must be specified.
-        if (data_rate is not None and datr_offset is not None) or (data_rate is None and datr_offset is None):
+        if (data_rate is not None and datr_offset is not None) or (
+                data_rate is None and datr_offset is None):
             raise test_errors.TestingToolError("Data Rate (datr) not specified.")
 
         resp_metadata = copy.copy(self.empty_gw_msg)
@@ -258,15 +260,17 @@ class GatewayMessage(test_messages.TestingToolMessage):
     def get_printable_str(self, encryption_key=None, ignore_format_errors=False):
         """ Creates a human readable string representation of the message."""
         lorawan_message = self.parse_lorawan_message(ignore_format_errors=ignore_format_errors)
-        ret_str = "Timestamp: {}\n".format(self.testingtool_msg_dict["tmst"])
-        ret_str += "Frequency: {}\n".format(self.testingtool_msg_dict["freq"])
-        ret_str += "DR: {}\n".format(self.testingtool_msg_dict["datr"])
-        ret_str += "Size: {}\n".format(self.testingtool_msg_dict["size"])
-        ret_str += "PHYPayload: {}\n".format(utils.bytes_to_text(base64.b64decode(self.testingtool_msg_dict["data"])))
+        ret_str = "tmst: {}, freq: {}, DR: {}\n".format(
+            self.testingtool_msg_dict["tmst"],
+            self.testingtool_msg_dict["freq"],
+            self.testingtool_msg_dict["datr"])
+        ret_str += "PHYPayload: {} (Size: {} bytes)\n".format(
+            utils.bytes_to_text(base64.b64decode(self.testingtool_msg_dict["data"]), sep=""),
+            self.testingtool_msg_dict["size"]
+        )
         if encryption_key:
             frmpayload_plaintext = lorawan_message.get_frmpayload_plaintext(key=encryption_key)
-            ret_str += "FRMPayload plain text:\n{}\n".format(utils.bytes_to_text(frmpayload_plaintext))
+            ret_str += "Decrypted FRMPayload: {}".format(
+                utils.bytes_to_text(frmpayload_plaintext, sep=""))
         ret_str += str(lorawan_message)
         return ret_str
-
-

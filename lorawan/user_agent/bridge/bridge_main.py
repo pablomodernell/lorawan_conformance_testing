@@ -44,4 +44,5 @@ def agent_main():
     spf_bridge.consume_start()
 
 
-
+if __name__ == '__main__':
+    agent_main()

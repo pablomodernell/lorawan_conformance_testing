@@ -39,6 +39,7 @@ class ActokToWrongMIC(lorawan_steps.WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: Ping message with a wrong MIC.
     """
+
     def step_handler(self, ch, method, properties, body):
         super().step_handler(ch, method, properties, body)
         lw_response, send_ping, _ = self.pingpong_echo_exchange(next_step=self.next_step)
@@ -50,12 +51,13 @@ class ActokToWrongMIC(lorawan_steps.WaitActokStep):
             datr_offset=device.loramac_params.rx1_dr_offset)
         self.send_downlink(
             msg=json_nwk_response,
-            routing_key=message_broker.routing_keys.toAgent+'.gw1')
+            routing_key=message_broker.routing_keys.toAgent + '.gw1')
         # Manually decrease the downlink counter.
         self.ctx_test_manager.ctx_test_session_coordinator.downlink_counter -= 1
         self.print_step_info(sending=send_ping,
-                             additional_message="Modified MIC: {} ->{}\n".format(bytes_to_text(lw_response[-4::]),
-                                                                                 bytes_to_text(b'\xff\xff\xff\xff')))
+                             additional_message="Modified MIC: {} ->{}\n".format(
+                                 bytes_to_text(lw_response[-4::], sep=""),
+                                 bytes_to_text(b'\xff\xff\xff\xff', sep="")))
 
 
 class TestAppManager(conformance_testing.test_step_sequence.TestManager):
@@ -65,6 +67,7 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
 
     LoRaWAN Test SEC 02: Test if a message with a wrong MIC is ignored as expected.
     """
+
     def __init__(self, test_session_coordinator):
         super().__init__(test_name=__name__.split(".")[-1],
                          ctx_test_session_coordinator=test_session_coordinator)
@@ -83,7 +86,8 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
         # ------------------------------------------------------------------------------------------------
         # Step 1, send wrong mic:
         # the test is waiting for an Act OK message to send a ping with a wrong MIC (to be ignored)
-        self.s1_actok_to_ping = ActokToWrongMIC(ctx_test_manager=self, step_name="S1ActokToWrongMIC",
+        self.s1_actok_to_ping = ActokToWrongMIC(ctx_test_manager=self,
+                                                step_name="S1ActokToWrongMIC",
                                                 next_step=self.s2_actok_final)
         self.add_step_description(step_name="Step 1: S1ActokToWrongMIC",
                                   description=(
@@ -99,4 +103,3 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
                                       "Objective: Test if a message with a wrong MIC is ignored as expected.\n"
                                       "References: LoRaWAN Specification v1.0.2.\n"
                                       "Pre-test conditions: The DUT is in Test Mode.\n"))
-

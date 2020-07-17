@@ -55,7 +55,7 @@ class SPFBridge(message_queueing.MqInterface):
     - *PF_IP*
     - *PF_UDP_PORT*
     """
-    VERSION = b"\x01"
+    VERSION = b"\x02"
     PUSH_DATA_ID = b"\x00"
     PUSH_ACK_ID = b"\x01"
     PULL_DATA_ID = b"\x02"
@@ -199,6 +199,7 @@ class SPFBridge(message_queueing.MqInterface):
         :return: None.
         """
         assert self._gateway_dl_addr is not None
+        print(f"Sending message to {self.gateway_dl_addr}")
         self._sock.sendto(dl_message, self.gateway_dl_addr)
 
     def send_pull_resp(self, json_bytes):

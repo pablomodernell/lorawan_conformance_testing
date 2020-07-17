@@ -63,7 +63,7 @@ class SemtechUDPMsg:
         ret_str = "**********************************************\n"
         ret_str += "Packet Forwarder Protocol:\n"
         ret_str += "Protocol Ver.: {0}\n".format(self.protocolVer)
-        ret_str += "Token: {0}\n".format(utils.bytes_to_text(self.token))
+        ret_str += "Token: {0}\n".format(utils.bytes_to_text(self.token, sep=""))
         ret_str += "Type of Msg.: {0}\n".format(self.spf_msg_type)
         ret_str += "Message ID: {0}\n".format(self.msg_id)
         if self.gwid is None:

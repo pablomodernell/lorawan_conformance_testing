@@ -49,6 +49,7 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
     Expected reception: any LoRaWAN message.
     Sends after check: None.
     """
+
     def __init__(self, ctx_test_manager, step_name, default_rx1_window=True, next_step=None):
         """
         Adds a flag to indicate the preferred downlink window (RX1 or RX2) to use for sending messages to the DUT.
@@ -57,7 +58,8 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
         :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
         :param next_step: next step of the test.
         """
-        super().__init__(next_step=next_step, step_name=step_name, ctx_test_manager=ctx_test_manager)
+        super().__init__(next_step=next_step, step_name=step_name,
+                         ctx_test_manager=ctx_test_manager)
         self.default_rx1_window = default_rx1_window
 
     def basic_check(self, received_testscript_msg_bytes):
@@ -82,12 +84,14 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
         if not lorawan_msg.mic_bytes == calculated_mic:
             description_template = "Wrong MIC.\nKey: {key}\nMIC: {received_mic}\nCalculated: {calc}"
             raise lorawan_errors.MICError(description=description_template.format(
-                                                key=utils.bytes_to_text(network_key),
-                                                received_mic=utils.bytes_to_text(lorawan_msg.mic_bytes),
-                                                calc=utils.bytes_to_text(calculated_mic)),
-                                          test_case=self.ctx_test_manager.tc_name,
-                                          step_name=self.name,
-                                          last_message=self.received_testscript_msg.get_printable_str())
+                key=utils.bytes_to_text(network_key, sep=""),
+                received_mic=utils.bytes_to_text(
+                    lorawan_msg.mic_bytes,
+                    sep=""),
+                calc=utils.bytes_to_text(calculated_mic, sep="")),
+                test_case=self.ctx_test_manager.tc_name,
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str())
 
     def check_act_ok(self, received_frmpayload):
         """
@@ -123,16 +127,19 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
 
     def get_jointrigger(self):
         end_device = self.ctx_test_manager.device_under_test
-        lw_response = end_device.prepare_lorawan_data(frmpayload=tests_parameters.TEST_CODE.TRIGGER_JOIN,
-                                                      fport=224)
+        lw_response = end_device.prepare_lorawan_data(
+            frmpayload=tests_parameters.TEST_CODE.TRIGGER_JOIN,
+            fport=224)
         return lw_response
 
     def raise_unexpected_response_error(self, last_message_bytes):
-        self.received_testscript_msg = flora_messages.GatewayMessage(json_ttm_str=last_message_bytes.decode())
+        self.received_testscript_msg = flora_messages.GatewayMessage(
+            json_ttm_str=last_message_bytes.decode())
         exeption_raised = test_errors.UnexpectedResponseError(description="Unexpected msg.",
                                                               test_case=self.ctx_test_manager.tc_name,
                                                               step_name=self.name,
-                                                              last_message=str(self.received_testscript_msg))
+                                                              last_message=str(
+                                                                  self.received_testscript_msg))
         ui_publisher.testingtool_log(msg_str=str(exeption_raised),
                                      key_prefix=message_broker.service_names.test_session_coordinator)
         raise exeption_raised
@@ -140,7 +147,8 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
     def step_handler(self, ch, method, properties, body):
         """ Actions performed in this step of the test"""
         if not self.received_testscript_msg:
-            self.received_testscript_msg = lorawan.parsing.flora_messages.GatewayMessage(json_ttm_str=body.decode())
+            self.received_testscript_msg = lorawan.parsing.flora_messages.GatewayMessage(
+                json_ttm_str=body.decode())
 
 
 class JoinRequestHandlerStep(LorawanStep):
@@ -171,7 +179,8 @@ class JoinRequestHandlerStep(LorawanStep):
         :param accept_rxdelay: byte sequence of the configuration of the RX delay to be included in the Join Accept.
         :param accept_cflist: byte sequence of the channel list to be configured in the Join Accept.
         """
-        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name, next_step=next_step,
+        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name,
+                         next_step=next_step,
                          default_rx1_window=default_rx1_window)
         self.accept_dlsettings = accept_dlsettings
         self.accept_rxdelay = accept_rxdelay
@@ -184,7 +193,8 @@ class JoinRequestHandlerStep(LorawanStep):
         :return: None.
         """
         if not self.received_testscript_msg:
-            self.received_testscript_msg = flora_messages.GatewayMessage(json_ttm_str=body_bytes.decode())
+            self.received_testscript_msg = flora_messages.GatewayMessage(
+                json_ttm_str=body_bytes.decode())
 
         lw_joinrequest = self.received_testscript_msg.parse_lorawan_message()
         devnonce = lw_joinrequest.macpayload.devnonce_bytes
@@ -222,10 +232,11 @@ class JoinRequestHandlerStep(LorawanStep):
         if lw_joinrequest.mhdr.mtype_str == "JOIN_REQUEST":
             self.process_join_request(body_bytes=body)
         else:
-            raise test_errors.UnexpectedResponseError(description="A Join Request message was expected.",
-                                                      step_name=self.name,
-                                                      last_message=self.received_testscript_msg.get_printable_str(),
-                                                      test_case=self.ctx_test_manager.tc_name)
+            raise test_errors.UnexpectedResponseError(
+                description="A Join Request message was expected.",
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str(),
+                test_case=self.ctx_test_manager.tc_name)
 
 
 class WaitDataToActivate(JoinRequestHandlerStep):
@@ -236,6 +247,7 @@ class WaitDataToActivate(JoinRequestHandlerStep):
     Expected reception: Data message.
     Sends after check: Test Activation Message, FRMPayload plain text 0x01010101.
     """
+
     def step_handler(self, ch, method, properties, body):
         """
         Actions performed in this step of the test.
@@ -250,7 +262,7 @@ class WaitDataToActivate(JoinRequestHandlerStep):
             self.process_join_request(body_bytes=body)
         # If it's a TESTING MESSAGE (LoRaWAN data using port 224):
         elif (mtype_str in ('UNCONFIRMED_UP', 'CONFIRMED_UP') and
-                not lw_received.macpayload.fport_int == 224):
+              not lw_received.macpayload.fport_int == 224):
             end_device = self.ctx_test_manager.device_under_test
             lw_response = end_device.prepare_lorawan_data(frmpayload=frmpayload_response,
                                                           fport=224)
@@ -265,15 +277,16 @@ class WaitDataToActivate(JoinRequestHandlerStep):
                     delay=end_device.loramac_params.rx2_delay,
                     data_rate=end_device.loramac_params.rx2_dr,
                     frequency=end_device.loramac_params.rx2_frequency)
-            self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+            self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                                msg=json_nwk_response)
             self.ctx_test_manager.ctx_test_session_coordinator.downlink_counter = 0
             self.print_step_info(sending=frmpayload_response)
         else:
-            raise test_errors.UnexpectedResponseError(description="Waiting for a data message (any port but 224).",
-                                                      step_name=self.name,
-                                                      last_message=self.received_testscript_msg.get_printable_str(),
-                                                      test_case=self.ctx_test_manager.tc_name)
+            raise test_errors.UnexpectedResponseError(
+                description="Waiting for a data message (any port but 224).",
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str(),
+                test_case=self.ctx_test_manager.tc_name)
 
 
 class WaitActokStep(LorawanStep):
@@ -283,6 +296,7 @@ class WaitActokStep(LorawanStep):
     Expected reception: TAOK message.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Checks the downlink counter of an Activation Ok message."""
         if not self.received_testscript_msg:
@@ -298,10 +312,11 @@ class WaitActokStep(LorawanStep):
                 received_frmpayload[0:1] != lorawan.lorawan_parameters.testing.TEST_CODE.PINGPONG):
             self.check_act_ok(received_frmpayload=received_frmpayload)
         else:
-            raise test_errors.UnexpectedResponseError(description="Waiting for an ACT OK with downlink counter.",
-                                                      step_name=self.name,
-                                                      last_message=self.received_testscript_msg.get_printable_str(),
-                                                      test_case=self.ctx_test_manager.tc_name)
+            raise test_errors.UnexpectedResponseError(
+                description="Waiting for an ACT OK with downlink counter.",
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str(),
+                test_case=self.ctx_test_manager.tc_name)
 
 
 class ActokFinal(WaitActokStep):
@@ -310,6 +325,7 @@ class ActokFinal(WaitActokStep):
     Expected reception: Activation Ok message (TAOK).
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Process TAOK and finishes test with PASS result if its format is correct."""
         super().step_handler(ch, method, properties, body)
@@ -323,16 +339,18 @@ class WaitConfirmedActOk(WaitActokStep):
     Expected reception: Activation Ok message (TAOK).
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Checks the downlink counter of an Activation Ok message."""
         super().step_handler(ch, method, properties, body)
         lw_message = self.received_testscript_msg.parse_lorawan_message()
         mtype_str = lw_message.mhdr.mtype_str
         if mtype_str not in ('CONFIRMED_UP',):
-            raise test_errors.InteroperabilityError(description="Waiting for a CONFIRMED_UP message.",
-                                                    step_name=self.name,
-                                                    last_message=self.received_testscript_msg.get_printable_str(),
-                                                    test_case=self.ctx_test_manager.tc_name)
+            raise test_errors.InteroperabilityError(
+                description="Waiting for a CONFIRMED_UP message.",
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str(),
+                test_case=self.ctx_test_manager.tc_name)
 
 
 class ActokToPing(WaitActokStep):
@@ -341,6 +359,7 @@ class ActokToPing(WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: Ping message.
     """
+
     def step_handler(self, ch, method, properties, body):
         """
         Pings with the previously configured reception windows lorawan_parameters
@@ -363,7 +382,7 @@ class ActokToPing(WaitActokStep):
                 data_rate=self.ctx_test_manager.device_under_test.loramac_params.rx2_dr,
                 frequency=self.ctx_test_manager.device_under_test.loramac_params.rx2_frequency)
 
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
         self.print_step_info(sending=send_ping)
 
@@ -373,6 +392,7 @@ class ActokToTriggerJoin(WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: Triggers Join Request.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Triggers a Join Request from the DUT after receiving an Activation Ok message."""
         super().step_handler(ch, method, properties, body)
@@ -389,7 +409,7 @@ class ActokToTriggerJoin(WaitActokStep):
                 delay=self.ctx_test_manager.device_under_test.loramac_params.rx2_delay,
                 data_rate=self.ctx_test_manager.device_under_test.loramac_params.rx2_dr,
                 frequency=self.ctx_test_manager.device_under_test.loramac_params.rx2_frequency)
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
         self.ctx_test_manager.device_under_test.set_default_loramac()
         self.print_step_info(sending=tests_parameters.TEST_CODE.TRIGGER_JOIN)
@@ -402,7 +422,9 @@ class CountingStep(WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: None.
     """
-    def __init__(self, ctx_test_manager, step_name, next_step, count_limit, default_rx1_window=True):
+
+    def __init__(self, ctx_test_manager, step_name, next_step, count_limit,
+                 default_rx1_window=True):
         """
         The test will be in this step so next step is a reference to itself.
         It keeps the message count.
@@ -427,6 +449,7 @@ class CountingFinalStep(CountingStep):
     Expected reception: Activation Ok.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Actions performed in this step of the test"""
         super().step_handler(ch, method, properties, body)
@@ -443,6 +466,7 @@ class FrequencyCheck(WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: None.
     """
+
     def __init__(self, ctx_test_manager, step_name, next_step, default_rx1_window=True):
         """
         The test will be in this step so next step is a reference to itself.
@@ -497,6 +521,7 @@ class FrequencyCheckFinal(FrequencyCheck):
     Expected reception: Activation Ok.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         super().step_handler(ch, method, properties, body)
         if all(self.frequencies_to_check.values()):
@@ -512,7 +537,9 @@ class ForbiddenFrequency(WaitActokStep):
     Expected reception: Activation Ok.
     Sends after check: None.
     """
-    def __init__(self, ctx_test_manager, forbiden_freq_list, step_name, next_step, default_rx1_window=True):
+
+    def __init__(self, ctx_test_manager, forbiden_freq_list, step_name, next_step,
+                 default_rx1_window=True):
         """
         The test will be in this step so next step is a reference to itself.
         It keeps the message count.
@@ -561,6 +588,7 @@ class WaitPong(LorawanStep):
     Expected reception: PONG message.
     Sends after check: None.
     """
+
     def __init__(self, ctx_test_manager, step_name, next_step, default_rx1_window=True):
         """
         The expected_bytes attribute MUST be set by a previous step before the handler is called.
@@ -569,7 +597,8 @@ class WaitPong(LorawanStep):
         :param next_step: next step of the test.
         :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
         """
-        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name, next_step=next_step,
+        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name,
+                         next_step=next_step,
                          default_rx1_window=default_rx1_window)
         self.expected_bytes = None
 
@@ -586,22 +615,25 @@ class WaitPong(LorawanStep):
         mtype_str = received_lorawan.mhdr.mtype_str
         if mtype_str in ('UNCONFIRMED_UP', 'UNCONFIRMED_DOWN', 'CONFIRMED_UP', 'CONFIRMED_DOWN'):
             if (received_lorawan.macpayload.fport_int == 224 and
-                    received_frmpayload[0:1] == lorawan.lorawan_parameters.testing.TEST_CODE.PINGPONG):
+                    received_frmpayload[
+                    0:1] == lorawan.lorawan_parameters.testing.TEST_CODE.PINGPONG):
 
                 if not received_frmpayload == self.expected_bytes:
                     raise lorawan_errors.EchoError(
                         description="PONG {0} received when expecting {1}.".format(
-                            utils.bytes_to_text(received_frmpayload),
+                            utils.bytes_to_text(received_frmpayload, sep=""),
                             self.expected_bytes),
                         step_name=self.name,
                         test_case=self.ctx_test_manager.tc_name,
-                        last_message=self.received_testscript_msg.get_printable_str(encryption_key=appskey))
+                        last_message=self.received_testscript_msg.get_printable_str(
+                            encryption_key=appskey))
             else:
                 # If it's a data message, but not a PONG, the FRMPayload is decrypted and showed in the GUI.
                 raise test_errors.UnexpectedResponseError(
                     description="Waiting for a PONG response.",
                     step_name=self.name,
-                    last_message=self.received_testscript_msg.get_printable_str(encryption_key=appskey),
+                    last_message=self.received_testscript_msg.get_printable_str(
+                        encryption_key=appskey),
                     test_case=self.ctx_test_manager.tc_name)
         else:
             raise test_errors.UnexpectedResponseError(description="Waiting for a PONG response.",
@@ -617,6 +649,7 @@ class ProcessPong(WaitPong):
     Expected reception: PONG message.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ PONG message handler, print step info if OK."""
         super().step_handler(ch, method, properties, body)
@@ -630,6 +663,7 @@ class PongFinalStep(WaitPong):
     Expected reception: PONG message.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ PONG message handler, test PASS if PONG is ok."""
         super().step_handler(ch, method, properties, body)
@@ -643,6 +677,7 @@ class PongToPing(WaitPong):
     Expected reception: PONG message.
     Sends after check: None.
     """
+
     def step_handler(self, ch, method, properties, body):
         """ Checks pong and sends a new ping using RX2."""
         super().step_handler(ch, method, properties, body)
@@ -661,7 +696,7 @@ class PongToPing(WaitPong):
                 delay=device.loramac_params.rx2_delay,
                 data_rate=device.loramac_params.rx2_dr,
                 frequency=device.loramac_params.rx2_frequency)
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
         self.print_step_info(sending=send_ping)
 
@@ -673,6 +708,7 @@ class PrintAnyMessage(LorawanStep):
     Expected reception: Any message.
     Sends after check: Test Mode deactivation (FRMPayload plain text 0x00).
     """
+
     def step_handler(self, ch, method, properties, body):
         if not self.received_testscript_msg:
             self.received_testscript_msg = flora_messages.GatewayMessage(json_ttm_str=body.decode())
@@ -692,21 +728,22 @@ class PrintAnyMessage(LorawanStep):
                 delay=end_device.loramac_params.rx2_delay,
                 data_rate=end_device.loramac_params.rx2_dr,
                 frequency=end_device.loramac_params.rx2_frequency)
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
-        received_lorawan = self.received_testscript_msg.parse_lorawan_message(ignore_format_errors=True)
+        received_lorawan = self.received_testscript_msg.parse_lorawan_message(
+            ignore_format_errors=True)
 
         step_report = ui_reports.InputFormBody(
             title="{TC}: Print message".format(TC=self.ctx_test_manager.tc_name.upper()),
             tag_key=self.ctx_test_manager.tc_name,
             tag_value=" ")
 
-        step_report.add_field(ui_reports.ParagraphField(name="Received in Step: {}".format(self.name),
-                                                        value=str(received_lorawan)))
+        step_report.add_field(
+            ui_reports.ParagraphField(name="Received in Step: {}".format(self.name),
+                                      value=str(received_lorawan)))
         step_report.add_field(ui_reports.ParagraphField(name="Sent in Step: {}".format(self.name),
-                                                        value=str(lorawan_parser.LoRaWANMessage(lw_response))))
+                                                        value=str(lorawan_parser.LoRaWANMessage(
+                                                            lw_response))))
         ui_publisher.display_on_gui(msg_str=str(step_report),
                                     key_prefix=message_broker.service_names.test_session_coordinator)
         self.print_step_info(sending=tests_parameters.FRMPAYLOAD.TEST_DEACTIVATE)
-
-

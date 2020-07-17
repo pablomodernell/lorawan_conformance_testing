@@ -7,7 +7,7 @@ down:
 	docker-compose down
 
 stop:
-	docker-compose down
+	docker-compose stop
 
 build:
 	docker-compose build

@@ -37,7 +37,7 @@ from lorawan.lorawan_conformance import test_names
 
 from logger_configurator import LoggerConfigurator
 
-LoggerConfigurator(level="DEBUG")
+LoggerConfigurator(level="INFO")
 logger = logging.getLogger(__name__)
 
 # Load all the modules of the available tests.
@@ -45,7 +45,8 @@ test_modules = dict()
 for test_group in test_names.keys():
     for name in test_names[test_group]:
         test_modules[name] = __import__(
-            "lorawan.lorawan_conformance."+test_group + '.' + name, globals(), locals(), ['object'])
+            "lorawan.lorawan_conformance." + test_group + '.' + name, globals(), locals(),
+            ['object'])
 
 
 def display_agent_tutorial(session_coordinator):
@@ -78,7 +79,7 @@ def display_agent_tutorial(session_coordinator):
         value='e.g. set the UDP port and the IP on local.conf configuration file'))
     agent_display.add_field(ui_reports.ParagraphField(
         name="7-Set AMQP Broker URL:",
-        value='e.g.: export AMQP_URL="'+session_coordinator.amqp_url+'"'))
+        value='e.g.: export AMQP_URL="' + session_coordinator.amqp_url + '"'))
     agent_display.add_field(ui_reports.ParagraphField(
         name="8-Set the IP of the interface listening to the Gateway with the Packet Forwarder (see step 6): ",
         value='e.g.: export PF_IP="XXX.XXX.XXX.XXX"'))
@@ -91,79 +92,83 @@ def display_agent_tutorial(session_coordinator):
 
 def testing_app_main():
     test_session_coordinator = testingtool_services.TestSessionCoordinator()
-    while test_session_coordinator.testingtool_on:
 
-        ui_publisher.testingtool_log(msg_str="\nWaiting for configuration.",
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
-        # >> Display agent instructions: -----------------------------------------------------------------
-        display_agent_tutorial(session_coordinator=test_session_coordinator)
-        # << End agent instructions: --------------------------------------------------------------------
-        test_session_coordinator.ask_configuration_register_device()
-        test_session_coordinator.wait_press_start()
-        result_report = ui_reports.InputFormBody(title="Results summary of the tests.",
-                                                 tag_key="Test",
-                                                 tag_value="Results")
-        try:
-            # for test_name in test_session_coordinator.requested_tests:
-            while test_session_coordinator.test_available():
+    ui_publisher.testingtool_log(msg_str="\nWaiting for configuration.",
+                                 key_prefix=message_broker.service_names.test_session_coordinator)
+    # >> Display agent instructions: -------------------------------------------------------------
+    display_agent_tutorial(session_coordinator=test_session_coordinator)
+    # << End agent instructions: -----------------------------------------------------------------
+    test_session_coordinator.ask_configuration_register_device()
+    test_session_coordinator.wait_press_start()
+    result_report = ui_reports.InputFormBody(title="Results summary of the tests.",
+                                             tag_key="Test",
+                                             tag_value="Results")
+    try:
+        # for test_name in test_session_coordinator.requested_tests:
+        while test_session_coordinator.test_available():
+            try:
                 try:
-                    try:
-                        test_name = test_session_coordinator.pop_next_test_name()
-                        test_module = test_modules[test_name]
-                    except KeyError:
-                        raise test_errors.UnknownTestError(test_name)
-                    ui_publisher.testingtool_log(msg_str="Selected test: {0}".format(test_name),
-                                                 key_prefix=message_broker.service_names.test_session_coordinator)
+                    test_name = test_session_coordinator.pop_next_test_name()
+                    if test_name is None:
+                        break
+                    test_module = test_modules[test_name]
+                except KeyError:
+                    raise test_errors.UnknownTestError(test_name)
+                ui_publisher.testingtool_log(
+                    msg_str="Selected test: {0}".format(test_name),
+                    key_prefix=message_broker.service_names.test_session_coordinator)
 
+                test_session_coordinator.current_test = test_module.TestAppManager(
+                    test_session_coordinator)
+                ui_publisher.testingtool_log(
+                    msg_str="Test manager loaded: {}".format(test_name),
+                    key_prefix=message_broker.service_names.test_session_coordinator)
+                test_session_coordinator.start_testing()
+            ########################################################################
+            # Catch Level 3 Errors
+            ########################################################################
+            except test_errors.TimeOutError as timeout_exception:
+                test_session_coordinator.handle_error(raised_exception=timeout_exception,
+                                                      test_name=test_name,
+                                                      result_report=result_report)
 
-                    test_session_coordinator.current_test = test_module.TestAppManager(test_session_coordinator)
-                    ui_publisher.testingtool_log(msg_str="Test manager loaded: {}".format(test_name),
-                                                 key_prefix=message_broker.service_names.test_session_coordinator)
-                    test_session_coordinator.start_testing()
-                ########################################################################
-                # Catch Level 3 Errors
-                ########################################################################
-                except test_errors.TimeOutError as timeout_exception:
-                    test_session_coordinator.handle_error(raised_exception=timeout_exception,
-                                                          test_name=test_name,
-                                                          result_report=result_report)
+            ########################################################################
+            # Catch Level 2 Errors
+            ########################################################################
+            except test_errors.TestFailError as test_fail_exception:
+                test_session_coordinator.handle_error(raised_exception=test_fail_exception,
+                                                      test_name=test_name,
+                                                      result_report=result_report)
 
-                ########################################################################
-                # Catch Level 2 Errors
-                ########################################################################
-                except test_errors.TestFailError as test_fail_exception:
-                    test_session_coordinator.handle_error(raised_exception=test_fail_exception,
-                                                          test_name=test_name,
-                                                          result_report=result_report)
+            except test_errors.UnknownTestError as unknown_test:
+                test_session_coordinator.handle_error(raised_exception=unknown_test,
+                                                      test_name=test_name,
+                                                      result_report=result_report)
 
-                except test_errors.UnknownTestError as unknown_test:
-                    test_session_coordinator.handle_error(raised_exception=unknown_test,
-                                                          test_name=test_name,
-                                                          result_report=result_report)
+            except test_errors.SessionTerminatedError as session_terminated:
+                test_session_coordinator.handle_error(raised_exception=session_terminated,
+                                                      test_name=test_name,
+                                                      result_report=result_report)
 
-                except test_errors.SessionTerminatedError as session_terminated:
-                    test_session_coordinator.handle_error(raised_exception=session_terminated,
-                                                          test_name=test_name,
-                                                          result_report=result_report)
-
-                    break
-                else:
-                    result_report.add_field(ui_reports.ParagraphField(name=test_name, value="PASS"))
-                finally:
-                    test_session_coordinator.consume_stop()
-
-        finally:
-            test_session_coordinator.consume_stop()
-            test_session_coordinator.channel.close()
-            if not result_report.level == ui_reports.LEVEL_ERR:
-                result_report.level = ui_reports.LEVEL_HL
-                result_report.add_field(ui_reports.ParagraphField(name="TEST VERDICT: PASS", value=" "))
+                break
             else:
-                result_report.add_field(ui_reports.ParagraphField(name="TEST VERDICT: FAIL", value=" "))
+                result_report.add_field(ui_reports.ParagraphField(name=test_name, value="PASS"))
+            finally:
+                test_session_coordinator.consume_stop()
 
-            ui_publisher.display_on_gui(msg_str=str(result_report),
-                                        key_prefix=message_broker.service_names.test_session_coordinator)
-            test_session_coordinator.testingtool_on = False
+    finally:
+        test_session_coordinator.consume_stop()
+        test_session_coordinator.channel.close()
+        if not result_report.level == ui_reports.LEVEL_ERR:
+            result_report.level = ui_reports.LEVEL_HL
+            result_report.add_field(ui_reports.ParagraphField(name="TEST VERDICT: PASS", value=" "))
+        else:
+            result_report.add_field(ui_reports.ParagraphField(name="TEST VERDICT: FAIL", value=" "))
+
+        ui_publisher.display_on_gui(
+            msg_str=str(result_report),
+            key_prefix=message_broker.service_names.test_session_coordinator)
+        test_session_coordinator.testingtool_on = False
 
 
 if __name__ == '__main__':

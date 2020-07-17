@@ -121,6 +121,18 @@ class LoRaMACParameters(object):
         else:
             self.channel_struct = channel_struct
 
+    def to_dict(self):
+        return {
+            "devAddr": self.devaddr.hex(),
+            "appSKey": self.appskey.hex(),
+            "nwkSKey": self.nwkskey.hex(),
+            "RX1 DR Offset": self.rx1_dr_offset,
+            "RX2 DR": self.rx2_dr
+        }
+
+    def __str__(self):
+        return json.dumps(self.to_dict())
+
     @property
     def rx1_delay(self):
         return self._rx1_delay
@@ -343,6 +355,11 @@ class EndDevice(object):
         self.loramac_params.nwkskey = nwkskey
         self.fcnt_up = 0
         self.fcnt_down = 0
+        print("#####################")
+        print("Updating Session")
+        print(f"Old session:\n{str(self.loramac_previous_session)}")
+        print(f"NEW session:\n{str(self.loramac_params)}")
+        print("#####################")
 
     def store_used_devnonce(self, devnonce):
         """
@@ -378,9 +395,12 @@ class EndDevice(object):
 
     def __str__(self):
         retstr = ''
-        retstr += "\tDevAddr: {0}\n".format(utils.bytes_to_text(self.loramac_params.devaddr))
-        retstr += "\tDevEUI: {0}\n".format(utils.bytes_to_text(self.deveui))
-        retstr += "\tAppSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.appskey))
-        retstr += "\tNwkSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.nwkskey))
-        retstr += "\tAppKey: {0}\n".format(utils.bytes_to_text(self.appkey))
+        retstr += "\tDevAddr: {0}\n".format(utils.bytes_to_text(self.loramac_params.devaddr,
+                                                                sep=""))
+        retstr += "\tDevEUI: {0}\n".format(utils.bytes_to_text(self.deveui, sep=""))
+        retstr += "\tAppSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.appskey,
+                                                                sep=""))
+        retstr += "\tNwkSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.nwkskey,
+                                                                sep=""))
+        retstr += "\tAppKey: {0}\n".format(utils.bytes_to_text(self.appkey, sep=""))
         return retstr
