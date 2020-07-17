@@ -46,7 +46,8 @@ class DownlinkScheduler(object):
             try:
                 devnonce = lorawan_msg.macpayload.devnonce_bytes
                 deveui_hex = utils.bytes_to_text(lorawan_msg.macpayload.deveui_bytes).upper()
-                if not self.sessions_handler.is_registered(dev_eui_hex=deveui_hex):
+                appeui_hex = utils.bytes_to_text(lorawan_msg.macpayload.appeui_bytes).upper()
+                if not self.sessions_handler.is_registered(dev_eui_hex=deveui_hex, app_eui_hex=appeui_hex):
                     logger.info(f"Device Not Registered: {deveui_hex}")
                     return
                 jaccept_phypayload = self.sessions_handler.otta_join(

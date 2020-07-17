@@ -58,7 +58,7 @@ class SPFBridge(object):
     - *PF_IP*
     - *PF_UDP_PORT*
     """
-    VERSION = b"\x02"
+    VERSION = b"\x01"
     PUSH_DATA_ID = b"\x00"
     PUSH_ACK_ID = b"\x01"
     PULL_DATA_ID = b"\x02"

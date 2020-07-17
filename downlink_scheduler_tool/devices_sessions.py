@@ -155,8 +155,12 @@ class DevicesSessionHandler(object):
         self._devices = dev_data.devices_to_configure
         self._active_sessions = {}
 
-    def is_registered(self, dev_eui_hex):
-        return dev_eui_hex in self._devices
+    def is_registered(self, dev_eui_hex, app_eui_hex=None):
+        if dev_eui_hex not in self._devices:
+            return False 
+        if not app_eui_hex or "appeui" not in self._devices[dev_eui_hex]:
+            return True 
+        return self._devices[dev_eui_hex]["appeui"] == app_eui_hex
 
     def has_active_session(self, dev_eui_hex):
         return dev_eui_hex in self._active_sessions
