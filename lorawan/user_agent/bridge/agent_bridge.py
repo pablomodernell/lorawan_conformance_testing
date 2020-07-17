@@ -41,7 +41,7 @@ from parameters.message_broker import routing_keys
 from lorawan.parsing.flora_messages import GatewayMessage
 
 
-class SPFBridge(message_queueing.MqInterface):
+class SPFBridge(object):
     """
     Semtech Packet Forwarder (SPF) Bridge.
     The Bride service running in the agent (user side) is in charge of listening to the uplink messages from the
@@ -80,9 +80,12 @@ class SPFBridge(message_queueing.MqInterface):
         self.udp_listener = udp_listener.UDPListener(self)
         self._ready_to_downlink = False
         self.last_uplink_time = None
-        self.declare_and_consume(queue_name='down_nwk',
-                                 routing_key=message_broker.routing_keys.toAgent+'.#',
-                                 callback=self.process_dlmsg)
+        self.uplink_mq_interface = message_queueing.MqInterface()
+        self.downlink_mq_interface = message_queueing.MqInterface()
+        self.downlink_mq_interface.declare_and_consume(
+            queue_name='down_nwk',
+            routing_key=message_broker.routing_keys.toAgent + '.#',
+            callback=self.process_dlmsg)
 
     @property
     def gateway_dl_addr(self):
@@ -132,12 +135,14 @@ class SPFBridge(message_queueing.MqInterface):
             print("----------<<<<<<<<<<<<<<\n----------<<<<<<<<<<<<<<\n")
 
         else:
-            print("Agent Bridge NOT ready to downlink: waiting for a PULL_DATA message from the gateway.")
+            print(
+                "Agent Bridge NOT ready to downlink: waiting for a PULL_DATA  from the gateway.")
 
     def process_uplink_data(self):
         """
         Uplink message handler.
-        When a UDP message is received with an uplink message from the gateway, it is sent to the broker using the
+        When a UDP message is received with an uplink message from the gateway,
+        it is sent to the broker using the
         right routing key.
         :return: None
         """
@@ -159,9 +164,9 @@ class SPFBridge(message_queueing.MqInterface):
             if len(data_msg_list) > 0:
                 for packet in data_msg_list:
                     # packet[0]: the decoded data
-                    # packet[1]: the json formatted string that contains the decoded data in it's data field.
-                    self.publish(msg=packet[1],
-                                 routing_key=routing_keys.fromAgent+'.gw1')
+                    # packet[1]: the json string with the decoded data in it's data field.
+                    self.uplink_mq_interface.publish(msg=packet[1],
+                                                     routing_key=routing_keys.fromAgent + '.gw1')
                     print("Sending UpLink: {0}\n".format(packet[1]))
                     print(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
             received_msg.print_stats()
@@ -212,12 +217,9 @@ class SPFBridge(message_queueing.MqInterface):
         :param json_bytes: byte sequence to be sent in the payload of a SPF PULL_RESP message.
         :return: None.
         """
-        message = SPFBridge.VERSION + struct.pack('>H', random.randint(0, 2 ** 16 - 1)) + SPFBridge.PULL_RESP_ID
+        message = SPFBridge.VERSION + struct.pack('>H', random.randint(0,
+                                                                       2 ** 16 - 1)) + SPFBridge.PULL_RESP_ID
         self.send_dl_raw(message + json_bytes)
 
-
-
-
-
-
-
+    def start_listening_downlink(self):
+        self.downlink_mq_interface.consume_start()

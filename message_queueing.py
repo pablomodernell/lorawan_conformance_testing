@@ -31,10 +31,7 @@ import pika.exceptions
 
 mq_broker_url = os.environ.get('AMQP_URL')
 params = pika.URLParameters(mq_broker_url)
-try:
-    mq_connection = pika.BlockingConnection(params)
-except pika.exceptions.ConnectionClosed as conn_closed:
-    mq_connection = None
+
 
 DEFAULT_EXCHANGE = 'amq.topic'
 
@@ -49,24 +46,16 @@ class MqInterface(object):
         """
         global mq_broker_url
         global params
-        global mq_connection
         self.amqp_url = mq_broker_url
-        if mq_connection and mq_connection.is_open:
-            self._connection = mq_connection
-        else:
-            self._connection = pika.BlockingConnection(params)
+        self._connection = pika.BlockingConnection(params)
         self._channel = self.connection.channel()
         self._knownQueues = []
         self._knownExchanges = []
 
     @property
     def connection(self):
-        global mq_connection
-        if mq_connection and mq_connection.is_open:
-            self._connection = mq_connection
-        else:
-            mq_connection = pika.BlockingConnection(params)
-            self._connection = mq_connection
+        if not (self._connection and self._connection.is_open):
+            self._connection = pika.BlockingConnection(params)
         return self._connection
 
     @property

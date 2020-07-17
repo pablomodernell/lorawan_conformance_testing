@@ -40,23 +40,27 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
 
     PRECONDITION: DUT (Device Under Test) is already in TEST MODE.
     """
+
     def __init__(self, test_session_coordinator):
         super().__init__(test_name=__name__.split(".")[-1],
                          ctx_test_session_coordinator=test_session_coordinator)
-        # ------------------------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------------------
         # Step 3, counting: waiting for activation ok message to check downlink.
-        self.s3_count_finalstep = lorawan_steps.CountingFinalStep(ctx_test_manager=self, step_name="S3CountFinalStep",
+        self.s3_count_finalstep = lorawan_steps.CountingFinalStep(ctx_test_manager=self,
+                                                                  step_name="S3CountFinalStep",
                                                                   next_step=None,
                                                                   count_limit=2)
-        self.add_step_description(step_name="Step 3: S3CountFinalStep.",
-                                  description=(
-                                      "Count a predefined amount (2) of TAOK messages.\n"
-                                      "- Reception from DUT: TAOK message with the downlink counter.\n"
-                                      "- TAS sends:  None.\n"))
+        self.add_step_description(
+            step_name="Step 3: S3CountFinalStep.",
+            description=(
+                "Count a predefined amount (2) of TAOK messages.\n"
+                "- Reception from DUT: TAOK message with the downlink counter.\n"
+                "- TAS sends:  None.\n"))
 
-        # ------------------------------------------------------------------------------------------------
-        # Step 2, waiting pong response: the test is waiting for test accepted app message in port 224.
-        self.s2_pong_to_count = lorawan_steps.ProcessPong(ctx_test_manager=self, step_name="S2ProcessPong",
+        # -----------------------------------------------------------------------------------------
+        # Step 2, PONG response: the test is waiting for test accepted app message in port 224.
+        self.s2_pong_to_count = lorawan_steps.ProcessPong(ctx_test_manager=self,
+                                                          step_name="S2ProcessPong",
                                                           next_step=self.s3_count_finalstep)
         self.add_step_description(step_name="Step 2: S2ProcessPong",
                                   description=(
@@ -64,27 +68,28 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
                                       "- Reception from DUT: PONG message.\n"
                                       "- TAS sends:  None.\n"))
 
-        # ------------------------------------------------------------------------------------------------
-        # Step 1, waiting actok: the test is waiting for an Activation OK message with the downlink counter
-        self.s1_actok_to_ping = lorawan_steps.ActokToPing(ctx_test_manager=self, step_name="S1ActokToPing",
+        # -----------------------------------------------------------------------------------------
+        # Step 1, TAOK: the test is waiting for an Activation OK message with the downlink counter
+        self.s1_actok_to_ping = lorawan_steps.ActokToPing(ctx_test_manager=self,
+                                                          step_name="S1ActokToPing",
                                                           next_step=self.s2_pong_to_count,
                                                           default_rx1_window=True)
-        self.add_step_description(step_name="Step 1: S1ActokToPing",
-                                  description=(
-                                      "Waits for a TAOK (Activation Ok) message with the current downlink counter of "
-                                      "the session and after it's received a PING PONG exchange will be initiated.\n"
-                                      "- Reception from DUT: TAOK message with the downlink counter.\n"
-                                      "- TAS sends: PING message.\n"))
+        self.add_step_description(
+            step_name="Step 1: S1ActokToPing",
+            description=(
+                "Waits for a TAOK (Activation Ok) message with the current downlink counter of "
+                "the session and after it's received a PING PONG exchange will be initiated.\n"
+                "- Reception from DUT: TAOK message with the downlink counter.\n"
+                "- TAS sends: PING message.\n"))
 
-        # ------------------------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------------------
         # Set Initial Step
         self.current_step = self.s1_actok_to_ping
-        self.add_step_description(step_name="Test ID: TD_LoRaWAN_FUN_01",
-                                  description=(
-                                      "Objective: Basic test application functionality with a message exchange. "
-                                      "Initiates a PING PONG echo exchange and verifies the TAOK downlink counter.\n"
-                                      "References: LoRaWAN Specification v1.0.2.\n"
-                                      "Pre-test conditions: The DUT has an active session with the TAS and "
-                                      "is in Test Mode.\n"))
-
-
+        self.add_step_description(
+            step_name="Test ID: TD_LoRaWAN_FUN_01",
+            description=(
+                "Objective: Basic test application functionality with a message exchange. "
+                "Initiates a PING PONG echo exchange and verifies the TAOK downlink counter.\n"
+                "References: LoRaWAN Specification v1.0.2.\n"
+                "Pre-test conditions: The DUT has an active session with the TAS and "
+                "is in Test Mode.\n"))

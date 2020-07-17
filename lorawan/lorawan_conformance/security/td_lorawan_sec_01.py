@@ -31,9 +31,11 @@ import conformance_testing.test_step_sequence
 
 
 class RepeatedPingPong(lorawan_steps.PongToPing):
-    def __init__(self, ctx_test_manager, step_name, next_step, count_limit, default_rx1_window=True):
+    def __init__(self, ctx_test_manager, step_name, next_step, count_limit,
+                 default_rx1_window=True):
         """
-        Repeated PING PONG exchanges are initiated by the TAS to check the implementation of the cryptography mechanism.
+        Repeated PING PONG exchanges are initiated by the TAS to check the implementation of the
+        cryptography mechanism.
         Expected reception: PONG message (response of a previously sent PING).
         Sends after check: PING message.
         """
@@ -66,58 +68,61 @@ class ProcessPongFinal(lorawan_steps.ProcessPong):
 
 class TestAppManager(conformance_testing.test_step_sequence.TestManager):
     """
-    The TestAppManager (Test Application Manager) is a TestManager defined in each test, it specifies the
-    different steps that the test performs.
+    The TestAppManager (Test Application Manager) is a TestManager defined in each test,
+    it specifies the different steps that the test performs.
 
-    LoRaWAN Test SEC 01: Test the encryption of the LoRaWAN data messages by the exchange of PING PONG echo messages.
+    LoRaWAN Test SEC 01:
+    Test the encryption of the LoRaWAN data messages by the exchange of PING PONG echo messages.
     """
 
     def __init__(self, test_session_coordinator):
         super().__init__(test_name=__name__.split(".")[-1],
                          ctx_test_session_coordinator=test_session_coordinator)
 
-        # ------------------------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------------------
         # Step 3, waiting pong: verifies the last pong response.
         self.s3_pong_finalstep = ProcessPongFinal(ctx_test_manager=self,
                                                   step_name="S3PongFinal", next_step=None)
-        self.add_step_description(step_name="Step 3: S3PongFinal.",
-                                  description=(
-                                      "Verifies the last PONG message, if it is correct the test case result is PASS.\n"
-                                      "- Reception from DUT: PONG message (response of a previously sent PING).\n"
-                                      "- TAS sends: None.\n"))
+        self.add_step_description(
+            step_name="Step 3: S3PongFinal.",
+            description=(
+                "Verifies the last PONG message, if it is correct the test case result is PASS.\n"
+                "- Reception from DUT: PONG message (response of a previously sent PING).\n"
+                "- TAS sends: None.\n"))
 
-        # ------------------------------------------------------------------------------------------------
-        # Step 2, waiting test accept: the test is waiting for test accepted app message in port 224.
+        # -----------------------------------------------------------------------------------------
+        # Step 2, TAOK: the test is waiting for test accepted app message in port 224.
         self.s2_repeat_pongtoping = RepeatedPingPong(ctx_test_manager=self,
                                                      step_name="S2RepeatedPingPong",
                                                      next_step=self.s3_pong_finalstep,
                                                      count_limit=10,
                                                      default_rx1_window=True)
-        self.add_step_description(step_name="Step : _",
-                                  description=(
-                                      "Initiates 10 PING PONG exchanges to check the cryptography implementation.\n"
-                                      "- Reception from DUT: PONG message (response of a previously sent PING).\n"
-                                      "- TAS sends: PING message.\n"))
+        self.add_step_description(
+            step_name="Step : _",
+            description=(
+                "Initiates 10 PING PONG exchanges to check the cryptography implementation.\n"
+                "- Reception from DUT: PONG message (response of a previously sent PING).\n"
+                "- TAS sends: PING message.\n"))
 
-        # ------------------------------------------------------------------------------------------------
-        # Step 1, waiting any: the test is waiting for any data packet to arrive in a port different from 0
+        # -----------------------------------------------------------------------------------------
+        # Step 1: the test is waiting for any data packet to arrive in a port different from 0
         self.s1_actok_to_ping = lorawan_steps.ActokToPing(ctx_test_manager=self,
                                                           step_name="S1ActokToPing",
                                                           next_step=self.s2_repeat_pongtoping)
-        self.add_step_description(step_name="Step 1: S1ActokToPing",
-                                  description=(
-                                      "Wait an ACT OK from the DUT to initate a PING PONG exchange.\n"
-                                      "- Reception from DUT: TAOK message with the downlink counter.\n"
-                                      "- TAS sends: PING message.\n"))
+        self.add_step_description(
+            step_name="Step 1: S1ActokToPing",
+            description=(
+                "Wait an ACT OK from the DUT to initate a PING PONG exchange.\n"
+                "- Reception from DUT: TAOK message with the downlink counter.\n"
+                "- TAS sends: PING message.\n"))
 
-        # ------------------------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------------------
         # Set Initial Step
         self.current_step = self.s1_actok_to_ping
-        self.add_step_description(step_name="Test ID: TD_LoRaWAN_SEC_01",
-                                  description=(
-                                      "Objective: Test the encryption of the LoRaWAN data messages by the exchange "
-                                      "of PING PONG echo messages.\n"
-                                      "References: LoRaWAN Specification v1.0.2.\n"
-                                      "Pre-test conditions: The DUT is in Test Mode.\n"))
-
-
+        self.add_step_description(
+            step_name="Test ID: TD_LoRaWAN_SEC_01",
+            description=(
+                "Objective: Test the encryption of the LoRaWAN data messages by the exchange "
+                "of PING PONG echo messages.\n"
+                "References: LoRaWAN Specification v1.0.2.\n"
+                "Pre-test conditions: The DUT is in Test Mode.\n"))

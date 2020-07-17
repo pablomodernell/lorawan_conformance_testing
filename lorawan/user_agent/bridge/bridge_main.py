@@ -33,6 +33,7 @@ from logger_configurator import LoggerConfigurator
 LoggerConfigurator(level="DEBUG")
 logger = logging.getLogger(__name__)
 
+
 @click.command()
 def agent_main():
     """ Agent Bridge service entry point."""
@@ -41,7 +42,7 @@ def agent_main():
     spf_bridge.listen_spf()
     spf_bridge.downlink_ready_semaphore.acquire()
     logger.info("Ready to forward.")
-    spf_bridge.consume_start()
+    spf_bridge.start_listening_downlink()
 
 
 if __name__ == '__main__':
