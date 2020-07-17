@@ -32,6 +32,7 @@ clean:
 
 build_scheduler: clean
 	@cp -r ~/.ssh .
+	install -C -m 777 downlink_scheduler_tool/devices_data.py.example downlink_scheduler_tool/devices_data.py
 	docker build -f Dockerfile.scheduler -t $(DOCKER_NAME_SCH_FULL) .
 	docker build -f Dockerfile.agent -t $(DOCKER_NAME_AGENT_FULL) .
 	@rm -r .ssh
