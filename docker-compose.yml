@@ -77,7 +77,7 @@ services:
     expose:
       - "1700"
     ports:
-      - "1700:1700/upd"
+      - "1700:1700/udp"
     restart: on-failure
     command: ["cl_start_bridge"]
 
