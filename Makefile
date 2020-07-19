@@ -23,6 +23,9 @@ bootstrap_test_session:
 launch_test_session: bootstrap_test_session
 	docker-compose up -d test-application-server
 
+start_agent: launch_test_session
+	docker-compose up -d agent
+
 agent_mock_logs:
 	docker logs $(docker-compose ps -q agent-mock) -f
 
