@@ -104,17 +104,17 @@ services:
     restart: on-failure
     command: ["python3", "/config_scheduler/downlink_scheduler_tool/config_scheduler_main.py"]
 
-    agent-scheduler:
-      depends_on:
-        - message-broker
-      image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.1-cmt_rejoin_fix_dev
-      volumes:
-        - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
-      env_file:
-        - env_var
-      expose:
-        - "1700"
-      ports:
-        - "17000:1700/udp"
-      restart: on-failure
-      command: ["python3", "/agent_mock/lorawan/user_agent/bridge/bridge_main.py"]
+  agent-scheduler:
+    depends_on:
+      - message-broker
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.1-cmt_rejoin_fix_dev
+    volumes:
+      - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
+    env_file:
+      - env_var
+    expose:
+      - "1700"
+    ports:
+      - "17000:1700/udp"
+    restart: on-failure
+    command: ["python3", "/agent_mock/lorawan/user_agent/bridge/bridge_main.py"]
