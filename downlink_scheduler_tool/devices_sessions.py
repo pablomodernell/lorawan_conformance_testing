@@ -23,6 +23,8 @@ class DeviceSession(Base):
     dev_addr_hex = sqla.Column(sqla.String, nullable=True)
     nwk_s_key_hex = sqla.Column(sqla.String, nullable=True)
     app_s_key_hex = sqla.Column(sqla.String, nullable=True)
+    last_join_accept_hex = sqla.Column(sqla.String, nullable=True)
+    used_otaa_devnonces_hex = sqla.Column(sqla.String, nullable=True)
     fcnt_down = sqla.Column(sqla.Integer, nullable=False)
 
     def __init__(self, dev_eui_hex, appkey_hex, dev_addr_hex=None, app_s_key_hex=None,
@@ -33,9 +35,10 @@ class DeviceSession(Base):
         self.app_s_key_hex = app_s_key_hex
         self.nwk_s_key_hex = nwk_s_key_hex
         self.fcnt_down = fcnt_down
+        self.last_join_accept_hex = None
+        self.used_otaa_devnonces_hex = None
 
         self._used_otaa_appnonces = []
-        self._used_otaa_devnonces = []
 
         self.default_dr = lorawan_parameters.LORA_DR.DR5,
         self.rx1_dr_offset = lorawan_parameters.DR_OFFSET.RX1_DEFAULT,
@@ -60,16 +63,27 @@ class DeviceSession(Base):
         self._used_otaa_appnonces.append(nonce)
         return nonce
 
-    def store_used_devnonce(self, devnonce):
+    def get_used_devnoce_hex_list(self):
+        return self.used_otaa_devnonces_hex.split(",")
+
+    def get_last_devnonce_hex(self):
+        return self.get_used_devnoce_hex_list()[-1]
+
+    def store_used_devnonce(self, devnonce_bytes):
         """
         (EndDevice, int) -> (None)
         Store the used device nonce to avoid repeated use of the same value and prevent replay attacks.
         :param devnonce: (int) Value to store as a used device nonce.
         :return: None
         """
-        if devnonce in self._used_otaa_devnonces:
+        devnonce_hex_new = utils.bytes_to_text(devnonce_bytes)
+        devnonce_hex_list = self.get_used_devnoce_hex_list
+        if devnonce_hex_new in devnonce_hex_list:
             raise scheduler_errors.DuplicatedNonce()
-        self._used_otaa_devnonces.append(devnonce)
+        if len(devnonce_hex_list) > 3:
+            devnonce_hex_list = devnonce_hex_list[1:]
+        devnonce_hex_list.append(devnonce_hex_new)
+        self.used_otaa_devnonces_hex = ",".join(devnonce_hex_list)
 
     def accept_join(self, devnonce, dlsettings, rxdelay, cflist):
         """
@@ -115,7 +129,7 @@ class DeviceSession(Base):
         seconds_delay = max(1, (int.from_bytes(rxdelay, byteorder='big') & 0x0f))
         self.rx1_delay = seconds_delay * lorawan_parameters.TIMING.MS_IN_SEC
 
-        return join_accept_phypayload
+        self.last_join_accept_hex = utils.bytes_to_text(join_accept_phypayload)
 
     def update_device_session(self, devaddr_hex, appskey_hex, nwkskey_hex):
         self.dev_addr_hex = devaddr_hex
@@ -249,15 +263,37 @@ class DevicesSessionHandler(object):
             app_s_key_hex = dev_session.app_s_key_hex
         return app_s_key_hex
 
-    def otta_join(self, deveui_hex, devnonce, dlsettings, rxdelay, cflist):
-        appkey_hex = self._devices[deveui_hex]["appkey"]
-        logger.info(f"Activating device: {deveui_hex}")
-        if not self.has_active_session(dev_eui_hex=deveui_hex):
-            self._active_sessions[deveui_hex] = DeviceSession(dev_eui_hex=deveui_hex,
-                                                              appkey_hex=appkey_hex)
-        joinaccept_phypayload = self._active_sessions[deveui_hex].accept_join(
-            devnonce=devnonce, dlsettings=dlsettings, rxdelay=rxdelay, cflist=cflist)
-        return joinaccept_phypayload
+    def process_otta_join(self, deveui_hex, devnonce, dlsettings, rxdelay, cflist):
+        try:
+            appkey_hex = self._devices[deveui_hex]["appkey"]
+            dev_session = self.query_dev_eui_hex(dev_eui_hex=deveui_hex)
+            if dev_session is None:
+                dev_session = DeviceSession(dev_eui_hex=deveui_hex,
+                                            appkey_hex=appkey_hex)
+                logger.info(
+                    f"Creating first session for: {deveui_hex}")
+                self.session.add(dev_session)
+            dev_session.accept_join(
+                devnonce=devnonce, dlsettings=dlsettings, rxdelay=rxdelay, cflist=cflist)
+        except Exception:
+            logger.error(f"Error creating session for device {deveui_hex}.")
+        else:
+            self.session.commit()
+
+    def get_joinaccept_bytes(self, deveui_hex):
+        dev_session = self.query_dev_eui_hex(dev_eui_hex=deveui_hex)
+        if dev_session is None:
+            logger.error(f"Error getting Join Accept, no session for device {deveui_hex}.")
+            return
+        join_accept_hex = dev_session.last_join_accept_hex
+        if join_accept_hex is None:
+            logger.error(f"No Join Accept generated for device {deveui_hex}.")
+            return
+        return bytes.fromhex(join_accept_hex)
 
     def prepare_lorawan_data(self, dev_eui_hex, frmpayload):
-        return self._active_sessions[dev_eui_hex].prepare_lorawan_data(frmpayload=frmpayload)
+        dev_session = self.query_dev_eui_hex(dev_eui_hex=dev_eui_hex)
+        if dev_session is None:
+            logger.error(f"Error Preparing DATA, no session for device {dev_eui_hex}.")
+            return
+        return dev_session.prepare_lorawan_data(frmpayload=frmpayload)

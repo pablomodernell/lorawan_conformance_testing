@@ -48,14 +48,17 @@ class DownlinkScheduler(object):
                 devnonce = lorawan_msg.macpayload.devnonce_bytes
                 deveui_hex = utils.bytes_to_text(lorawan_msg.macpayload.deveui_bytes).upper()
                 appeui_hex = utils.bytes_to_text(lorawan_msg.macpayload.appeui_bytes).upper()
-                if not self.sessions_handler.is_registered(dev_eui_hex=deveui_hex, app_eui_hex=appeui_hex):
+                if not self.sessions_handler.is_registered(dev_eui_hex=deveui_hex,
+                                                           app_eui_hex=appeui_hex):
                     logger.info(f"Device Not Registered: {deveui_hex}")
                     return
-                jaccept_phypayload = self.sessions_handler.otta_join(
-                    deveui_hex, devnonce=devnonce,
+                self.sessions_handler.process_otta_join(
+                    deveui_hex=deveui_hex, devnonce=devnonce,
                     dlsettings=self.accept_dlsettings,
                     rxdelay=self.accept_rxdelay,
                     cflist=self.accept_cflist)
+                jaccept_phypayload = self.sessions_handler.get_joinaccept_bytes(
+                    deveui_hex=deveui_hex)
                 json_nwk_response = received_testscript_msg.create_nwk_response_str(
                     phypayload=jaccept_phypayload,
                     delay=lorawan_parameters.TIMING.JOIN_ACCEPT_DELAY1,
@@ -68,7 +71,7 @@ class DownlinkScheduler(object):
                 logger.info(f"Ignoring Duplicated nonce {devnonce}")
         elif lorawan_msg.mhdr.mhdr_bytes == lorawan_parameters.MHDR.UNCONFIRMED_UP:
             devaddrhex = utils.bytes_to_text(lorawan_msg.macpayload.fhdr.devaddr_bytes).upper()
-            network_key = self.sessions_handler.get_nwk_s_key(dev_addr_hex=devaddrhex)
+            network_key = self.sessions_handler.get_nwk_s_key_hex(dev_addr_hex=devaddrhex)
             if network_key is None:
                 logger.info(f"No active session for device: {devaddrhex}")
                 return
@@ -77,7 +80,7 @@ class DownlinkScheduler(object):
             if not lorawan_msg.mic_bytes == calculated_mic:
                 logger.info(
                     f"Wrong MIC. Expecting {calculated_mic}, Device {dev_eui_hex} ({devaddrhex}).")
-            logger.info(f"Verified MIC using NwkSKey: {utils.bytes_to_text(network_key)}")
+            logger.info(f"MIC OK (NwkSKey: {utils.bytes_to_text(network_key)}, dev {dev_eui_hex})")
 
             frmpayload_command = bytes.fromhex(
                 self.sessions_handler.get_command_hex(dev_addr_hex=devaddrhex))
