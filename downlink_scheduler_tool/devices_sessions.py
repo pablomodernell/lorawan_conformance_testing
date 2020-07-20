@@ -219,7 +219,7 @@ class DevicesSessionHandler(object):
 
     def query_dev_addr_hex(self, dev_addr_hex):
         return self.session.query(DeviceSession).filter(
-            DeviceSession.dev_addr_hex == dev_addr_hex).all()
+            DeviceSession.dev_addr_hex == dev_addr_hex).first()
 
     def is_registered(self, dev_eui_hex, app_eui_hex=None):
         if dev_eui_hex not in self._devices:

@@ -112,6 +112,8 @@ services:
     image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.2-cmt_rejoin_persistence
     volumes:
       - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
+    environment:
+      PACKET_FORWARDER_VERSION_INT: 2
     env_file:
       - env_var
     expose:

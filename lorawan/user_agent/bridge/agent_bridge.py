@@ -43,6 +43,8 @@ from lorawan.parsing.flora_messages import GatewayMessage
 
 logger = logging.getLogger(__name__)
 
+PACKET_FORWARDER_VERSION_INT = int(os.environ.get('PACKET_FORWARDER_VERSION_INT'))
+
 
 class SPFBridge(object):
     """
@@ -58,7 +60,7 @@ class SPFBridge(object):
     - *PF_IP*
     - *PF_UDP_PORT*
     """
-    VERSION = b"\x01"
+    VERSION = bytes([PACKET_FORWARDER_VERSION_INT])
     PUSH_DATA_ID = b"\x00"
     PUSH_ACK_ID = b"\x01"
     PULL_DATA_ID = b"\x02"

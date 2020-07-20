@@ -71,10 +71,11 @@ class DownlinkScheduler(object):
                 logger.info(f"Ignoring Duplicated nonce {devnonce}")
         elif lorawan_msg.mhdr.mhdr_bytes == lorawan_parameters.MHDR.UNCONFIRMED_UP:
             devaddrhex = utils.bytes_to_text(lorawan_msg.macpayload.fhdr.devaddr_bytes).upper()
-            network_key = self.sessions_handler.get_nwk_s_key_hex(dev_addr_hex=devaddrhex)
-            if network_key is None:
+            network_key_hex = self.sessions_handler.get_nwk_s_key_hex(dev_addr_hex=devaddrhex)
+            if network_key_hex is None:
                 logger.info(f"No active session for device: {devaddrhex}")
                 return
+            network_key = bytes.fromhex(network_key_hex)
             calculated_mic = lorawan_msg.calculate_mic(key=network_key)
             dev_eui_hex = self.sessions_handler.get_dev_eui_hex(dev_addr_hex=devaddrhex)
             if not lorawan_msg.mic_bytes == calculated_mic:
