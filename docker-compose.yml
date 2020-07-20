@@ -10,7 +10,7 @@ services:
     image: rabbitmq:3-management
     volumes:
       - ./docker_images/rabbitmq/config:/etc/rabbitmq/:ro
-      - volume_message-broker:/var/lib/rabbitmq
+#      - volume_message-broker:/var/lib/rabbitmq
     hostname: message-broker
     expose:
       - "1883"
@@ -114,7 +114,7 @@ services:
     volumes:
       - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
     environment:
-      PACKET_FORWARDER_VERSION_INT: 2
+      PACKET_FORWARDER_VERSION_INT: 1
     env_file:
       - env_var
     expose:
