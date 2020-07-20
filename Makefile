@@ -4,7 +4,7 @@ NAME_SCH=downlink-configure
 NAME_AGENT=pmodernell-conformance-agent
 DOCKER_NAME_SCH=eu.gcr.io/engineering-test-197116/$(NAME_SCH)
 DOCKER_NAME_AGENT=eu.gcr.io/engineering-test-197116/$(NAME_AGENT)
-VERSION=0.1.2-cmt_rejoin_persistence
+VERSION=0.1.3-cmt_rejoin_persistence
 DOCKER_NAME_SCH_FULL=$(DOCKER_NAME_SCH):$(VERSION)
 DOCKER_NAME_AGENT_FULL=$(DOCKER_NAME_AGENT):$(VERSION)
 DOCKER_VOLUME=$(shell pwd)
@@ -60,5 +60,5 @@ publish_scheduler: build_scheduler
 	@docker push $(DOCKER_NAME_AGENT_FULL)
 
 config_scheduler:
-	docker-compose up -d message-broker agent-scheduler config-scheduler
+	docker-compose up -d message-broker postgres agent-scheduler config-scheduler
 
