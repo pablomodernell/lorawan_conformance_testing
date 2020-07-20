@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class DownlinkScheduler(object):
     def __init__(self,
+                 db_config,
                  accept_dlsettings=lorawan_parameters.DLSETTINGS.RX1OFFSET0_RX2DR0,
                  accept_rxdelay=lorawan_parameters.JOIN_ACCEPT_RXDELAY.DELAY0,
                  accept_cflist=lorawan_parameters.JOIN_ACCEPT_CFLIST.NO_CHANNELS):
@@ -23,7 +24,7 @@ class DownlinkScheduler(object):
         self.downlink_mq_interface = message_queueing.MqPublisher(
             routing_key=routing_keys.fromAgentToScheduler)
 
-        self.sessions_handler = devices_sessions.DevicesSessionHandler()
+        self.sessions_handler = devices_sessions.DevicesSessionHandler(db_config=db_config)
         self.accept_dlsettings = accept_dlsettings
         self.accept_rxdelay = accept_rxdelay
         self.accept_cflist = accept_cflist

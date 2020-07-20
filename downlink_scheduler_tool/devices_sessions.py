@@ -1,3 +1,4 @@
+import logging
 import struct
 import random
 import utils
@@ -5,18 +6,32 @@ import downlink_scheduler_tool.scheduler_errors as scheduler_errors
 import downlink_scheduler_tool.devices_data as dev_data
 import lorawan.lorawan_parameters.general as lorawan_parameters
 
-import logging
+import sqlalchemy as sqla
+from sqlalchemy.ext.declarative import declarative_base
+from postgresclient import db_utils
+
+Base = declarative_base()
 
 logger = logging.getLogger(__name__)
 
 
-class DeviceSession(object):
-    def __init__(self, dev_eui, appkey, dev_addr=None, app_s_key=None, nwk_s_key=None, fcnt_down=0):
-        self.dev_eui = dev_eui
-        self.appkey = appkey
-        self.dev_addr = dev_addr
-        self.app_s_key = app_s_key
-        self.nwk_s_key = nwk_s_key
+class DeviceSession(Base):
+    __tablename__ = "device_session_config"
+
+    dev_eui_hex = sqla.Column(sqla.String, nullable=False, index=True, primary_key=True)
+    appkey_hex = sqla.Column(sqla.String, nullable=False)
+    dev_addr_hex = sqla.Column(sqla.String, nullable=True)
+    nwk_s_key_hex = sqla.Column(sqla.String, nullable=True)
+    app_s_key_hex = sqla.Column(sqla.String, nullable=True)
+    fcnt_down = sqla.Column(sqla.Integer, nullable=False)
+
+    def __init__(self, dev_eui_hex, appkey_hex, dev_addr_hex=None, app_s_key_hex=None,
+                 nwk_s_key_hex=None, fcnt_down=0):
+        self.dev_eui_hex = dev_eui_hex
+        self.appkey_hex = appkey_hex
+        self.dev_addr_hex = dev_addr_hex
+        self.app_s_key_hex = app_s_key_hex
+        self.nwk_s_key_hex = nwk_s_key_hex
         self.fcnt_down = fcnt_down
 
         self._used_otaa_appnonces = []
@@ -74,20 +89,25 @@ class DeviceSession(object):
         netid = struct.pack(">L", netid_int)[-3:]
         appnonce_netid_devnonce = appnonce + netid[::-1] + devnonce[::-1]
 
-        nwkskey = utils.aes128_encrypt(self.appkey, b'\x01' + appnonce_netid_devnonce + bytes(7))
-        appskey = utils.aes128_encrypt(self.appkey, b'\x02' + appnonce_netid_devnonce + bytes(7))
+        appkey_bytes = bytes.fromhex(self.appkey_hex)
+        nwkskey = utils.aes128_encrypt(appkey_bytes, b'\x01' + appnonce_netid_devnonce + bytes(7))
+        appskey = utils.aes128_encrypt(appkey_bytes, b'\x02' + appnonce_netid_devnonce + bytes(7))
         logger.info(f"AppSKey: {utils.bytes_to_text(appskey)}")
         logger.info(f"NwkSKey: {utils.bytes_to_text(nwkskey)}")
         self.store_used_devnonce(devnonce)
         macpayload = appnonce + netid[::-1] + devaddr[::-1] + dlsettings + rxdelay + cflist
         mhdr_macpayload = lorawan_parameters.MHDR.JOIN_ACCEPT + macpayload
-        mic = utils.aes128_cmac(self.appkey, mhdr_macpayload)[:4]
+        mic = utils.aes128_cmac(appkey_bytes, mhdr_macpayload)[:4]
 
         join_accept_phypayload = (lorawan_parameters.MHDR.JOIN_ACCEPT +
-                                  utils.aes128_decrypt(key=self.appkey,
+                                  utils.aes128_decrypt(key=appkey_bytes,
                                                        cipher_text=macpayload + mic)
                                   )
-        self.update_device_session(devaddr=devaddr, appskey=appskey, nwkskey=nwkskey)
+        devaddr_hex = utils.bytes_to_text(devaddr)
+        appskey_hex = utils.bytes_to_text(appskey)
+        nwkskey_hex = utils.bytes_to_text(nwkskey)
+        self.update_device_session(devaddr_hex=devaddr_hex, appskey_hex=appskey_hex,
+                                   nwkskey_hex=nwkskey_hex)
 
         self.rx1_dr_offset = (int.from_bytes(dlsettings, byteorder='big') & 0x70) >> 4
         rx2_dr = (int.from_bytes(dlsettings, byteorder='big') & 0x0f)
@@ -97,10 +117,10 @@ class DeviceSession(object):
 
         return join_accept_phypayload
 
-    def update_device_session(self, devaddr, appskey, nwkskey):
-        self.dev_addr = devaddr
-        self.app_s_key = appskey
-        self.nwk_s_key = nwkskey
+    def update_device_session(self, devaddr_hex, appskey_hex, nwkskey_hex):
+        self.dev_addr_hex = devaddr_hex
+        self.app_s_key_hex = appskey_hex
+        self.nwk_s_key_hex = nwkskey_hex
 
     def prepare_lorawan_data(self,
                              frmpayload,
@@ -120,50 +140,84 @@ class DeviceSession(object):
         :return: bytes of the PHYPayload
         """
         fcnt_down = 0
-
-        fhdr = self.dev_addr[::-1] + fctr + struct.pack('<H', fcnt_down) + fopts
+        dev_addr_bytes = bytes.fromhex(self.dev_addr_hex)
+        fhdr = dev_addr_bytes[::-1] + fctr + struct.pack('<H', fcnt_down) + fopts
         mhdr_fhdr = mhdr + fhdr
         assert mhdr in (
-        b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
+            b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
         if mhdr in (b'\x00', b'\x40', b'\x80'):
             direction = 0
         else:
             direction = 1
+        nwk_s_key_bytes = bytes.fromhex(self.nwk_s_key_hex)
+        app_s_key_bytes = bytes.fromhex(self.app_s_key_hex)
         if fport is not None and frmpayload is not None:
             if fport == 0:
-                key = self.nwk_s_key
+                key = nwk_s_key_bytes
             else:
-                key = self.app_s_key
+                key = app_s_key_bytes
             mac_hdr_payload = mhdr_fhdr + struct.pack('B', fport) + utils.encrypt_ieee802154(
                 key=key,
                 frmpayload=frmpayload,
                 direction=direction,
-                devaddr=self.dev_addr,
+                devaddr=dev_addr_bytes,
                 fcnt=fcnt_down)
         else:
             mac_hdr_payload = mhdr_fhdr
-        phy_payload = mac_hdr_payload + utils.mic_rfc4493(key=self.nwk_s_key,
+        phy_payload = mac_hdr_payload + utils.mic_rfc4493(key=nwk_s_key_bytes,
                                                           msg=mac_hdr_payload,
                                                           direction=direction,
-                                                          devaddr=self.dev_addr,
+                                                          devaddr=dev_addr_bytes,
                                                           fcnt=fcnt_down)
         return phy_payload
 
 
 class DevicesSessionHandler(object):
-    def __init__(self):
+    def __init__(self, db_config):
         self._devices = dev_data.devices_to_configure
         self._active_sessions = {}
+        database_uri = "postgresql://{}:{}@{}:{}/{}".format(db_config["user"],
+                                                            db_config["password"],
+                                                            db_config["host"],
+                                                            db_config["port"],
+                                                            db_config["database"])
+        db_utils.create_db(**db_config)
+        engine = sqla.create_engine(database_uri)
+        engine.connect()
+        Session = sqla.orm.sessionmaker(bind=engine)
+        self.session = Session()
+        Base.metadata.create_all(engine)
+        try:
+            self.session.execute(sqla.text("""CREATE TABLE alembic_version (
+                        version_num character varying(32) NOT NULL,
+                        PRIMARY KEY (version_num)
+                        );
+                """))
+            self.session.execute(
+                sqla.text("""INSERT INTO alembic_version VALUES ('c4821ceae1a2')"""))
+            self.session.commit()
+        except:
+            logger.warning("Table alembic_version already exist")
+            self.session.rollback()
+
+    def query_dev_eui_hex(self, dev_eui_hex):
+        return self.session.query(DeviceSession).filter(
+            DeviceSession.dev_eui_hex == dev_eui_hex).first()
+
+    def query_dev_addr_hex(self, dev_addr_hex):
+        return self.session.query(DeviceSession).filter(
+            DeviceSession.dev_addr_hex == dev_addr_hex).all()
 
     def is_registered(self, dev_eui_hex, app_eui_hex=None):
         if dev_eui_hex not in self._devices:
-            return False 
+            return False
         if not app_eui_hex or "appeui" not in self._devices[dev_eui_hex]:
-            return True 
+            return True
         return self._devices[dev_eui_hex]["appeui"] == app_eui_hex
 
     def has_active_session(self, dev_eui_hex):
-        return dev_eui_hex in self._active_sessions
+        dev_session = self.query_dev_eui_hex(dev_eui_hex=dev_eui_hex)
+        return dev_session is not None
 
     def get_appkey_hex(self, dev_eui_hex):
         if self.is_registered(dev_eui_hex=dev_eui_hex):
@@ -175,30 +229,32 @@ class DevicesSessionHandler(object):
             return self._devices[dev_eui_hex]["command"]
 
     def get_dev_eui_hex(self, dev_addr_hex):
+        dev_session = self.query_dev_addr_hex(dev_addr_hex=dev_addr_hex)
         dev_eui_hex = None
-        for session in self._active_sessions.values():
-            if dev_addr_hex == utils.bytes_to_text(session.dev_addr):
-                dev_eui_hex = utils.bytes_to_text(session.dev_eui)
-                break
+        if dev_session is not None:
+            dev_eui_hex = dev_session.dev_eui_hex
         return dev_eui_hex
 
-    def get_nwk_s_key(self, dev_addr_hex):
-        dev_eui_hex = self.get_dev_eui_hex(dev_addr_hex=dev_addr_hex)
-        if dev_eui_hex in self._active_sessions:
-            return self._active_sessions[dev_eui_hex].nwk_s_key
+    def get_nwk_s_key_hex(self, dev_addr_hex):
+        dev_session = self.query_dev_addr_hex(dev_addr_hex=dev_addr_hex)
+        nwk_s_key_hex = None
+        if dev_session is not None:
+            nwk_s_key_hex = dev_session.nwk_s_key_hex
+        return nwk_s_key_hex
 
-    def get_app_s_key(self, dev_addr_hex):
-        dev_eui_hex = self.get_dev_eui_hex(dev_addr_hex=dev_addr_hex)
-        if dev_eui_hex in self._active_sessions:
-            return self._active_sessions[dev_eui_hex].app_s_key
+    def get_app_s_key_hex(self, dev_addr_hex):
+        dev_session = self.query_dev_addr_hex(dev_addr_hex=dev_addr_hex)
+        app_s_key_hex = None
+        if dev_session is not None:
+            app_s_key_hex = dev_session.app_s_key_hex
+        return app_s_key_hex
 
     def otta_join(self, deveui_hex, devnonce, dlsettings, rxdelay, cflist):
-        deveui = bytes.fromhex(deveui_hex)
-        appkey = bytes.fromhex(self._devices[deveui_hex]["appkey"])
+        appkey_hex = self._devices[deveui_hex]["appkey"]
         logger.info(f"Activating device: {deveui_hex}")
         if not self.has_active_session(dev_eui_hex=deveui_hex):
-            self._active_sessions[deveui_hex] = DeviceSession(dev_eui=deveui,
-                                                              appkey=appkey)
+            self._active_sessions[deveui_hex] = DeviceSession(dev_eui_hex=deveui_hex,
+                                                              appkey_hex=appkey_hex)
         joinaccept_phypayload = self._active_sessions[deveui_hex].accept_join(
             devnonce=devnonce, dlsettings=dlsettings, rxdelay=rxdelay, cflist=cflist)
         return joinaccept_phypayload
