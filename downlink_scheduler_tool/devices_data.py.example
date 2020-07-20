@@ -1,2 +1,3 @@
-devices_to_configure = {'70B3D52C70104BE2': {'id': 19426, 'appkey': '75E3205B17A819F9724B22EE2CA36CF1',
-                                       'command': '940070B3D52C70104BE270B3D52C701001372760000118C0'}}
+devices_to_configure = {'70B3D52C70104BE2': {'appeui': '70B3D52C70100137', 'id': 19426,
+                                             'appkey': '75E3205B17A819F9724B22EE2CA36CF1',
+                                             'command': '940070B3D52C70104BE270B3D52C701001372760000118C0'}}

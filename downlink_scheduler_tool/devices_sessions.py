@@ -36,7 +36,7 @@ class DeviceSession(Base):
         self.nwk_s_key_hex = nwk_s_key_hex
         self.fcnt_down = fcnt_down
         self.last_join_accept_hex = None
-        self.used_otaa_devnonces_hex = None
+        self.used_otaa_devnonces_hex = ""
 
         self._used_otaa_appnonces = []
 
@@ -57,14 +57,13 @@ class DeviceSession(Base):
         to prevent from replay attacks)
         :return: int (between 0 and 2ˆ16)
         """
-        nonce = random.randint(0, 2 ** 24 - 1)
-        while nonce in self._used_otaa_appnonces:
-            nonce = random.randint(0, 2 ** 24 - 1)
-        self._used_otaa_appnonces.append(nonce)
-        return nonce
+        return random.randint(0, 2 ** 24 - 1)
 
     def get_used_devnoce_hex_list(self):
-        return self.used_otaa_devnonces_hex.split(",")
+        if self.used_otaa_devnonces_hex is None:
+            return []
+        else:
+            return self.used_otaa_devnonces_hex.split(",")
 
     def get_last_devnonce_hex(self):
         return self.get_used_devnoce_hex_list()[-1]
@@ -77,7 +76,7 @@ class DeviceSession(Base):
         :return: None
         """
         devnonce_hex_new = utils.bytes_to_text(devnonce_bytes)
-        devnonce_hex_list = self.get_used_devnoce_hex_list
+        devnonce_hex_list = self.get_used_devnoce_hex_list()
         if devnonce_hex_new in devnonce_hex_list:
             raise scheduler_errors.DuplicatedNonce()
         if len(devnonce_hex_list) > 3:
@@ -275,7 +274,7 @@ class DevicesSessionHandler(object):
                 self.session.add(dev_session)
             dev_session.accept_join(
                 devnonce=devnonce, dlsettings=dlsettings, rxdelay=rxdelay, cflist=cflist)
-        except Exception:
+        except Exception as e:
             logger.error(f"Error creating session for device {deveui_hex}.")
         else:
             self.session.commit()

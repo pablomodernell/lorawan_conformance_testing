@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 DB_CONFIG = {"database": "config_scheduler",
              "host": "localhost",
-             "port": 5432,
+             "port": 5435,
              "user": "postgres",
              "password": "CushVenyayz0"}
 
