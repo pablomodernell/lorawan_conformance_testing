@@ -19,6 +19,23 @@ Base = declarative_base()
 logger = logging.getLogger(__name__)
 
 
+def create_db(database, user, password, host, port=5432):
+    connection = psycopg2.connect(user=user, password=password, host=host, port=port)
+    connection.autocommit = True
+
+    try:
+        connection.cursor().execute("CREATE DATABASE %s;",
+                                    [psycopg2.extensions.AsIs(database)])
+    except Exception as error:
+        if not hasattr(error, "pgerror") or "already exists" not in error.pgerror:
+            raise error
+        logger.warning("Database '%s' already exists.", database)
+
+    connection.close()
+    logger.debug("""It is possible that you want to install some extensions. 
+    Check utils.EXTENSIONS and use create_db_with_extensions if desired.""")
+
+
 class DeviceSession(Base):
     __tablename__ = "device_session_config"
 
@@ -189,27 +206,9 @@ class DeviceSession(Base):
         return phy_payload
 
 
-def create_db(database, user, password, host, port=5432):
-    connection = psycopg2.connect(user=user, password=password, host=host, port=port)
-    connection.autocommit = True
-
-    try:
-        connection.cursor().execute("CREATE DATABASE %s;",
-                                    [psycopg2.extensions.AsIs(database)])
-    except Exception as error:
-        if not hasattr(error, "pgerror") or "already exists" not in error.pgerror:
-            raise error
-        logger.warning("Database '%s' already exists.", database)
-
-    connection.close()
-    logger.debug("""It is possible that you want to install some extensions. 
-    Check utils.EXTENSIONS and use create_db_with_extensions if desired.""")
-
-
 class DevicesSessionHandler(object):
     def __init__(self, db_config):
         self._devices = dev_data.devices_to_configure
-        self._active_sessions = {}
         database_uri = "postgresql://{}:{}@{}:{}/{}".format(db_config["user"],
                                                             db_config["password"],
                                                             db_config["host"],

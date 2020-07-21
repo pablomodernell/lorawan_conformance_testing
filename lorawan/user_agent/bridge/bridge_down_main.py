@@ -26,24 +26,31 @@ Main module containing the main entry point of the Agent Bridge.
 #################################################################################
 import logging
 import click
+import os
 
-from lorawan.user_agent.bridge.agent_bridge import SPFBridge
+from lorawan.user_agent.bridge.agent_bridge import SPFBridgeDownlink
 from logger_configurator import LoggerConfigurator
 
 LoggerConfigurator(level="INFO")
 logger = logging.getLogger(__name__)
 
+POSTGRES_PORT = int(os.environ.get('POSTGRES_PORT'))
+POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
+
+DB_CONFIG = {"database": "conformance_agent",
+             "host": POSTGRES_HOST,
+             "port": POSTGRES_PORT,
+             "user": "postgres",
+             "password": "CushVenyayz0"}
+
 
 @click.command()
-def agent_main():
+def agent_down_main():
     """ Agent Bridge service entry point."""
-    spf_bridge = SPFBridge()
-    logger.info("Starting agent...")
-    spf_bridge.listen_spf()
-    spf_bridge.downlink_ready_semaphore.acquire()
-    logger.info("Ready to forward.")
+    spf_bridge = SPFBridgeDownlink(gw_identifier="gw1", db_config=DB_CONFIG)
+    logger.info("Starting Downlink agent...")
     spf_bridge.start_listening_downlink()
 
 
 if __name__ == '__main__':
-    agent_main()
+    agent_down_main()

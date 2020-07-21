@@ -40,6 +40,7 @@ import lorawan.parsing.gateway_forwarder
 import parameters.message_broker as message_broker
 from parameters.message_broker import routing_keys
 from lorawan.parsing.flora_messages import GatewayMessage
+import lorawan.user_agent.bridge.gateway_connection_manager as gw_conn_manager
 
 logger = logging.getLogger(__name__)
 
@@ -67,83 +68,86 @@ class SPFBridge(object):
     PULL_RESP_ID = b"\x03"
     PULL_ACK_ID = b"\x04"
 
-    def __init__(self):
+    def __init__(self, gw_identifier, db_config):
+        """
+
+        """
+        super().__init__()
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.gw_identifier = gw_identifier
+        self.gateway_manager = gw_conn_manager.GatewayManager(db_config=db_config)
+
+    @property
+    def gateway_dl_addr(self):
+        return self.gateway_manager.get_down_addr_tuple(gw_identifier=self.gw_identifier)
+
+    @gateway_dl_addr.setter
+    def gateway_dl_addr(self, downlink_addr):
+        self.gateway_manager.store_gw_connection(gw_identifier=self.gw_identifier,
+                                                 gw_ip=downlink_addr[0],
+                                                 gw_down_port=downlink_addr[1])
+
+    @property
+    def gateway_ul_addr(self):
+        return self.gateway_manager.get_up_addr_tuple(gw_identifier=self.gw_identifier)
+
+    @gateway_ul_addr.setter
+    def gateway_ul_addr(self, uplink_addr):
+        self.gateway_manager.store_gw_connection(gw_identifier=self.gw_identifier,
+                                                 gw_ip=uplink_addr[0],
+                                                 gw_up_port=uplink_addr[1])
+
+
+    def send_dl_raw(self, dl_message):
+        """
+        (SPFBridge, bytes) -> (None)
+
+        Sends a downlink UDP message to the Packet Forwarder running on the gateway. The IP address must be previously
+        obtained by receiving a PULL REQUEST message.
+
+        :param dl_message: bytes to be sent to the Gateway's  Semtech Packet Forwarder.
+        :return: None.
+        """
+        if self.gateway_dl_addr is not None:
+            logger.info(f"Sending message to {self.gateway_dl_addr}")
+            self._sock.sendto(dl_message, self.gateway_dl_addr)
+        else:
+            logger.error(f"Gateway {self.gw_identifier} Downlink Port unknown.")
+
+
+class SPFBridgeUplink(SPFBridge):
+    """
+    Semtech Packet Forwarder (SPF) Bridge.
+    The Bride service running in the agent (user side) is in charge of listening to the uplink messages from the
+    LoRa gateway (e.g. in the same LAN of the machine running the bridge) in order to forward them to
+    the broker. The broker then will be in charge of making the messages available to the
+    testing services (f-interop side).
+    The Bridge is also in charge of receiving the downlink messages from the testing platform to send them to the
+    user's gateway.
+
+    The user must specify the IP and port of the gateway running the packet forwarder in the environment variables:
+    - *PF_IP*
+    - *PF_UDP_PORT*
+    """
+
+    def __init__(self, gw_identifier, db_config):
         """
         Creates a Semtech Packet Forwarder (SPF) Bridge to handle the uplink UDP messages. It is also a consumer
         of downlink messages from the broker. The SPF Bridge is a MqInterface.
         """
-        super().__init__()
+        super().__init__(gw_identifier=gw_identifier, db_config=db_config)
         self.UDP_IP = os.environ.get('PF_IP')
         self.UDP_PORT = int(os.environ.get('PF_UDP_PORT'))
-        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind((self.UDP_IP, self.UDP_PORT))
-        self.gwdladdrLock1 = udp_listener.UDPListener.create_lock()
-        self.gwuladdrLock2 = udp_listener.UDPListener.create_lock()
-        self._gateway_dl_addr = None
-        self._gateway_ul_addr = None
-        self.downlink_ready_semaphore = udp_listener.UDPListener.create_semaphore()
-        self.udp_listener = udp_listener.UDPListener(self)
+
         self._ready_to_downlink = False
-        self.last_uplink_time = None
         self.uplink_mq_interface = message_queueing.MqPublisher(
             routing_key=message_broker.routing_keys.fromAgentToScheduler)
-        self.downlink_mq_interface = message_queueing.MqSelectConnectionInterface(
-            queue_name='down_sch_nwk',
-            routing_key=message_broker.routing_keys.fromSchedulerToAgent,
-            on_message_callback=self.process_dlmsg
-        )
-
-    @property
-    def gateway_dl_addr(self):
-        """ Thread safe access to the downlink address of the gateway's packet forwarder."""
-        with self.gwdladdrLock1:
-            retval = self._gateway_dl_addr
-            return retval
-
-    @gateway_dl_addr.setter
-    def gateway_dl_addr(self, downlink_addr):
-        """ Thread safe access to the downlink address of the gateway's packet forwarder."""
-        with self.gwdladdrLock1:
-            self._gateway_dl_addr = downlink_addr
-
-    @property
-    def gateway_ul_addr(self):
-        """ Thread safe access to the uplink address of the gateway's packet forwarder."""
-        with self.gwuladdrLock2:
-            retval = self._gateway_ul_addr
-            return retval
-
-    @gateway_ul_addr.setter
-    def gateway_ul_addr(self, uladdr):
-        """ Thread safe access to the uplink address of the gateway's packet forwarder."""
-        with self.gwuladdrLock2:
-            self._gateway_ul_addr = uladdr
 
     def listen_spf(self):
         """ Starts to listen for UDP uplink messages from the gateway."""
-        self.udp_listener.setDaemon(True)
-        self.udp_listener.start()
-
-    def process_dlmsg(self, body_str):
-        """
-        Downlink messages handler.
-        If no PULL_DATA message was previously received from the gateway (so the downlink address is unknown), the
-        message is ignored.
-        """
-        if self._ready_to_downlink:
-            received_gw_message = GatewayMessage(body_str)
-            self.send_pull_resp(received_gw_message.get_txpk_str().encode())
-            elapsed_time = time.time() - self.last_uplink_time
-            msg_print = "\n\n<<<<<<<<<<<<<<<<<<<<<<<<\nTime since the last uplink: {time}\n<<<<<<<<<<<<<<<<<<<<<<<<\n"
-            logger.info(msg_print.format(time=elapsed_time))
-            logger.info(
-                "Sending DL to GW: \n{0}".format(received_gw_message.get_txpk_str().encode()))
-            logger.info(received_gw_message.get_printable_str(ignore_format_errors=True))
-            logger.info("----------<<<<<<<<<<<<<<\n----------<<<<<<<<<<<<<<\n")
-
-        else:
-            logger.info(
-                "Agent Bridge NOT ready to downlink: waiting for a PULL_DATA  from the gateway.")
+        while True:
+            self.process_uplink_data()
 
     def process_uplink_data(self):
         """
@@ -154,7 +158,6 @@ class SPFBridge(object):
         :return: None
         """
         data, addr = self._sock.recvfrom(1024)  # buffer size is 1024 bytes
-        self.last_uplink_time = time.time()
         logger.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>\n")
         # print("Printing RAW received bytes:")
         # print(data)
@@ -162,10 +165,9 @@ class SPFBridge(object):
         received_msg = lorawan.parsing.gateway_forwarder.SemtechUDPMsg(data)
         logger.info(received_msg)
         # PUSH_DATA (ID=0) received -> Send an PUSH_ACK
-        if received_msg.msg_id == SPFBridge.PUSH_DATA_ID[0]:
-            push_ack_bytes = data[0:3] + SPFBridge.PUSH_ACK_ID
+        if received_msg.msg_id == SPFBridgeUplink.PUSH_DATA_ID[0]:
+            push_ack_bytes = data[0:3] + SPFBridgeUplink.PUSH_ACK_ID
             self.gateway_ul_addr = addr
-            self.send_ulresponse_raw(push_ack_bytes)
 
             data_msg_list = received_msg.get_data()
             if len(data_msg_list) > 0:
@@ -176,14 +178,12 @@ class SPFBridge(object):
                                                   routing_key=routing_keys.fromAgentToScheduler)
                     logger.info("Sending UpLink: {0}\n".format(packet[1]))
                     logger.info(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
+            self.send_ulresponse_raw(push_ack_bytes)
             received_msg.print_stats()
         # PULL_DATA (ID=2) received -> Send an PULL_ACK
-        elif received_msg.msg_id == SPFBridge.PULL_DATA_ID[0]:
-            pull_ack = data[0:3] + SPFBridge.PULL_ACK_ID
+        elif received_msg.msg_id == SPFBridgeUplink.PULL_DATA_ID[0]:
+            pull_ack = data[0:3] + SPFBridgeUplink.PULL_ACK_ID
             self.gateway_dl_addr = addr
-            if not self._ready_to_downlink:
-                self._ready_to_downlink = True
-                self.downlink_ready_semaphore.release()
             self.send_dl_raw(pull_ack)
         logger.info("---------->>>>>>>>>>>>>>\n---------->>>>>>>>>>>>>>\n")
 
@@ -197,22 +197,58 @@ class SPFBridge(object):
         Gateway's  Semtech Packet Forwarder.
         :return: None.
         """
-        assert self._gateway_ul_addr
-        self._sock.sendto(ul_message, self.gateway_ul_addr)
+        if self.gateway_ul_addr is not None:
+            logger.info(f"Sending UL Response to {self.gateway_ul_addr}")
+            self._sock.sendto(ul_message, self.gateway_ul_addr)
+        else:
+            logger.error(f"Gateway {self.gw_identifier} Uplink Port unknown.")
 
-    def send_dl_raw(self, dl_message):
+
+class SPFBridgeDownlink(SPFBridge):
+    """
+    Semtech Packet Forwarder (SPF) Bridge.
+    The Bride service running in the agent (user side) is in charge of listening to the uplink messages from the
+    LoRa gateway (e.g. in the same LAN of the machine running the bridge) in order to forward them to
+    the broker. The broker then will be in charge of making the messages available to the
+    testing services (f-interop side).
+    The Bridge is also in charge of receiving the downlink messages from the testing platform to send them to the
+    user's gateway.
+
+    The user must specify the IP and port of the gateway running the packet forwarder in the environment variables:
+    - *PF_IP*
+    - *PF_UDP_PORT*
+    """
+
+    def __init__(self, gw_identifier, db_config):
         """
-        (SPFBridge, bytes) -> (None)
-
-        Sends a downlink UDP message to the Packet Forwarder running on the gateway. The IP address must be previously
-        obtained by receiving a PULL REQUEST message.
-
-        :param dl_message: bytes to be sent to the Gateway's  Semtech Packet Forwarder.
-        :return: None.
+        Creates a Semtech Packet Forwarder (SPF) Bridge to handle the uplink UDP messages. It is also a consumer
+        of downlink messages from the broker. The SPF Bridge is a MqInterface.
         """
-        assert self._gateway_dl_addr is not None
-        logger.info(f"Sending message to {self.gateway_dl_addr}")
-        self._sock.sendto(dl_message, self.gateway_dl_addr)
+        super().__init__(gw_identifier=gw_identifier, db_config=db_config)
+
+        self.downlink_mq_interface = message_queueing.MqSelectConnectionInterface(
+            queue_name='down_sch_nwk',
+            routing_key=message_broker.routing_keys.fromSchedulerToAgent,
+            on_message_callback=self.process_dlmsg
+        )
+
+    def process_dlmsg(self, body_str):
+        """
+        Downlink messages handler.
+        If no PULL_DATA message was previously received from the gateway (so the downlink address is unknown), the
+        message is ignored.
+        """
+        if self.gateway_dl_addr is not None:
+            received_gw_message = GatewayMessage(body_str)
+            self.send_pull_resp(received_gw_message.get_txpk_str().encode())
+            logger.info(
+                "Sending DL to GW: \n{0}".format(received_gw_message.get_txpk_str().encode()))
+            logger.info(received_gw_message.get_printable_str(ignore_format_errors=True))
+            logger.info("----------<<<<<<<<<<<<<<\n----------<<<<<<<<<<<<<<\n")
+
+        else:
+            logger.info(
+                "Agent Bridge NOT ready to downlink: waiting for a PULL_DATA  from the gateway.")
 
     def send_pull_resp(self, json_bytes):
         """
@@ -224,8 +260,8 @@ class SPFBridge(object):
         :param json_bytes: byte sequence to be sent in the payload of a SPF PULL_RESP message.
         :return: None.
         """
-        message = SPFBridge.VERSION + struct.pack(
-            '>H', random.randint(0, 2 ** 16 - 1)) + SPFBridge.PULL_RESP_ID
+        message = SPFBridgeUplink.VERSION + struct.pack(
+            '>H', random.randint(0, 2 ** 16 - 1)) + SPFBridgeUplink.PULL_RESP_ID
         self.send_dl_raw(message + json_bytes)
 
     def start_listening_downlink(self):
