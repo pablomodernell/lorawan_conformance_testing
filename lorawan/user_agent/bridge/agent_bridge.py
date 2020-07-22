@@ -89,6 +89,8 @@ class SPFBridge(object):
             routing_key=message_broker.routing_keys.fromAgentToScheduler)
         self.downlink_mq_interface = message_queueing.MqSelectConnectionInterface(
             queue_name='down_sch_nwk',
+            queue_durable=False,
+            queue_auto_delete=True,
             routing_key=message_broker.routing_keys.fromSchedulerToAgent,
             on_message_callback=self.process_dlmsg
         )

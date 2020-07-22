@@ -95,9 +95,9 @@ services:
 
   config-scheduler:
     depends_on:
-      - agent-scheduler
+      - message-broker
       - postgres
-    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.4-cmt_rejoin_persistence
+    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.5-cmt_deletequeue_persistence
     volumes:
       - ./downlink_scheduler_tool/devices_data.py:/config_scheduler/downlink_scheduler_tool/devices_data.py
       - ./downlink_scheduler_tool/devices_sessions.py:/config_scheduler/downlink_scheduler_tool/devices_sessions.py
@@ -110,7 +110,7 @@ services:
   agent-scheduler:
     depends_on:
       - message-broker
-    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.4-cmt_rejoin_persistence
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.5-cmt_deletequeue_persistence
     volumes:
       - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
     environment:
