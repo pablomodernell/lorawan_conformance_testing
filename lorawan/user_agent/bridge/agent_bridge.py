@@ -31,6 +31,7 @@ import random
 import socket
 import struct
 import time
+import logging
 
 import lorawan.user_agent.bridge.udp_listener as udp_listener
 import message_queueing
@@ -39,6 +40,10 @@ import lorawan.parsing.gateway_forwarder
 import parameters.message_broker as message_broker
 from parameters.message_broker import routing_keys
 from lorawan.parsing.flora_messages import GatewayMessage
+
+logger = logging.getLogger(__name__)
+
+PACKET_FORWARDER_VERSION_INT = int(os.environ.get('PACKET_FORWARDER_VERSION_INT'))
 
 
 class SPFBridge(object):
@@ -55,7 +60,7 @@ class SPFBridge(object):
     - *PF_IP*
     - *PF_UDP_PORT*
     """
-    VERSION = b"\x02"
+    VERSION = bytes([PACKET_FORWARDER_VERSION_INT])
     PUSH_DATA_ID = b"\x00"
     PUSH_ACK_ID = b"\x01"
     PULL_DATA_ID = b"\x02"
@@ -80,12 +85,15 @@ class SPFBridge(object):
         self.udp_listener = udp_listener.UDPListener(self)
         self._ready_to_downlink = False
         self.last_uplink_time = None
-        self.uplink_mq_interface = message_queueing.MqInterface()
-        self.downlink_mq_interface = message_queueing.MqInterface()
-        self.downlink_mq_interface.declare_and_consume(
-            queue_name='down_nwk',
-            routing_key=message_broker.routing_keys.toAgent + '.#',
-            callback=self.process_dlmsg)
+        self.uplink_mq_interface = message_queueing.MqPublisher(
+            routing_key=message_broker.routing_keys.fromAgentToScheduler)
+        self.downlink_mq_interface = message_queueing.MqSelectConnectionInterface(
+            queue_name='down_sch_nwk',
+            queue_durable=False,
+            queue_auto_delete=True,
+            routing_key=message_broker.routing_keys.fromSchedulerToAgent,
+            on_message_callback=self.process_dlmsg
+        )
 
     @property
     def gateway_dl_addr(self):
@@ -118,24 +126,25 @@ class SPFBridge(object):
         self.udp_listener.setDaemon(True)
         self.udp_listener.start()
 
-    def process_dlmsg(self, ch, method, properties, body):
+    def process_dlmsg(self, body_str):
         """
         Downlink messages handler.
         If no PULL_DATA message was previously received from the gateway (so the downlink address is unknown), the
         message is ignored.
         """
         if self._ready_to_downlink:
-            received_gw_message = GatewayMessage(body.decode())
+            received_gw_message = GatewayMessage(body_str)
             self.send_pull_resp(received_gw_message.get_txpk_str().encode())
             elapsed_time = time.time() - self.last_uplink_time
             msg_print = "\n\n<<<<<<<<<<<<<<<<<<<<<<<<\nTime since the last uplink: {time}\n<<<<<<<<<<<<<<<<<<<<<<<<\n"
-            print(msg_print.format(time=elapsed_time))
-            print("Sending DL to GW: \n{0}".format(received_gw_message.get_txpk_str().encode()))
-            print(received_gw_message.get_printable_str(ignore_format_errors=True))
-            print("----------<<<<<<<<<<<<<<\n----------<<<<<<<<<<<<<<\n")
+            logger.info(msg_print.format(time=elapsed_time))
+            logger.info(
+                "Sending DL to GW: \n{0}".format(received_gw_message.get_txpk_str().encode()))
+            logger.info(received_gw_message.get_printable_str(ignore_format_errors=True))
+            logger.info("----------<<<<<<<<<<<<<<\n----------<<<<<<<<<<<<<<\n")
 
         else:
-            print(
+            logger.info(
                 "Agent Bridge NOT ready to downlink: waiting for a PULL_DATA  from the gateway.")
 
     def process_uplink_data(self):
@@ -148,12 +157,12 @@ class SPFBridge(object):
         """
         data, addr = self._sock.recvfrom(1024)  # buffer size is 1024 bytes
         self.last_uplink_time = time.time()
-        print("\n\n>>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>\n")
+        logger.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>\n")
         # print("Printing RAW received bytes:")
         # print(data)
         # print(utils.bytes_to_text(data))
         received_msg = lorawan.parsing.gateway_forwarder.SemtechUDPMsg(data)
-        print(received_msg)
+        logger.info(received_msg)
         # PUSH_DATA (ID=0) received -> Send an PUSH_ACK
         if received_msg.msg_id == SPFBridge.PUSH_DATA_ID[0]:
             push_ack_bytes = data[0:3] + SPFBridge.PUSH_ACK_ID
@@ -165,10 +174,10 @@ class SPFBridge(object):
                 for packet in data_msg_list:
                     # packet[0]: the decoded data
                     # packet[1]: the json string with the decoded data in it's data field.
-                    self.uplink_mq_interface.publish(msg=packet[1],
-                                                     routing_key=routing_keys.fromAgent + '.gw1')
-                    print("Sending UpLink: {0}\n".format(packet[1]))
-                    print(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
+                    self.uplink_mq_interface.send(data=packet[1],
+                                                  routing_key=routing_keys.fromAgentToScheduler)
+                    logger.info("Sending UpLink: {0}\n".format(packet[1]))
+                    logger.info(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
             received_msg.print_stats()
         # PULL_DATA (ID=2) received -> Send an PULL_ACK
         elif received_msg.msg_id == SPFBridge.PULL_DATA_ID[0]:
@@ -178,7 +187,7 @@ class SPFBridge(object):
                 self._ready_to_downlink = True
                 self.downlink_ready_semaphore.release()
             self.send_dl_raw(pull_ack)
-        print("---------->>>>>>>>>>>>>>\n---------->>>>>>>>>>>>>>\n")
+        logger.info("---------->>>>>>>>>>>>>>\n---------->>>>>>>>>>>>>>\n")
 
     def send_ulresponse_raw(self, ul_message):
         """
@@ -204,7 +213,7 @@ class SPFBridge(object):
         :return: None.
         """
         assert self._gateway_dl_addr is not None
-        print(f"Sending message to {self.gateway_dl_addr}")
+        logger.info(f"Sending message to {self.gateway_dl_addr}")
         self._sock.sendto(dl_message, self.gateway_dl_addr)
 
     def send_pull_resp(self, json_bytes):
@@ -217,8 +226,8 @@ class SPFBridge(object):
         :param json_bytes: byte sequence to be sent in the payload of a SPF PULL_RESP message.
         :return: None.
         """
-        message = SPFBridge.VERSION + struct.pack('>H', random.randint(0,
-                                                                       2 ** 16 - 1)) + SPFBridge.PULL_RESP_ID
+        message = SPFBridge.VERSION + struct.pack(
+            '>H', random.randint(0, 2 ** 16 - 1)) + SPFBridge.PULL_RESP_ID
         self.send_dl_raw(message + json_bytes)
 
     def start_listening_downlink(self):

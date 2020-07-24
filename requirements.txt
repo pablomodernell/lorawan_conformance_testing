@@ -1,4 +1,4 @@
-pika==0.12.0
+pika==1.1.0
 pycryptodomex==3.6.6
 click==6.7
 pytest
@@ -8,3 +8,6 @@ flask_restful==0.3.7
 werkzeug==0.15.4
 Flask-SocketIO==3.1.2
 gevent==1.4.0
+SQLAlchemy==1.3.8
+psycopg2==2.7.4
+

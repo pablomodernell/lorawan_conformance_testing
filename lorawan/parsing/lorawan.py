@@ -93,7 +93,7 @@ class LoRaWANMessage(ConditionalRaiser):
         ret_str += "----------------------------------------------\n"
         ret_str += "PHY payload information\n"
         ret_str += "MHDR bits: {0} ({1})\n".format(self.mhdr,
-                                              self.mhdr.mtype_str)
+                                                   self.mhdr.mtype_str)
         ret_str += "MACPayload: {0}\n".format(utils.bytes_to_text(
             self.macpayload.macpayload_bytes, sep=""))
         ret_str += str(self.macpayload)
@@ -168,9 +168,10 @@ class LoRaWANMHDR(ConditionalRaiser):
     @property
     def mtype_int(self):
         if self.raise_if_not_ok(0 <= self._mtype_int < 7):
-            raise lorawan_errors.MHDRError(description="Wrong MType: {}\n".format(self.mtype_int),
-                                           step_name=None,
-                                           test_case=None)
+            raise lorawan_errors.MHDRError(
+                description="Wrong MType: {}\n".format(utils.bytes_to_text(self.mhdr_bytes)),
+                step_name=None,
+                test_case=None)
         return self._mtype_int
 
     @property

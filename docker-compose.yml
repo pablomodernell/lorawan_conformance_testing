@@ -2,13 +2,15 @@ version: '3'
 
 volumes:
   volume_message-broker:
+  volume_postgres:
+
 
 services:
   message-broker:
     image: rabbitmq:3-management
     volumes:
       - ./docker_images/rabbitmq/config:/etc/rabbitmq/:ro
-      - volume_message-broker:/var/lib/rabbitmq
+#      - volume_message-broker:/var/lib/rabbitmq
     hostname: message-broker
     expose:
       - "1883"
@@ -89,4 +91,48 @@ services:
       dockerfile: docker_images/agent_mock/Dockerfile
     env_file:
       - env_var
+    restart: on-failure
+
+  config-scheduler:
+    depends_on:
+      - message-broker
+      - postgres
+    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.5-cmt_deletequeue_persistence
+    volumes:
+      - ./downlink_scheduler_tool/devices_data.py:/config_scheduler/downlink_scheduler_tool/devices_data.py
+      - ./downlink_scheduler_tool/devices_sessions.py:/config_scheduler/downlink_scheduler_tool/devices_sessions.py
+      - ./downlink_scheduler_tool/downlink_scheduler.py:/config_scheduler/downlink_scheduler_tool/downlink_scheduler.py
+    env_file:
+      - env_var
+    restart: on-failure
+    command: ["python3", "/config_scheduler/downlink_scheduler_tool/config_scheduler_main.py"]
+
+  agent-scheduler:
+    depends_on:
+      - message-broker
+    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.5-cmt_deletequeue_persistence
+    volumes:
+      - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
+    environment:
+      PACKET_FORWARDER_VERSION_INT: 1
+    env_file:
+      - env_var
+    expose:
+      - "1700"
+    ports:
+      - "17000:1700/udp"
+    restart: on-failure
+    command: ["python3", "/agent_mock/lorawan/user_agent/bridge/bridge_main.py"]
+
+  postgres:
+    image: timescale/timescaledb-postgis:1.4.2-pg11
+    volumes:
+      - volume_postgres:/var/lib/postgresql/data/
+    expose:
+      - "5432"
+    ports:
+      - "5435:5432"
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=CushVenyayz0
     restart: on-failure
