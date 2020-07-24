@@ -29,7 +29,6 @@ import abc
 import time
 import pika
 import pika.exceptions
-from queue_client import QueueSender
 import logging
 
 logger = logging.getLogger(__name__)

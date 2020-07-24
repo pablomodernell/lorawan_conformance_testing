@@ -19,6 +19,8 @@ class DownlinkScheduler(object):
                  accept_cflist=lorawan_parameters.JOIN_ACCEPT_CFLIST.NO_CHANNELS):
         self.uplink_mq_interface = message_queueing.MqSelectConnectionInterface(
             queue_name='up_downlink_scheduler',
+            queue_durable=False,
+            queue_auto_delete=True,
             routing_key=routing_keys.fromAgentToScheduler,
             on_message_callback=self.up_message_handler)
         self.downlink_mq_interface = message_queueing.MqPublisher(
