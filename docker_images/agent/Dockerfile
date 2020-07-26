@@ -11,18 +11,18 @@ WORKDIR "/agent"
 RUN mkdir logs
 
 # Application deps
-ADD requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 RUN python3 -m pip install -r requirements.txt
-ADD supervisor/agent/supervisord.conf.ini supervisord.conf.ini
-# ADD conf.d/ conf.d/
+COPY supervisor/agent/supervisord.conf.ini supervisord.conf.ini
+# COPY conf.d/ conf.d/
 
-ADD lorawan lorawan
-ADD conformance_testing conformance_testing
-ADD parameters parameters
-ADD utils.py utils.py
-ADD message_queueing.py message_queueing.py
-ADD user_interface user_interface
-ADD agent_main.py agent_main.py
+COPY lorawan lorawan
+COPY conformance_testing conformance_testing
+COPY parameters parameters
+COPY utils.py utils.py
+COPY message_queueing.py message_queueing.py
+COPY logger_configurator.py logger_configurator.py
+COPY user_interface user_interface
 
 # Define environment variable
 ENV PYTHONPATH /agent/

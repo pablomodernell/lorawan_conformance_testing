@@ -85,15 +85,15 @@ class SPFBridge(object):
         self.udp_listener = udp_listener.UDPListener(self)
         self._ready_to_downlink = False
         self.last_uplink_time = None
-        self.uplink_mq_interface = message_queueing.MqPublisher(
-            routing_key=message_broker.routing_keys.fromAgentToScheduler)
-        self.downlink_mq_interface = message_queueing.MqSelectConnectionInterface(
-            queue_name='down_sch_nwk',
-            queue_durable=False,
-            queue_auto_delete=True,
-            routing_key=message_broker.routing_keys.fromSchedulerToAgent,
-            on_message_callback=self.process_dlmsg
-        )
+
+        self.uplink_mq_interface = message_queueing.MqInterface()
+        self.downlink_mq_interface = message_queueing.MqInterface()
+        self.downlink_mq_interface.declare_and_consume(
+            queue_name='down_nwk',
+            durable=False,
+            auto_delete=True,
+            routing_key=message_broker.routing_keys.toAgent + '.#',
+            callback=self.process_dlmsg)
 
     @property
     def gateway_dl_addr(self):
@@ -126,12 +126,13 @@ class SPFBridge(object):
         self.udp_listener.setDaemon(True)
         self.udp_listener.start()
 
-    def process_dlmsg(self, body_str):
+    def process_dlmsg(self, channel, basic_deliver, properties, body):
         """
         Downlink messages handler.
         If no PULL_DATA message was previously received from the gateway (so the downlink address is unknown), the
         message is ignored.
         """
+        body_str = body.decode()
         if self._ready_to_downlink:
             received_gw_message = GatewayMessage(body_str)
             self.send_pull_resp(received_gw_message.get_txpk_str().encode())
@@ -174,8 +175,8 @@ class SPFBridge(object):
                 for packet in data_msg_list:
                     # packet[0]: the decoded data
                     # packet[1]: the json string with the decoded data in it's data field.
-                    self.uplink_mq_interface.send(data=packet[1],
-                                                  routing_key=routing_keys.fromAgentToScheduler)
+                    self.uplink_mq_interface.publish(msg=packet[1],
+                                                     routing_key=routing_keys.fromAgent + '.gw1')
                     logger.info("Sending UpLink: {0}\n".format(packet[1]))
                     logger.info(lorawan.parsing.lorawan.LoRaWANMessage(packet[0]))
             received_msg.print_stats()

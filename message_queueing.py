@@ -67,7 +67,7 @@ class MqInterface(object):
             self._channel = self.connection.channel()
         return self._channel
 
-    def declare_queue(self, queue_name, exclusive=True, auto_delete=False):
+    def declare_queue(self, queue_name, exclusive=True, auto_delete=False, durable=True):
         """
         Declares a new queue in the message broker.
         :param queue_name:
@@ -76,7 +76,7 @@ class MqInterface(object):
         :return: queue result
         """
         queue_result = self.channel.queue_declare(queue=queue_name, exclusive=exclusive,
-                                                  auto_delete=auto_delete)
+                                                  auto_delete=auto_delete, durable=durable)
         if queue_name not in self._knownQueues:
             self._knownQueues.append(queue_name)
         return queue_result
@@ -93,8 +93,9 @@ class MqInterface(object):
                                           consumer_tag=tag)
 
     def declare_and_consume(self, queue_name, routing_key, callback, exclusive=True,
-                            auto_delete=False, auto_ack=True):
-        queue_result = self.declare_queue(queue_name, exclusive=exclusive, auto_delete=auto_delete)
+                            auto_delete=False, auto_ack=True, durable=True):
+        queue_result = self.declare_queue(
+            queue_name, exclusive=exclusive, auto_delete=auto_delete, durable=durable)
         self.bind_queue(exchange_name=DEFAULT_EXCHANGE,
                         queue_name=queue_name,
                         routing_key=routing_key)

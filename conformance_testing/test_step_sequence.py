@@ -142,6 +142,8 @@ class TestManager(object, metaclass=abc.ABCMeta):
                                                    tag_value=" ")
         self.ctx_test_session_coordinator.declare_and_consume(queue_name='up_tas',
                                                               routing_key=routing_keys.fromAgent + '.#',
+                                                              durable=False,
+                                                              auto_delete=True,
                                                               callback=self.message_handler)
         ui_publisher.testingtool_log(
             msg_str="Init Test Manager, starting test: {0}".format(test_name),

@@ -1,7 +1,6 @@
-AMQP_URL=amqp://guest:guest@message-broker:5672/
-AMQP_URL_cloud=amqp://tpsqxgij:cLrPHJwy9R-enLb6weNTN1-arx5SwfbE@rhino.rmq.cloudamqp.com/tpsqxgij
 AMQP_EXCHANGE='amq.topic'
 PF_IP=0.0.0.0
 PF_UDP_PORT=1700
+PACKET_FORWARDER_VERSION_INT=2
 POSTGRES_PORT=5432
 POSTGRES_HOST=postgres

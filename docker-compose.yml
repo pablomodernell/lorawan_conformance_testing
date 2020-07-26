@@ -16,16 +16,18 @@ services:
       - "1883"
       - "8883"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBIT_PORT}:5672"
+      - "${RABBIT_MANAGE_PORT}:15672"
     restart: on-failure
 
   test-application-server:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/test_application_server/Dockerfile
+      - command-manager
+      - notification-displayer
+    image: "${DOCKER_REPO}/test-application-server:${TAS_VERSION}"
+    environment:
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
     restart: on-failure
@@ -34,9 +36,9 @@ services:
   command-manager:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/command_manager/Dockerfile
+    image: "${DOCKER_REPO}/command-manager:${CM_VERSION}"
+    environment:
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
     restart: on-failure
@@ -45,24 +47,24 @@ services:
   notification-displayer:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/notification_displayer/Dockerfile
+    image: "${DOCKER_REPO}/notification-displayer:${ND_VERSION}"
+    environment:
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
     expose:
       - "5000"
     ports:
-      - "8081:5000"
+      - "${UI_PORT}:5000"
     restart: on-failure
     command: ["python3", "user_interface/notification_displayer/displayer_app.py"]
 
   agent-mock:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/agent_mock/Dockerfile
+    image: "${DOCKER_REPO}/agent-mock:${AM_VERSION}"
+    environment:
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
     restart: on-failure
@@ -71,58 +73,28 @@ services:
   agent:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/agent_mock/Dockerfile
+    image: "${DOCKER_REPO}/agent:${A_VERSION}"
+    environment:
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
     expose:
       - "1700"
     ports:
-      - "1700:1700/udp"
+      - "${AGENT_PORT}:1700/udp"
     restart: on-failure
-    command: ["cl_start_bridge"]
+    command: ["python3", "/agent/lorawan/user_agent/bridge/bridge_main.py"]
 
   cli:
     depends_on:
       - message-broker
-    build:
-      context: .
-      dockerfile: docker_images/agent_mock/Dockerfile
-    env_file:
-      - env_var
-    restart: on-failure
-
-  config-scheduler:
-    depends_on:
-      - message-broker
-      - postgres
-    image: eu.gcr.io/engineering-test-197116/downlink-configure:0.1.5-cmt_deletequeue_persistence
-    volumes:
-      - ./downlink_scheduler_tool/devices_data.py:/config_scheduler/downlink_scheduler_tool/devices_data.py
-      - ./downlink_scheduler_tool/devices_sessions.py:/config_scheduler/downlink_scheduler_tool/devices_sessions.py
-      - ./downlink_scheduler_tool/downlink_scheduler.py:/config_scheduler/downlink_scheduler_tool/downlink_scheduler.py
-    env_file:
-      - env_var
-    restart: on-failure
-    command: ["python3", "/config_scheduler/downlink_scheduler_tool/config_scheduler_main.py"]
-
-  agent-scheduler:
-    depends_on:
-      - message-broker
-    image: eu.gcr.io/engineering-test-197116/pmodernell-conformance-agent:0.1.5-cmt_deletequeue_persistence
-    volumes:
-      - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
+    image: "${DOCKER_REPO}/agent-mock:${AM_VERSION}"
     environment:
-      PACKET_FORWARDER_VERSION_INT: 1
+      - "AMQP_URL=${AMQP_URL}"
     env_file:
       - env_var
-    expose:
-      - "1700"
-    ports:
-      - "17000:1700/udp"
     restart: on-failure
-    command: ["python3", "/agent_mock/lorawan/user_agent/bridge/bridge_main.py"]
+
 
   postgres:
     image: timescale/timescaledb-postgis:1.4.2-pg11
@@ -131,7 +103,7 @@ services:
     expose:
       - "5432"
     ports:
-      - "5435:5432"
+      - "${POSTGRES_PORT}:5432"
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_PASSWORD=CushVenyayz0

@@ -45,16 +45,19 @@ class UiListener(Thread):
         self.mq_interface.declare_and_consume(queue_name="notifier_display_gui",
                                               routing_key=parameters.message_broker.routing_keys.ui_all_users + '.display',
                                               callback=self.process_received_display_msg,
+                                              durable=False,
                                               exclusive=False,
                                               auto_delete=True)
         self.mq_interface.declare_and_consume(queue_name="notifier_configuration_request",
                                               routing_key=parameters.message_broker.routing_keys.configuration_request,
                                               callback=self.process_configuration_request_msg,
+                                              durable=False,
                                               exclusive=False,
                                               auto_delete=True)
         self.mq_interface.declare_and_consume(queue_name="notifier_request_action_gui",
                                               routing_key=parameters.message_broker.routing_keys.ui_all_users + '.request',
                                               callback=self.process_gui_action_request_msg,
+                                              durable=False,
                                               exclusive=False,
                                               auto_delete=True)
         super(UiListener, self).__init__()
