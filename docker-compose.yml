@@ -25,7 +25,7 @@ services:
       - message-broker
       - command-manager
       - notification-displayer
-    image: "${DOCKER_REPO}/test-application-server:${TAS_VERSION}"
+    image: "${DOCKER_REPO}-test_application_server:${TAS_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -36,7 +36,7 @@ services:
   command-manager:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/command-manager:${CM_VERSION}"
+    image: "${DOCKER_REPO}-command_manager:${CM_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -47,7 +47,7 @@ services:
   notification-displayer:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/notification-displayer:${ND_VERSION}"
+    image: "${DOCKER_REPO}-notification_displayer:${ND_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -62,7 +62,7 @@ services:
   agent-mock:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/agent-mock:${AM_VERSION}"
+    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -73,7 +73,7 @@ services:
   agent:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/agent:${A_VERSION}"
+    image: "${DOCKER_REPO}-agent:${A_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -88,7 +88,7 @@ services:
   cli:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/agent-mock:${AM_VERSION}"
+    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:

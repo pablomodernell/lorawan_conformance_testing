@@ -10,7 +10,7 @@ services:
     depends_on:
       - message-broker
       - postgres
-    image: "${DOCKER_REPO}/tools-config-scheduler:${TOOLS_CS_VERSION}"
+    image: "${DOCKER_REPO}-tools_config_scheduler:${TOOLS_CS_VERSION}"
     volumes:
       - ./downlink_scheduler_tool/devices_data.py:/config_scheduler/downlink_scheduler_tool/devices_data.py
       - ./downlink_scheduler_tool/devices_sessions.py:/config_scheduler/downlink_scheduler_tool/devices_sessions.py
@@ -25,7 +25,7 @@ services:
   tools-agent-scheduler:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}/tools-agent-scheduler:${TOOLS_AS_VERSION}"
+    image: "${DOCKER_REPO}-tools_agent_scheduler:${TOOLS_AS_VERSION}"
     volumes:
       - ./lorawan/user_agent/bridge/agent_bridge.py:/agent_mock/lorawan/user_agent/bridge/agent_bridge.py
     environment:
