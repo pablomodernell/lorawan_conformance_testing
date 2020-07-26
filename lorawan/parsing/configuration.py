@@ -43,8 +43,8 @@ class DeviceID(object):
     }
     """
 
-    def __init__(self, 
-                 json_device_id_str=None, 
+    def __init__(self,
+                 json_device_id_str=None,
                  devaddr_bytes=None,
                  deveui_bytes=None,
                  appkey_bytes=None,
@@ -87,7 +87,7 @@ class DeviceID(object):
     @devaddr.setter
     def devaddr(self, devaddr_bytes):
         self.device_id_dict["DevAddr"] = base64.b64encode(devaddr_bytes).decode()
-        
+
     @property
     def appkey(self):
         return base64.b64decode(self.device_id_dict["AppKey"])
@@ -119,10 +119,9 @@ class DeviceID(object):
     def to_print_str(self):
         """ Creates a human readable string with the contained information."""
         temp = "DevAddr: {DevAddr}\nDevEUI: {DevEUI}\nAppKey: {AppKey}\nAppSKey: {AppSKey}\nNwkSKey: {NwkSKey}"
-        retstr = temp.format(DevAddr=bytes_to_text(self.devaddr),
-                             DevEUI=bytes_to_text(self.deveui),
-                             AppKey=bytes_to_text(self.appkey),
-                             AppSKey=bytes_to_text(self.appskey),
-                             NwkSKey=bytes_to_text(self.nwkskey))
+        retstr = temp.format(DevAddr=bytes_to_text(self.devaddr, sep=""),
+                             DevEUI=bytes_to_text(self.deveui, sep=""),
+                             AppKey=bytes_to_text(self.appkey, sep=""),
+                             AppSKey=bytes_to_text(self.appskey, sep=""),
+                             NwkSKey=bytes_to_text(self.nwkskey, sep=""))
         return retstr
-

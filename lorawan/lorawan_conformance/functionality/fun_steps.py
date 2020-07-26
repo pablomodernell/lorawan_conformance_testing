@@ -36,8 +36,9 @@ import parameters.message_broker as message_broker
 class CountCheckFCntUp(lorawan_steps.CountingStep):
     """
     The Test Case remains in this step (is a CountingStep) until the reception of a specified
-    number of messages (TAOK) and checks the Frame Counter UP of the received messages. After verifying the
-    retransmission the UNCONFIRMED frames are configured again for the subsequent uplink transmissions.
+    number of messages (TAOK) and checks the Frame Counter UP of the received messages.
+    After verifying the retransmission the UNCONFIRMED frames are configured again for the
+    subsequent uplink transmissions.
     This is a final step, its completion means the that the Test Case result is PASS.
     Expected reception: TAOK.
     Sends after check: None.
@@ -81,13 +82,14 @@ class CountCheckFCntUp(lorawan_steps.CountingStep):
             else:
                 appskey = self.ctx_test_manager.device_under_test.loramac_params.appskey
                 raise lorawan_errors.FCntError(
-                    description="Previous Uplink FCnt: {p} -> Received: {r} (expecting: {e})".format(
+                    description="Previous Uplink FCnt: {p} (Received: {r}, expecting: {e})".format(
                         p=self.last_fcntup,
                         r=received_fcntup_int,
-                        e=self.last_fcntup+self.sequence_increment),
+                        e=self.last_fcntup + self.sequence_increment),
                     test_case=self.ctx_test_manager.tc_name,
                     step_name=self.name,
-                    last_message=self.received_testscript_msg.get_printable_str(encryption_key=appskey)
+                    last_message=self.received_testscript_msg.get_printable_str(
+                        encryption_key=appskey)
                 )
         if self.message_count >= self._number_of_msg:
             frmpayload_response = tests_parameters.TEST_CODE.USE_UNCONFIRMED
@@ -117,6 +119,7 @@ class ActOkToSetConfirmed(lorawan_steps.WaitActokStep):
     Expected reception: TAOK.
     Sends after check: Activates the CONFIRMED_UP for all the subsequent uplink frames (Test ID 2).
     """
+
     def step_handler(self, ch, method, properties, body):
         super().step_handler(ch, method, properties, body)
 
@@ -136,25 +139,28 @@ class ActOkToSetConfirmed(lorawan_steps.WaitActokStep):
                 delay=end_device.loramac_params.rx2_delay,
                 data_rate=end_device.loramac_params.rx2_dr,
                 frequency=end_device.loramac_params.rx2_frequency)
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
         self.print_step_info(sending=frmpayload_response)
 
 
 class CheckConfirmedToACK(lorawan_steps.WaitConfirmedActOk):
     """
-    Checks the TAOK verifying that the message if of the type CONFIRMED_UP, and triggers the usage of UNCONFIRMED
-    uplink messages for the subsequent transmissions.
+    Checks the TAOK verifying that the message if of the type CONFIRMED_UP,
+    and triggers the usage of UNCONFIRMED uplink messages for the subsequent transmissions.
     Expected reception: TAOK.
-    Sends after check: Activates the UNCONFIRMED type for all the subsequent uplink frames (Test ID 2).
+    Sends after check:
+    Activates the UNCONFIRMED type for all the subsequent uplink frames (Test ID 2).
     """
+
     def step_handler(self, ch, method, properties, body):
         super().step_handler(ch, method, properties, body)
 
         end_device = self.ctx_test_manager.device_under_test
-        lw_response = end_device.prepare_lorawan_data(frmpayload=tests_parameters.TEST_CODE.USE_UNCONFIRMED,
-                                                      fport=224,
-                                                      fctr=lorawan_parameters.FCTRL.DOWN_ADROFF_ACKON_FPENDOFF_FOPTLEN0)
+        lw_response = end_device.prepare_lorawan_data(
+            frmpayload=tests_parameters.TEST_CODE.USE_UNCONFIRMED,
+            fport=224,
+            fctr=lorawan_parameters.FCTRL.DOWN_ADROFF_ACKON_FPENDOFF_FOPTLEN0)
         if self.default_rx1_window:
             json_nwk_response = self.received_testscript_msg.create_nwk_response_str(
                 phypayload=lw_response,
@@ -166,13 +172,17 @@ class CheckConfirmedToACK(lorawan_steps.WaitConfirmedActOk):
                 delay=end_device.loramac_params.rx2_delay,
                 data_rate=end_device.loramac_params.rx2_dr,
                 frequency=end_device.loramac_params.rx2_frequency)
-        self.send_downlink(routing_key=message_broker.routing_keys.toAgent+'.gw1',
+        self.send_downlink(routing_key=message_broker.routing_keys.toAgent + '.gw1',
                            msg=json_nwk_response)
         self.print_step_info()
 
 
 class CheckConfirmedToACKFinal(CheckConfirmedToACK):
-    """ The tests finishes with result PASS if the TAOK is correct and comes in a CONFIRMED message. Final step."""
+    """
+    The tests finishes with result PASS if the TAOK is correct and comes in a CONFIRMED message.
+    Final step.
+    """
+
     def step_handler(self, ch, method, properties, body):
         super().step_handler(ch, method, properties, body)
         self.success()

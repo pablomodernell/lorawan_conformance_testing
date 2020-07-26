@@ -19,21 +19,29 @@ class RequestProcessor(message_queueing.MqInterface):
         self.declare_and_consume(queue_name='comm_configuration_request',
                                  exclusive=False,
                                  routing_key=routing_keys.configuration_request,
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.process_configuration_request)
 
         self.declare_and_consume(queue_name='comm_ui_request',
                                  exclusive=False,
                                  routing_key=f"{routing_keys.ui_all_users}.request",
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.process_ui_request)
 
         self.declare_and_consume(queue_name='comm_send_configuration_reply',
                                  exclusive=False,
                                  routing_key=routing_keys.command_configuration_reply,
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.send_configuration_reply)
 
         self.declare_and_consume(queue_name='comm_send_ui_reply',
                                  exclusive=False,
                                  routing_key=routing_keys.command_ui_reply,
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.send_ui_reply)
 
     def get_configuration_command(self):

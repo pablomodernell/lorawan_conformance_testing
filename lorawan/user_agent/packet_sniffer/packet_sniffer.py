@@ -46,10 +46,14 @@ class PacketSniffer(message_queueing.MqInterface):
 
         self.declare_and_consume(queue_name='sniffer_down',
                                  routing_key=message_broker.routing_keys.toAgent+'.#',
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.handle_sniffer_down_msg)
 
         self.declare_and_consume(queue_name='sniffer_up',
                                  routing_key=message_broker.routing_keys.fromAgent+'.#',
+                                 durable=False,
+                                 auto_delete=True,
                                  callback=self.handle_sniffer_up_msg)
 
     def start_sniffing(self):

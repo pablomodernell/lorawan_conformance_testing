@@ -41,6 +41,7 @@ class Step(object, metaclass=abc.ABCMeta):
     attributes of all tests, independently of the tested technology. A test is composed of a list of steps and the
     step should be designed to test one specific functionality of the communication standard under test.
     """
+
     def __init__(self, ctx_test_manager, step_name, next_step=None):
         """Step constructor. The step attribute context_test_session_coordinator is a reference to the Test App Server instance
         of which this step is part.
@@ -101,7 +102,8 @@ class Step(object, metaclass=abc.ABCMeta):
                                                             value=line))
         if sending:
             step_report.add_field(ui_reports.ParagraphField(name="Sending to DUT:",
-                                                            value=utils.bytes_to_text(sending)))
+                                                            value=utils.bytes_to_text(sending,
+                                                                                      sep="")))
         if additional_message:
             step_report.add_field(ui_reports.ParagraphField(name="Additional information:",
                                                             value=additional_message))
@@ -116,14 +118,16 @@ class Step(object, metaclass=abc.ABCMeta):
 
         :return: (None)
         """
-        ui_publisher.testingtool_log(msg_str="Test {0}: PASS.\n\n".format(self.ctx_test_manager.tc_name),
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.testingtool_log(
+            msg_str="Test {0}: PASS.\n\n".format(self.ctx_test_manager.tc_name),
+            key_prefix=message_broker.service_names.test_session_coordinator)
         self.ctx_test_manager.ctx_test_session_coordinator.consume_stop()
 
 
 class TestManager(object, metaclass=abc.ABCMeta):
     """ The implementation of each Test Case consists of a Test Manager that knows the list of steps to be executed.
     """
+
     @abc.abstractmethod
     def __init__(self, test_name, ctx_test_session_coordinator):
         """
@@ -137,10 +141,13 @@ class TestManager(object, metaclass=abc.ABCMeta):
                                                    tag_key=self.tc_name,
                                                    tag_value=" ")
         self.ctx_test_session_coordinator.declare_and_consume(queue_name='up_tas',
-                                                              routing_key=routing_keys.fromAgent+'.#',
+                                                              routing_key=routing_keys.fromAgent + '.#',
+                                                              durable=False,
+                                                              auto_delete=True,
                                                               callback=self.message_handler)
-        ui_publisher.testingtool_log(msg_str="Init Test Manager, starting test: {0}".format(test_name),
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        ui_publisher.testingtool_log(
+            msg_str="Init Test Manager, starting test: {0}".format(test_name),
+            key_prefix=message_broker.service_names.test_session_coordinator)
 
     def get_testcase_str(self):
         """ Returns a string with all the information of the tests to be displayed to the user."""

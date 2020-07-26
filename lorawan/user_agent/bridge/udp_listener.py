@@ -30,7 +30,7 @@ import threading
 class UDPListener(threading.Thread):
     """
     The UDP listener is in charge of concurrently running the uplink message handler while
-    the main task continues its execution.
+    the main task continues its execuion.
     """
     def __init__(self, ctx_mqinterface):
         """

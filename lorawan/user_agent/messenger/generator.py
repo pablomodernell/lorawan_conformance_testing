@@ -62,34 +62,50 @@ class MessageGenerator(object):
 
         self.mqif.declare_and_consume(queue_name='down_nwk_mock',
                                       routing_key=message_broker.routing_keys.toAgent+'.#',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_nwk_down_msg)
 
         self.mqif.declare_and_consume(queue_name='mock_up_message_actok',
                                       routing_key='mock.up.message.actok',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_up_message_actok)
 
         self.mqif.declare_and_consume(queue_name='mock_up_message_pong',
                                       routing_key='mock.up.message.pong',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_up_message_pong)
 
         self.mqif.declare_and_consume(queue_name='mock_up_message_join',
                                       routing_key='mock.up.message.join',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_up_message_join)
 
         self.mqif.declare_and_consume(queue_name='mock_up_data',
                                       routing_key='mock.up.data',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_up_data)
 
         self.mqif.declare_and_consume(queue_name='mock_configure_resetABP',
                                       routing_key='mock.configure.resetABP',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_configure_node_resetabp)
 
         self.mqif.declare_and_consume(queue_name='mock_configure',
                                       routing_key='mock.configure',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_configure_node)
 
         self.mqif.declare_and_consume(queue_name='mock_configure_showinfo',
                                       routing_key='mock.configure.showinfo',
+                                      durable=False,
+                                      auto_delete=True,
                                       callback=self.handle_mock_configure_showinfo)
 
     def get_frequency(self):

@@ -37,8 +37,8 @@ class UserInterface(message_queueing.MqInterface):
 
     def display_on_gui(self, msg_str, key_prefix="NoLogKey"):
         self.publish(msg=msg_str, routing_key=routing_keys.ui_all_users+'.display')
-        self.testingtool_log(msg_str="Display on GUI>> "+msg_str,
-                             key_prefix=key_prefix)
+        # self.testingtool_log(msg_str="Display on GUI>> "+msg_str,
+        #                      key_prefix=key_prefix)
 
 
 ui_publisher = UserInterface()

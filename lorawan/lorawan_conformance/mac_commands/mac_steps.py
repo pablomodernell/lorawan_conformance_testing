@@ -62,7 +62,8 @@ class NoMACCommandCheck(lorawan_steps.LorawanStep):
             for command in received_commands:
                 commands_str += str(command)
             raise lorawan_errors.MACError(
-                description="No MAC command expected, but received:\n{comm}".format(comm=commands_str),
+                description="No MAC command expected, but received:\n{comm}".format(
+                    comm=commands_str),
                 test_case=self.ctx_test_manager.tc_name,
                 step_name=self.name)
         else:
@@ -89,8 +90,9 @@ class NoMACCommandCheckFinal(NoMACCommandCheck):
 
 class ActokToMACCommand(lorawan_steps.WaitActokStep):
     """
-    Check the TAOK message and sends a MAC command in the default reception window (RX1 or RX2). The MAC command
-    could be configured to be sent on the FRMPayload (using port 0) or piggybacked (using FOpts field of the FHDR).
+    Check the TAOK message and sends a MAC command in the default reception window (RX1 or RX2).
+    The MAC command could be configured to be sent on the FRMPayload (using port 0) or
+    piggybacked (using FOpts field of the FHDR).
     Expected reception: TAOK.
     Sends after check: MAC command.
     """
@@ -107,13 +109,16 @@ class ActokToMACCommand(lorawan_steps.WaitActokStep):
         :param ctx_test_manager: Test Manager of the Test Case.
         :param step_name: string representation of the step name.
         :param next_step: next step of the test.
-        :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
+        :param default_rx1_window: flag to indicate if the default behaviour should be sending
+                                    downlink in RX1 (or RX2).
         :param command_bytes: byte sequence of the MAC commands to be sent in the downlink message.
-        :param piggybacked: flag to indicate if the commands should be copied in the FOpts filed of the message.
-        :param in_frmpayload: flag to indicate if port 0 should be used and the commands copied in the FRMPayload.
+        :param piggybacked: flag to indicate if the commands should be copied in the FOpts filed
+                            of the message.
+        :param in_frmpayload: flag to indicate if port 0 should be used and the commands copied
+                                in the FRMPayload.
         """
-        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name, next_step=next_step,
-                         default_rx1_window=default_rx1_window)
+        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name,
+                         next_step=next_step, default_rx1_window=default_rx1_window)
         self.piggybacked = piggybacked
         self.in_frmpayload = in_frmpayload
         self.command_bytes = command_bytes
@@ -155,7 +160,7 @@ class ActokToMACCommand(lorawan_steps.WaitActokStep):
             received_str=self.received_testscript_msg.get_printable_str(
                 encryption_key=key),
             additional_message="Sending MAC Command: 0x{comm}\nPiggybacked: {p}\nIn FRMPayload: {f}".format(
-                comm=utils.bytes_to_text(self.command_bytes),
+                comm=utils.bytes_to_text(self.command_bytes, sep=""),
                 p=self.piggybacked,
                 f=self.in_frmpayload))
 
@@ -172,15 +177,16 @@ class MACCommandAnsCheck(lorawan_steps.LorawanStep):
                  next_step,
                  default_rx1_window=True):
         """
-        Defines a received commands list (empty by default) to be filled by the parsed MAC commands contained in
-        this message.
+        Defines a received commands list (empty by default) to be filled by the parsed MAC
+        commands contained in this message.
         :param ctx_test_manager: Test Manager of the Test Case.
         :param step_name: string representation of the step name.
-        :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
+        :param default_rx1_window: flag to indicate if the default behaviour should be sending
+                                    downlink in RX1 (or RX2).
         :param next_step: next step of the test.
         """
-        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name, next_step=next_step,
-                         default_rx1_window=default_rx1_window)
+        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name,
+                         next_step=next_step, default_rx1_window=default_rx1_window)
         self.received_commands = []
 
     def step_handler(self, ch, method, properties, body):
@@ -202,7 +208,8 @@ class MACCommandAnsCheck(lorawan_steps.LorawanStep):
 
 class NewChannelAnsCheck(MACCommandAnsCheck):
     """
-    Verifies that the DUT sent an answer to a NewChannelReq MAC command request sent previouly by the TAS.
+    Verifies that the DUT sent an answer to a NewChannelReq MAC command request sent previouly
+    by the TAS.
     Expected reception: any LoRaWAN message.
     Sends after check: None.
     """
@@ -216,10 +223,12 @@ class NewChannelAnsCheck(MACCommandAnsCheck):
         """
         :param ctx_test_manager: Test Manager of the Test Case.
         :param step_name: string representation of the step name.
-        :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
+        :param default_rx1_window: flag to indicate if the default behaviour should be sending
+                                    downlink in RX1 (or RX2).
         :param next_step: next step of the test.
         :param number_of_requests: Number of the newly configured channels.
-        :param is_accept_expected: flag to indicate if the channels added are expected to be accepted or rejected.
+        :param is_accept_expected: flag to indicate if the channels added are expected to be
+                                    accepted or rejected.
         """
         super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name, next_step=next_step,
                          default_rx1_window=default_rx1_window)
@@ -267,7 +276,8 @@ class NewChannelAnsCheck(MACCommandAnsCheck):
 
 class NewChannelAnsCheckFinal(NewChannelAnsCheck):
     """
-    Verifies that the DUT sent an answer to a NewChannelReq MAC command request sent previouly by the TAS.
+    Verifies that the DUT sent an answer to a NewChannelReq MAC command request sent
+    previously by the TAS.
     Final step, the test result is PASS if this step verification succeeds.
     Expected reception: any LoRaWAN message.
     Sends after check: None.
@@ -332,8 +342,9 @@ class DevStatusAnsCheck(MACCommandAnsCheck):
 
 class DevStatusAnsCheckFinal(DevStatusAnsCheck):
     """
-    Checks the answer to a DevStatusReq MAC Command previously sent. Final step, the test case result is
-    PASS in case that this step verifies the correct reception of the DevStatusAns from the DUT.
+    Checks the answer to a DevStatusReq MAC Command previously sent. Final step, the test case
+    result is PASS in case that this step verifies the correct reception of the
+    DevStatusAns from the DUT.
     Expected reception: TAOK message.
     Sends after check: None.
     """
@@ -345,7 +356,8 @@ class DevStatusAnsCheckFinal(DevStatusAnsCheck):
 
 class ActokToNewChannelReq(ActokToMACCommand):
     """
-    Verifies the TAOK message and sends a NewChannelReq MAC Command to configure a new channel in the DUT.
+    Verifies the TAOK message and sends a NewChannelReq MAC Command to configure a new channel
+    in the DUT.
     Expected reception: TAOK message.
     Sends after check: NewChannelReq MAC Command.
     """
@@ -358,16 +370,21 @@ class ActokToNewChannelReq(ActokToMACCommand):
                  piggybacked=True,
                  in_frmpayload=False):
         """
-        New frequencies will be configured in the DUT using NewChannelReq MAC Commands. The desired new frequencies
-        will be provided to the constructor as tuples of (frequency, index) values, with the index indicating the
-        place to add the new frequency in the channel database of the DUT LoRaWAN MAC parameters.
+        New frequencies will be configured in the DUT using NewChannelReq MAC Commands.
+        The desired new frequencies will be provided to the constructor as tuples of
+        (frequency, index) values, with the index indicating the place to add the new frequency
+        in the channel database of the DUT LoRaWAN MAC parameters.
 
         :param next_step: next step of the test.
         :param step_name: string representation of the step name.
-        :param freq_idx_tuple_list: list of (freq, index) tuples ( e.g. [(868.1, 1), (868.3, 1), (868.5, 2)] )
-        :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
-        :param piggybacked: flag to indicate if the commands should be copied in the FOpts filed of the message.
-        :param in_frmpayload: flag to indicate if port 0 should be used and the commands copied in the FRMPayload.
+        :param freq_idx_tuple_list: list of (freq, index) tuples
+                                    ( e.g. [(868.1, 1), (868.3, 1), (868.5, 2)] )
+        :param default_rx1_window: flag to indicate if the default behaviour should be sending
+                                    downlink in RX1 (or RX2).
+        :param piggybacked: flag to indicate if the commands should be copied in the
+                            FOpts filed of the message.
+        :param in_frmpayload: flag to indicate if port 0 should be used and the commands copied
+                                in the FRMPayload.
         """
         commands = b''
         self.channel_list = freq_idx_tuple_list
@@ -397,8 +414,8 @@ class ActokToNewChannelReq(ActokToMACCommand):
 
 class NewChannelAnsOkCheck(MACCommandAnsCheck):
     """
-    Verifies the TAOK message and checks that a NewChannelAns MAC Command is sent by DUT as an answer to a previously
-    sent NewChannelReq command.
+    Verifies the TAOK message and checks that a NewChannelAns MAC Command is sent by DUT
+    as an answer to a previously sent NewChannelReq command.
     Expected reception: TAOK message.
     Sends after check: None.
     """
@@ -413,10 +430,11 @@ class NewChannelAnsOkCheck(MACCommandAnsCheck):
         :param step_name: string representation of the step name.
         :param next_step: next step of the test.
         :param number_of_ans: number of channels added.
-        :param default_rx1_window: flag to indicate if the default behaviour should be sending downlink in RX1 (or RX2).
+        :param default_rx1_window: flag to indicate if the default behaviour should be sending
+                                    downlink in RX1 (or RX2).
         """
-        super().__init__(ctx_test_manager=ctx_test_manager,
-                         step_name=step_name, next_step=next_step, default_rx1_window=default_rx1_window)
+        super().__init__(ctx_test_manager=ctx_test_manager, step_name=step_name,
+                         next_step=next_step, default_rx1_window=default_rx1_window)
         self.number_of_ans = number_of_ans
 
     def step_handler(self, ch, method, properties, body):

@@ -1,0 +1,3 @@
+class DuplicatedNonce(Exception):
+    pass
+
