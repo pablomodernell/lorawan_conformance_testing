@@ -6,6 +6,7 @@
 
 ## Quick start
 
+Requirements: Install Docker Engine and Docker Compose following the instructions [here](https://docs.docker.com/compose/install/).
 
 0. Configure the LoRa gateway local.conf file to send the packets to an IP and UDP port in your LAN.
     * **local.conf** example:
