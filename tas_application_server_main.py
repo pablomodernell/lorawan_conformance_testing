@@ -60,17 +60,17 @@ def display_agent_tutorial(session_coordinator):
                                              tag_key="Agent",
                                              tag_value="Instructions")
     agent_display.add_field(ui_reports.ParagraphField(
-        name="6-Configure the Packet Forwarder on the LoRa Gateway.:",
+        name="1-Configure the Packet Forwarder on the LoRa Gateway.:",
         value='e.g. Agent UDP port (default 1700) and the host IP on gateway\'s local.conf file'))
     if "message-broker" not in session_coordinator.amqp_url:
         agent_display.add_field(ui_reports.ParagraphField(
-            name="7-Set AMQP Broker URL:",
+            name="2-Set AMQP Broker URL:",
             value=f"e.g.: export AMQP_URL={session_coordinator.amqp_url}"))
     agent_display.add_field(ui_reports.ParagraphField(
-        name="9-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): ",
+        name="3-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): ",
         value='e.g.: export AGENT_PORT=1700'))
     agent_display.add_field(ui_reports.ParagraphField(
-        name="5-Start Agent Service:",
+        name="4-Start Agent Service:",
         value='make start_agent'))
     ui_publisher.display_on_gui(msg_str=str(agent_display),
                                 key_prefix=message_broker.service_names.test_session_coordinator)

@@ -1,5 +1,4 @@
 import json
-import pika
 import logging
 
 import gevent.monkey
@@ -71,7 +70,6 @@ class UiListener(Thread):
         logger.info(f"Received configuration request: {body}")
         config_received += 1
         socketio.emit('ask_config', "<p> Send configuration to TAS!!</p>", namespace='/test')
-        # ch.basic_ack(delivery_tag=method.delivery_tag)
 
     def process_gui_action_request_msg(self, ch, method, properties, body):
         logger.info(f"Received configuration request: {body}")
