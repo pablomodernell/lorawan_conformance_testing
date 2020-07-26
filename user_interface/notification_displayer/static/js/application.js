@@ -11,8 +11,21 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('user_alerts', function (msg) {
         console.log("Show user alert: " + msg);
         show_alert(msg);
-        document.getElementById('config_button').hidden = false;
     });
+    socket.on('ask_config', function (msg) {
+        console.log("Asking for Config: " + msg);
+        show_alert(msg);
+        document.getElementById('config_button').disabled = false;
+
+    });
+    socket.on('ask_dut', function (msg) {
+        console.log("Asking for DUT: " + msg);
+        document.getElementById('device_button').disabled = false;
+        document.getElementById('form-eui').disabled = false;
+        document.getElementById('form-devaddr').disabled = false;
+        document.getElementById('form-appkey').disabled = false;
+    });
+
     // If hide button is clicked, delete the post.
     document.addEventListener('click', event => {
         const element = event.target;
@@ -36,11 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Config: " + values);
             document.getElementById('test-list').disabled = true;
             document.getElementById('config_button').disabled = true;
-
-            document.getElementById('device_button').disabled = false;
-            document.getElementById('form-eui').disabled = false;
-            document.getElementById('form-devaddr').disabled = false;
-            document.getElementById('form-appkey').disabled = false;
 
         } else if (element.id === 'device_button') {
             const deveui = document.getElementById('form-eui').value;

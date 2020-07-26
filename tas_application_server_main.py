@@ -60,32 +60,18 @@ def display_agent_tutorial(session_coordinator):
                                              tag_key="Agent",
                                              tag_value="Instructions")
     agent_display.add_field(ui_reports.ParagraphField(
-        name="1-Verify you are using a compatible Python 3 version:",
-        value='e.g. Python 3.5'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="2-Install virtualenv:",
-        value='e.g. pip install virtualenv'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="3-Create a Python virtual environment:",
-        value='e.g. virtualenv --python python3.5 venv'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="4-Activate virtual environment:",
-        value='e.g. source venv/bin/activate'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="5-Install Agent:",
-        value='e.g. pip install florawan_testing'))
-    agent_display.add_field(ui_reports.ParagraphField(
         name="6-Configure the Packet Forwarder on the LoRa Gateway.:",
-        value='e.g. set the UDP port and the IP on local.conf configuration file'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="7-Set AMQP Broker URL:",
-        value='e.g.: export AMQP_URL="' + session_coordinator.amqp_url + '"'))
-    agent_display.add_field(ui_reports.ParagraphField(
-        name="8-Set the IP of the interface listening to the Gateway with the Packet Forwarder (see step 6): ",
-        value='e.g.: export PF_IP="XXX.XXX.XXX.XXX"'))
+        value='e.g. Agent UDP port (default 1700) and the host IP on gateway\'s local.conf file'))
+    if "message-broker" not in session_coordinator.amqp_url:
+        agent_display.add_field(ui_reports.ParagraphField(
+            name="7-Set AMQP Broker URL:",
+            value=f"e.g.: export AMQP_URL={session_coordinator.amqp_url}"))
     agent_display.add_field(ui_reports.ParagraphField(
         name="9-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): ",
-        value='e.g.: export PF_UDP_PORT="XXXX"'))
+        value='e.g.: export AGENT_PORT=1700'))
+    agent_display.add_field(ui_reports.ParagraphField(
+        name="5-Start Agent Service:",
+        value='make start_agent'))
     ui_publisher.display_on_gui(msg_str=str(agent_display),
                                 key_prefix=message_broker.service_names.test_session_coordinator)
 

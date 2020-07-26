@@ -111,11 +111,11 @@ down:
 stop:
 	docker-compose -f docker-compose.yml stop
 
-bootstrap_test_session:
+bootstrap_session_interface:
 	docker-compose -f docker-compose.yml up -d --no-recreate message-broker postgres
 	@echo "Preparing test environment..."
 	@sleep 10
-	docker-compose -f docker-compose.yml up -d --no-recreate command-manager notification-displayer
+	docker-compose -f docker-compose.yml up -d --force-recreate --no-deps command-manager notification-displayer
 	@sleep 2
 	@echo "Ready. Open Notification Displayer Web (http://localhost:8081/) and launch session."
 
