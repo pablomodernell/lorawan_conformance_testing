@@ -1,39 +1,58 @@
-# F-LoRA: LoRaWAN testing tool.
-* [F-Interop](www.f-interop.eu)
+# LoRaWAN Conformance Testing Tools.
+* Redy to be run locally or as part of the [F-Interop](www.f-interop.eu) Platform.
 * Region:  European Union 863-870MHz ISM Band 
 * Protocol version: LoRaWAN Version 1.0.2/ Regional Parameters v1.0.2rB
 
-## Quick start 
 
-1. Create a user account [F-Interop](www.f-interop.eu) in [https://go.f-interop.eu/](https://go.f-interop.eu/).
-2. Configure the LoRa gateway local.conf file to send the packets to an IP and UDP port in your LAN.
+## Quick start
+
+
+0. Configure the LoRa gateway local.conf file to send the packets to an IP and UDP port in your LAN.
     * **local.conf** example:
 
-    		                                                      
+
 		           {"server_address": "192.168.0.129",
-		           "serv_port_up": 5555,                          
-		           "serv_port_down": 5555,                        
+		           "serv_port_up": 1700,
+		           "serv_port_down": 1700,
 		           "serv_enabled": true,
-		           "keepalive_interval": 10,        
-		           "stat_interval": 30,             
-		           "push_timeout_ms": 100,                        
-		           "forward_crc_valid": true,                     
-		           "forward_crc_error": false,                    
+		           "keepalive_interval": 10,
+		           "stat_interval": 30,
+		           "push_timeout_ms": 100,
+		           "forward_crc_valid": true,
+		           "forward_crc_error": false,
 		           "forward_crc_disabled": false }
-		           
-3. Sign in and select the F-LoRa LoRaWAN conformance test.
-4. Provide the device personalization information (ABP) using the web GUI:
+
+
+### Running the Test Server locally
+
+
+2a. Start the User Interface and prepare the test environment: **make  bootstrap_session_interface**
+3a. Open the user interface in a web browser: ** by default on http://localhost:8081/**
+4a. Start the Test Application Server: **make launch_test_session**
+5a. Follow the instruction in the web user interface and select the tests to be run and the device credentials.
+6a. Start the Agent: **make start_agent**
+7a. Press the **Start** button in the web GUI.
+8b. Connect the Device Under Test (DUT) to start sending messages to the LoRa gateway.
+    * The DUT with the Implementation Under Test (IUT) must implement the Test Application Protocol to enter in
+    Test Mode (using the default testing port 224).
+
+
+### Running the Test Server remotely in F-Interop plaform
+
+
+2b. Create a user account [F-Interop](www.f-interop.eu) in [https://go.f-interop.eu/](https://go.f-interop.eu/).
+3b. Sign in and select the F-LoRa LoRaWAN conformance test.
+4b. Provide the device personalization information (ABP) using the web GUI:
     * DevEUI
     * AppKey
     * DevAddr
-5. Select the test cases to be executed and follow instructions to install the Agent. The following environment 
-variables must be defined:
+5b. Select the test cases to be executed and follow instructions to run the Agent. The following environment
+variables should be defined:
     * AMQP_URL: URL of the AMQP broker with the connection parameters.
-    * PF_IP: IP of the interface connected to the Gateway with the Packet Forwarder (the IP configured in the Gateway).
-    * PF_UDP_PORT: UDP port used by the Packer Forwarder.
-6. Start the Agent using the **flora_start_bridge** command.
-6. Press the **Start** button in the web GUI.
-7. Connect the Device Under Test (DUT) to start sending messages to the LoRa gateway.
+    * AGENT_PORT: UDP port where the Agent listens for messages sent by the Packer Forwarder.
+6b. Start the Agent using Make: **make start_agent"".
+7b. Press the **Start** button in the web GUI.
+8b. Connect the Device Under Test (DUT) to start sending messages to the LoRa gateway.
     * The DUT with the Implementation Under Test (IUT) must implement the Test Application Protocol to enter in
     Test Mode (using the default testing port 224).
 
