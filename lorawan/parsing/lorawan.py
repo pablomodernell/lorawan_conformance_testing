@@ -284,8 +284,9 @@ class LoRaWANMACPayload(ConditionalRaiser):
             ret_str += str(self.fhdr)
             ret_str += "FPort: {0}\n".format(self.fport_int)
             if self.frmpayload_bytes:
-                ret_str += "FRMPayload: {0}\n".format(utils.bytes_to_text(self.frmpayload_bytes,
-                                                                          sep=""))
+                ret_str += "Encrypted FRMPayload: {0}\n".format(
+                    utils.bytes_to_text(self.frmpayload_bytes,
+                                        sep=""))
             else:
                 ret_str += "No FRMPayload detected.\n"
         ret_str += "==============================================\n"
@@ -342,7 +343,9 @@ class LoRaWANFHDR(ConditionalRaiser):
                                                                   sep=""))
         retstr += "----FCtrl: {0}\n".format(self.fctrl.fctrl_binary_str())
         retstr += str(self.fctrl)
-        retstr += "----FCnt: {0} ({1})\n".format(self.get_fcnt_int(), self.fcnt_bytes)
+        retstr += "----FCnt: {0} ({1})\n".format(self.get_fcnt_int(),
+                                                 utils.bytes_to_text(self.fcnt_bytes,
+                                                                     sep=""))
         retstr += "----FOpts: {0}\n".format(self.fopts_to_str())
         return retstr
 

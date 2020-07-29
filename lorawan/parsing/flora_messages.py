@@ -270,7 +270,8 @@ class GatewayMessage(test_messages.TestingToolMessage):
         )
         if encryption_key:
             frmpayload_plaintext = lorawan_message.get_frmpayload_plaintext(key=encryption_key)
-            ret_str += "Decrypted FRMPayload: {}".format(
-                utils.bytes_to_text(frmpayload_plaintext, sep=""))
+            ret_str += "Decrypted FRMPayload: {frmpay}\n (Key {ekey})\n".format(
+                frmpay=utils.bytes_to_text(frmpayload_plaintext, sep=""),
+                ekey=utils.bytes_to_text(encryption_key, sep=""))
         ret_str += str(lorawan_message)
         return ret_str
