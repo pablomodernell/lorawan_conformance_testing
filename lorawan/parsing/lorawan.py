@@ -90,8 +90,9 @@ class LoRaWANMessage(ConditionalRaiser):
     def __str__(self):
         """ Human readable string representation of the LoRaWAN message."""
         ret_str = ''
-        ret_str += "----------------------------------------------\n"
-        ret_str += "PHY payload information\n"
+        ret_str += "\n----------------------------------------------\n"
+        ret_str += "PHY payload:\n"
+        ret_str += f"{utils.bytes_to_text(self.phypayload_bytes, sep='')}\n"
         ret_str += "MHDR bits: {0} ({1})\n".format(self.mhdr,
                                                    self.mhdr.mtype_str)
         ret_str += "MACPayload: {0}\n".format(utils.bytes_to_text(

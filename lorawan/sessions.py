@@ -30,29 +30,38 @@ import json
 import random
 import utils
 import copy
+import logging
+
 import lorawan.lorawan_parameters.general as lorawan_parameters
 import conformance_testing.test_errors as test_errors
+
+logger = logging.getLogger(__name__)
 
 
 class ChannelStructure(object):
     """ Channel structure of the LoRaWAN MAC parameters."""
+
     def __init__(self):
         """
         The channel structure mantains a data base with the configured frequencies.
         """
         self._channel_db = list(lorawan_parameters.MIN_LORA_FREQ)
-        self._used_frequencies = [channel["freq"] for channel in self._channel_db if not channel["freq"] == 0]
+        self._used_frequencies = [channel["freq"] for channel in self._channel_db if
+                                  not channel["freq"] == 0]
 
     @property
     def used_frequencies(self):
-        """ Updates from the channel data base and returns the list of frequencies currently used."""
-        self._used_frequencies = [channel["freq"] for channel in self._channel_db if not channel["freq"] == 0]
+        """
+        Updates from the channel data base and returns the list of frequencies currently used.
+        """
+        self._used_frequencies = [channel["freq"] for channel in self._channel_db if
+                                  not channel["freq"] == 0]
         return self._used_frequencies
 
     def add_frequency(self, freq, idx=None):
         """
-        Configures a new frequency to be used by the end device. If no position (index) is provided the new
-        frequency is configured in the first non used index.
+        Configures a new frequency to be used by the end device. If no position (index) is provided
+        the new frequency is configured in the first non used index.
         :param freq: frequency to be added.
         :param idx: position in the channel structure to add the new frequency.
         :return:
@@ -92,6 +101,7 @@ class ChannelStructure(object):
 
 class LoRaMACParameters(object):
     """ LoRaWAN MAC parameters structure."""
+
     def __init__(self,
                  devaddr,
                  appskey,
@@ -221,9 +231,9 @@ class EndDevice(object):
     def create_appnonce(self):
         """
         (EndDevice) -> (None)
-        Creates a new random device nonce to be used in a join request and keeps track of the used nonces
-        in order to avoid repeating a value (join requests with repeated device nonces are ignored by the network
-        to prevent from replay attacks)
+        Creates a new random device nonce to be used in a join request and keeps track of the used
+        nonces in order to avoid repeating a value (join requests with repeated device nonces are
+        ignored by the network to prevent from replay attacks)
         :return: int (between 0 and 2ˆ16)
         """
         nonce = random.randint(0, 2 ** 24 - 1)
@@ -238,7 +248,8 @@ class EndDevice(object):
                     rxdelay=lorawan_parameters.JOIN_ACCEPT_RXDELAY.DELAY1,
                     cflist=lorawan_parameters.JOIN_ACCEPT_CFLIST.NO_CHANNELS):
         """
-        Updates the session information and creates the PHYPayload of a join accept message to be sent to the DUT.
+        Updates the session information and creates the PHYPayload of a join accept message to be
+        sent to the DUT.
 
         :param devnonce: 2 bytes of the device nonce used in the join request message.
         :param dlsettings: byte of the dlsettings field (join accept)
@@ -267,7 +278,8 @@ class EndDevice(object):
                                   )
         self.update_device_session(devaddr=devaddr, appskey=appskey, nwkskey=nwkskey)
 
-        self.loramac_params.rx1_dr_offset = (int.from_bytes(dlsettings, byteorder='big') & 0x70) >> 4
+        self.loramac_params.rx1_dr_offset = (int.from_bytes(dlsettings,
+                                                            byteorder='big') & 0x70) >> 4
         rx2_dr = (int.from_bytes(dlsettings, byteorder='big') & 0x0f)
         self.loramac_params.rx2_dr = lorawan_parameters.LORA_DR[rx2_dr]
         seconds_delay = max(1, (int.from_bytes(rxdelay, byteorder='big') & 0x0f))
@@ -285,14 +297,15 @@ class EndDevice(object):
                              fopts=b'',
                              force_fcntdown_int=None):
         """
-        Creates the PHYPayload of a LoRaWAN DATA message with the specified lorawan_parameters. It does the FRMPayload
-        encryption and calculates de MIC using the device's keys.
+        Creates the PHYPayload of a LoRaWAN DATA message with the specified lorawan_parameters.
+        It does the FRMPayload encryption and calculates de MIC using the device's keys.
         :param frmpayload: plain text of the FRMPayload (bytes)
         :param fport: frame port of the message (int)
         :param mhdr: MAC Header (1 byte)
         :param fctr: Frame control field of the Frame header (FHDR)
         :param fopts: Frame options field used to send MAC commands (0 to 15 bytes).
-        :param force_fcntdown_int: Force the use of a forged downlink frame count (don't increase de downlink count).
+        :param force_fcntdown_int: Force the use of a forged downlink frame count
+                                    (don't increase the downlink count).
         :return: bytes of the PHYPayload
         """
         if force_fcntdown_int:
@@ -306,7 +319,8 @@ class EndDevice(object):
 
         fhdr = self.loramac_params.devaddr[::-1] + fctr + struct.pack('<H', fcnt_down) + fopts
         mhdr_fhdr = mhdr + fhdr
-        assert mhdr in (b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
+        assert mhdr in (
+        b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
         if mhdr in (b'\x00', b'\x40', b'\x80'):
             direction = 0
         else:
@@ -333,16 +347,17 @@ class EndDevice(object):
 
     def update_device_session(self, devaddr, appskey, nwkskey):
         """
-        Updates de identification of the devices corresponding to the current session. This could be used to update
-        the short address (DevAddr) and session keys (AppSKey and NwkSKey) after a join-request and join-accept
-        message interchange. After a session update the frame count value (FCnt) is reset.
+        Updates de identification of the devices corresponding to the current session. This could
+        be used to update the short address (DevAddr) and session keys (AppSKey and NwkSKey) after
+        a join-request and join-accept message interchange. After a session update the frame count
+        value (FCnt) is reset.
         :param devaddr: bytes (4) of the device short address.
         :param appskey: bytes (8) of the application session key.
         :param nwkskey: bytes (8) of the network session key.
         :return: None
         """
-        if not(len(appskey) == 16 and len(nwkskey) == 16 and len(devaddr) == 4):
-            description_template = "Wrong session information.\nDevAddr={da}\nAppSkey={ak}\nNwkSKey={nk}\n"
+        if not (len(appskey) == 16 and len(nwkskey) == 16 and len(devaddr) == 4):
+            description_template = "Wrong session info.\nDevAddr={da}\nAppSkey={ak}\nNwkSKey={nk}\n"
             raise test_errors.SessionError(description=description_template.format(ak=appskey,
                                                                                    nk=nwkskey,
                                                                                    da=devaddr),
@@ -355,30 +370,31 @@ class EndDevice(object):
         self.loramac_params.nwkskey = nwkskey
         self.fcnt_up = 0
         self.fcnt_down = 0
-        print("#####################")
-        print("Updating Session")
-        print(f"Old session:\n{str(self.loramac_previous_session)}")
-        print(f"NEW session:\n{str(self.loramac_params)}")
-        print("#####################")
+        prev_str = str(self.loramac_previous_session)
+        new_str = str(self.loramac_params)
+        logger.debug(
+            f"Updating Session\nOld session:\n{prev_str}\nNEW session:\n{new_str}")
 
     def store_used_devnonce(self, devnonce):
         """
         (EndDevice, int) -> (None)
-        Store the used device nonce to avoid repeated use of the same value and prevent replay attacks.
+        Store the used device nonce to avoid repeated use of the same value and prevent
+        replay attacks.
         :param devnonce: (int) Value to store as a used device nonce.
         :return: None
         """
         if devnonce in self._used_otaa_devnonces:
-            raise test_errors.SessionError(description="Repeated devnonce in join request message. Replay detected.",
-                                           test_case="TC",
-                                           step_name="SN")
+            raise test_errors.SessionError(
+                description="Repeated devnonce in join request message. Replay detected.",
+                test_case="TC",
+                step_name="SN")
         self._used_otaa_devnonces.append(devnonce)
 
     def joinrequest_is_replay(self, devnonce):
         """
         (EndDevice, bute) -> (boolean)
-        Detects if a device nonce was already used in a previous join request message in order to detect replayed
-        messages.
+        Detects if a device nonce was already used in a previous join request message in order to
+        detect replayed messages.
         :param devnonce: device nonce (2 bytes, big endian)
         :return: True iif the device nonce was already used.
         """

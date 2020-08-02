@@ -25,6 +25,7 @@ This Module define the main services of the Test Session Coordinator in charge o
 # SOFTWARE.
 #################################################################################
 import json
+import logging
 
 import lorawan.sessions as device_sessions
 import lorawan.parsing.configuration as configuration_parser
@@ -35,6 +36,8 @@ import user_interface.ui_reports as ui_reports
 import parameters.message_broker as message_broker
 from parameters.message_broker import routing_keys
 
+logger = logging.getLogger(__name__)
+
 
 class TestSessionCoordinator(message_queueing.MqInterface):
     """
@@ -43,7 +46,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
     messages and send downlink messages to the agent (using the correct routing key).
     """
 
-    def __init__(self):
+    def __init__(self, reset_attemps=3):
         """
         The constructor initializes the downlink counter of the test session (defined in the test application
         protocol) and declares logging queues in the RMQ Broker to avoid the message loss (in case that the clients
@@ -56,7 +59,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self._next_test_index = 0
         self._reset_dut = False
         self._reset_count = 0
-        self._reset_limit = 3
+        self._reset_limit = reset_attemps
         self.downlink_counter = 0
         self.testingtool_on = True
         self.last_deviceid = None
@@ -107,20 +110,20 @@ class TestSessionCoordinator(message_queueing.MqInterface):
     def pop_next_test_name(self):
         """ Returns the name of the next test to be executed."""
         if not self.test_available():
-            print(f"No test available.")
+            logger.info(f"No test available.")
             return None
         if self.reset_dut:
             if self._reset_count >= self._reset_limit:
-                print(
+                logger.info(
                     f"Reset attempts exceeded ({self._reset_count}/{self._reset_limit}).")
                 self._next_test_index = len(self.requested_tests)
                 return None
-            print("Resetting device.")
+            logger.info("Resetting device.")
             self.reset_dut = False
             self._reset_count += 1
             return "td_lorawan_reset"
         else:
-            print("Returning new test.")
+            logger.info("Returning new test.")
             self._reset_count = 0
             idx = self._next_test_index
             self._next_test_index += 1

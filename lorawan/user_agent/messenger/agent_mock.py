@@ -29,6 +29,10 @@ import click
 import lorawan.user_agent.messenger.generator as gen
 from lorawan.parsing.configuration import DeviceID
 
+from logger_configurator import LoggerConfigurator
+
+LoggerConfigurator(level="INFO")
+
 
 def validate_session_data(field_length, field_str):
     try:
@@ -82,3 +86,10 @@ def agent_mock_main(deveui, devaddr, appkey, appskey, nwkskey, tas_appeui):
     generator.start_consuming()
 
 
+if __name__ == '__main__':
+    agent_mock_main(deveui="0101010101010101",
+                    devaddr="01010101",
+                    appkey="2b7e151628aed2a6abf7158809cf4f3c",
+                    appskey="2b7e151628aed2a6abf7158809cf4f3c",
+                    nwkskey="2b7e151628aed2a6abf7158809cf4f3c",
+                    tas_appeui="0101010101010101")

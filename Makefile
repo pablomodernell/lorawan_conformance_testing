@@ -125,6 +125,9 @@ launch_test_session:
 start_agent:
 	docker-compose -f docker-compose.yml up -d --force-recreate --no-deps agent
 
+start_inspector:
+	docker-compose -f docker-compose.yml up -d --force-recreate --no-deps agent-mock
+
 agent_mock_logs:
 	docker logs $(docker-compose ps -q agent-mock) -f
 

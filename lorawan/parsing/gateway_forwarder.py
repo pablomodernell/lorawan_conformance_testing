@@ -38,7 +38,7 @@ class SemtechUDPMsg:
     # Semtech Packet Forwarder (SPF) Message Types:
     SPF_MESSAGES = ("PUSH_DATA", "PUSH ACK", "PULL_DATA", "PULL_RESP", "PULL_ACK", "TX_ACK")
 
-    def __init__(self, message_bytes):
+    def  __init__(self, message_bytes):
         """
         (SemtechUDPMsg, bytes) -> (None)
         Parses the bytes of a received SPF messages.
@@ -60,7 +60,7 @@ class SemtechUDPMsg:
 
     def __str__(self):
         """ Human readable string representation."""
-        ret_str = "**********************************************\n"
+        ret_str = "\n**********************************************\n"
         ret_str += "Packet Forwarder Protocol:\n"
         ret_str += "Protocol Ver.: {0}\n".format(self.protocolVer)
         ret_str += "Token: {0}\n".format(utils.bytes_to_text(self.token, sep=""))

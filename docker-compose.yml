@@ -28,6 +28,7 @@ services:
     image: "${DOCKER_REPO}-test_application_server:${TAS_VERSION}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
+      - "TAS_RESET_ATTEMPTS=${TAS_RESET_ATTEMPTS}"
     env_file:
       - env_var
     restart: on-failure
