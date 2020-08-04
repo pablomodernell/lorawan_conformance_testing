@@ -2,46 +2,47 @@ DOCKER_REGISTRY=pmodernell/lorawan_conformance
 
 # Global version for the testing platform:
 VERSION=0.0.1-demo
+SUFFIX=
 
 NAME_AGENT=agent
 # Specifies particular version for this service:
-VERSION_AGENT=$(VERSION)
+VERSION_AGENT=$(VERSION)$(SUFFIX)
 DOCKER_NAME_AGENT=$(DOCKER_REGISTRY)-$(NAME_AGENT)
 DOCKER_NAME_AGENT_FULL=$(DOCKER_NAME_AGENT):$(VERSION_AGENT)
 
 NAME_TAS=test_application_server
 # Specifies particular version for this service:
-VERSION_TAS=$(VERSION)
+VERSION_TAS=$(VERSION)$(SUFFIX)
 DOCKER_NAME_TAS=$(DOCKER_REGISTRY)-$(NAME_TAS)
 DOCKER_NAME_TAS_FULL=$(DOCKER_NAME_TAS):$(VERSION_TAS)
 
 NAME_CM=command_manager
 # Specifies particular version for this service:
-VERSION_CM=$(VERSION)
+VERSION_CM=$(VERSION)$(SUFFIX)
 DOCKER_NAME_CM=$(DOCKER_REGISTRY)-$(NAME_CM)
 DOCKER_NAME_CM_FULL=$(DOCKER_NAME_CM):$(VERSION_CM)
 
 NAME_ND=notification_displayer
 # Specifies particular version for this service:
-VERSION_ND=$(VERSION)
+VERSION_ND=$(VERSION)$(SUFFIX)
 DOCKER_NAME_ND=$(DOCKER_REGISTRY)-$(NAME_ND)
 DOCKER_NAME_ND_FULL=$(DOCKER_NAME_ND):$(VERSION_ND)
 
 NAME_AM=agent_mock
 # Specifies particular version for this service:
-VERSION_AM=$(VERSION)
+VERSION_AM=$(VERSION)$(SUFFIX)
 DOCKER_NAME_AM=$(DOCKER_REGISTRY)-$(NAME_AM)
 DOCKER_NAME_AM_FULL=$(DOCKER_NAME_AM):$(VERSION_AM)
 
 NAME_T_CS=tools_config_scheduler
 # Specifies particular version for this service:
-VERSION_T_CS=$(VERSION)
+VERSION_T_CS=$(VERSION)$(SUFFIX)
 DOCKER_NAME_T_CS=$(DOCKER_REGISTRY)-$(NAME_T_CS)
 DOCKER_NAME_T_CS_FULL=$(DOCKER_NAME_T_CS):$(VERSION_T_CS)
 
 NAME_T_AS=tools_agent_scheduler
 # Specifies particular version for this service:
-VERSION_T_AS=$(VERSION)
+VERSION_T_AS=$(VERSION)$(SUFFIX)
 DOCKER_NAME_T_AS=$(DOCKER_REGISTRY)-$(NAME_T_AS)
 DOCKER_NAME_T_AS_FULL=$(DOCKER_NAME_T_AS):$(VERSION_T_AS)
 
@@ -132,7 +133,7 @@ agent_mock_logs:
 	docker logs $(docker-compose ps -q agent-mock) -f
 
 open_cli:
-	docker-compose run --rm cli bash
+	docker-compose run --rm cli sh
 
 publish_conformance: build_conformance
 	@docker push $(DOCKER_NAME_AGENT_FULL)
