@@ -1,0 +1,1240 @@
+2020-08-11 22:34:48,407 lorawan.sessions  set_default_loramac INFO     Restoring default LoRa MAC parameters.
+2020-08-11 22:34:48,412 pika.adapters.base_connection _create_and_connect_to_socket INFO     Pika version 0.12.0 connecting to 172.31.0.3:5672
+2020-08-11 22:34:48,417 pika.adapters.blocking_connection             __init__ INFO     Created channel=1
+
+
+Agent mock started and ready to interact with the Testing App Server.
+2020-08-11 22:35:33,126 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1333739500, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:35:33,127 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101000000164A3BB6E8FA72BBC111A6E183DC041807843AFEE1
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101000000164A3BB6E8FA72BBC111A6E183DC041807
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000000
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 0 (0000)
+----FOpts: None
+FPort: 22
+Encrypted FRMPayload: 4A3BB6E8FA72BBC111A6E183DC041807
+==============================================
+MIC: 843AFEE1
+==============================================
+
+2020-08-11 22:35:33,130 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 00000000000000FE3E090D0503AB0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:33,136 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEAAADg2JksxUshhmI=",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 17,
+    "tmst": 1334739500
+}
+2020-08-11 22:35:33,138 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:33,140 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1334739500, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000000E0D8992CC54B218662 (Size: 17 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000000E0D8992CC54B218662
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000000E0D8992CC5
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000000
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 0 (0000)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: D8992CC5
+==============================================
+MIC: 4B218662
+==============================================
+Decrypted FRMPayload: 01010101
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:33,140 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Test Activation detected
+2020-08-11 22:35:34,330 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1334946052, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:35:34,331 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800100E0FD51D4B7BBEA
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800100E0FD51
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800100
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 1 (0001)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: FD51
+==============================================
+MIC: D4B7BBEA
+==============================================
+
+2020-08-11 22:35:34,332 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:39,336 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1339945916, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:35:39,336 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800200E0E0C27B735131
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800200E0E0C2
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800200
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 2 (0002)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: E0C2
+==============================================
+MIC: 7B735131
+==============================================
+
+2020-08-11 22:35:39,337 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:39,340 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEAAQDgfYzshyQZ5ns=",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 17,
+    "tmst": 1340945916
+}
+2020-08-11 22:35:39,341 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:39,341 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1340945916, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000100E07D8CEC872419E67B (Size: 17 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000100E07D8CEC872419E67B
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000100E07D8CEC87
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000100
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 1 (0001)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 7D8CEC87
+==============================================
+MIC: 2419E67B
+==============================================
+Decrypted FRMPayload: 04A07D76
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:39,342 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:35:44,538 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1344945772, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:35:44,538 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800300E04EFDE2798B98BAC2
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800300E04EFDE279
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800300
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 3 (0003)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 4EFDE279
+==============================================
+MIC: 8B98BAC2
+==============================================
+
+2020-08-11 22:35:44,540 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04A17E77
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:44,541 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:35:44,548 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEAAgDgA41OandkGVn4n1C6j6dRlIJHHu3q",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 30,
+    "tmst": 1345945772
+}
+2020-08-11 22:35:44,549 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:44,551 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1345945772, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000200E0038D4E6A77641959F89F50BA8FA7519482471EEDEA (Size: 30 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000200E0038D4E6A77641959F89F50BA8FA7519482471EEDEA
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000200E0038D4E6A77641959F89F50BA8FA7519482
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000200
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 2 (0002)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 038D4E6A77641959F89F50BA8FA7519482
+==============================================
+MIC: 471EEDEA
+==============================================
+Decrypted FRMPayload: 04F8C5A93BC837DE31D1EB2F39A0EF65B7
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:44,551 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:35:49,650 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1349976356, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:35:49,650 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800400E004F8C24DBC0F1B6248A3BA1A6F43B729B797C3134A
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800400E004F8C24DBC0F1B6248A3BA1A6F43B729B7
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800400
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 4 (0004)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 04F8C24DBC0F1B6248A3BA1A6F43B729B7
+==============================================
+MIC: 97C3134A
+==============================================
+
+2020-08-11 22:35:49,651 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04F9C6AA3CC938DF32D2EC303AA1F066B8
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:49,652 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:35:49,654 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEAAwDgqkomwPvS33uI",
+    "datr": "SF8BW125",
+    "freq": 868.1,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 18,
+    "tmst": 1350976356
+}
+2020-08-11 22:35:49,655 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:49,655 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1350976356, freq: 868.1, DR: SF8BW125
+PHYPayload: 6001010101000300E0AA4A26C0FBD2DF7B88 (Size: 18 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000300E0AA4A26C0FBD2DF7B88
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000300E0AA4A26C0FB
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000300
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 3 (0003)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: AA4A26C0FB
+==============================================
+MIC: D2DF7B88
+==============================================
+Decrypted FRMPayload: 04FD2B3B04
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:49,656 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:35:54,694 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1354945492, FREQ: 868.3, DATR: SF8BW125.
+2020-08-11 22:35:54,694 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800500E0A423C6B054CC8C5E68
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800500E0A423C6B054
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800500
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 5 (0005)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: A423C6B054
+==============================================
+MIC: CC8C5E68
+==============================================
+
+2020-08-11 22:35:54,695 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04FE2C3C05
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:54,695 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:35:54,697 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEABADgMOTndp6wEp+Vag==",
+    "datr": "SF8BW125",
+    "freq": 868.3,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 19,
+    "tmst": 1355945492
+}
+2020-08-11 22:35:54,697 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:54,698 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1355945492, freq: 868.3, DR: SF8BW125
+PHYPayload: 6001010101000400E030E4E7769EB0129F956A (Size: 19 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000400E030E4E7769EB0129F956A
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000400E030E4E7769EB0
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000400
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 4 (0004)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 30E4E7769EB0
+==============================================
+MIC: 129F956A
+==============================================
+Decrypted FRMPayload: 0476F9F7E880
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:54,698 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:35:59,960 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1359955588, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:35:59,961 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800600E0F6CF667A6C52F0DBDC65
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800600E0F6CF667A6C52
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800600
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 6 (0006)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: F6CF667A6C52
+==============================================
+MIC: F0DBDC65
+==============================================
+
+2020-08-11 22:35:59,961 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 0477FAF8E981
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:35:59,961 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:35:59,965 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEABQDg0zygkauVZsEThiQEDA62",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 24,
+    "tmst": 1360955588
+}
+2020-08-11 22:35:59,965 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:35:59,966 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1360955588, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000500E0D33CA091AB9566C1138624040C0EB6 (Size: 24 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000500E0D33CA091AB9566C1138624040C0EB6
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000500E0D33CA091AB9566C1138624
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000500
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 5 (0005)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: D33CA091AB9566C1138624
+==============================================
+MIC: 040C0EB6
+==============================================
+Decrypted FRMPayload: 04DAACD5FE15F52A45714C
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:35:59,966 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:04,348 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1364965684, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:36:04,348 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800700E0B50F3317E82CFC89E393D0E417D6B7
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800700E0B50F3317E82CFC89E393D0
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800700
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 7 (0007)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: B50F3317E82CFC89E393D0
+==============================================
+MIC: E417D6B7
+==============================================
+
+2020-08-11 22:36:04,349 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04DBADD6FF16F62B46724D
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:04,350 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:04,354 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEABgDgKzK6AJlf45LjGzo=",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 20,
+    "tmst": 1365965684
+}
+2020-08-11 22:36:04,355 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:04,356 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1365965684, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000600E02B32BA00995FE392E31B3A (Size: 20 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000600E02B32BA00995FE392E31B3A
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000600E02B32BA00995FE3
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000600
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 6 (0006)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 2B32BA00995FE3
+==============================================
+MIC: 92E31B3A
+==============================================
+Decrypted FRMPayload: 045158BB801578
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:04,357 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:09,852 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1369955316, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:36:09,853 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800800E00A8F8F4BC48C37B25BCD9B
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800800E00A8F8F4BC48C37
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800800
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 8 (0008)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 0A8F8F4BC48C37
+==============================================
+MIC: B25BCD9B
+==============================================
+
+2020-08-11 22:36:09,854 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 045259BC811679
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:09,854 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:09,859 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEABwDgGXhWkxqxJkAB0CkMmgp3Si1N7Gc=",
+    "datr": "SF8BW125",
+    "freq": 868.1,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 29,
+    "tmst": 1370955316
+}
+2020-08-11 22:36:09,860 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:09,861 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1370955316, freq: 868.1, DR: SF8BW125
+PHYPayload: 6001010101000700E0197856931AB1264001D0290C9A0A774A2D4DEC67 (Size: 29 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000700E0197856931AB1264001D0290C9A0A774A2D4DEC67
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000700E0197856931AB1264001D0290C9A0A774A
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000700
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 7 (0007)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 197856931AB1264001D0290C9A0A774A
+==============================================
+MIC: 2D4DEC67
+==============================================
+Decrypted FRMPayload: 046CAE081FB5BC012D26D78DF1E6EA6D
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:09,862 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:14,563 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1374975652, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:36:14,563 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800900E046D5A7362D39F25B48A37FFEC99B1B762E38CB4B
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800900E046D5A7362D39F25B48A37FFEC99B1B76
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800900
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 9 (0009)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 46D5A7362D39F25B48A37FFEC99B1B76
+==============================================
+MIC: 2E38CB4B
+==============================================
+
+2020-08-11 22:36:14,565 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 046DAF0920B6BD022E27D88EF2E7EB6E
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:14,566 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:14,570 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEACADgkQ+xwRqAreuY+BjY6M6ypvA=",
+    "datr": "SF8BW125",
+    "freq": 868.1,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 26,
+    "tmst": 1375975652
+}
+2020-08-11 22:36:14,571 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:14,573 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1375975652, freq: 868.1, DR: SF8BW125
+PHYPayload: 6001010101000800E0910FB1C11A80ADEB98F818D8E8CEB2A6F0 (Size: 26 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000800E0910FB1C11A80ADEB98F818D8E8CEB2A6F0
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000800E0910FB1C11A80ADEB98F818D8E8
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000800
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 8 (0008)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 910FB1C11A80ADEB98F818D8E8
+==============================================
+MIC: CEB2A6F0
+==============================================
+Decrypted FRMPayload: 04148AC12E75D599351E855548
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:14,573 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:19,683 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1379965268, FREQ: 868.3, DATR: SF8BW125.
+2020-08-11 22:36:19,684 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800A00E069FD9C6E6D59C9665EC9E88DA286EC753C
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800A00E069FD9C6E6D59C9665EC9E88DA2
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800A00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 10 (000A)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 69FD9C6E6D59C9665EC9E88DA2
+==============================================
+MIC: 86EC753C
+==============================================
+
+2020-08-11 22:36:19,685 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04158BC22F76D69A361F865649
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:19,685 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:19,691 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEACQDgttYkkOe8rUB21VdWVtFZCWlhkg==",
+    "datr": "SF8BW125",
+    "freq": 868.3,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 28,
+    "tmst": 1380965268
+}
+2020-08-11 22:36:19,697 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:19,699 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1380965268, freq: 868.3, DR: SF8BW125
+PHYPayload: 6001010101000900E0B6D62490E7BCAD4076D5575656D15909696192 (Size: 28 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000900E0B6D62490E7BCAD4076D5575656D15909696192
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000900E0B6D62490E7BCAD4076D5575656D159
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000900
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 9 (0009)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: B6D62490E7BCAD4076D5575656D159
+==============================================
+MIC: 09696192
+==============================================
+Decrypted FRMPayload: 0469D75341ACBB3C426F07FEE83CE6
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:19,699 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:24,598 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1384975372, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:36:24,598 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800B00E098575CBB6BE24B59D84E078FA282F34D060F30
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800B00E098575CBB6BE24B59D84E078FA282F3
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800B00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 11 (000B)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 98575CBB6BE24B59D84E078FA282F3
+==============================================
+MIC: 4D060F30
+==============================================
+
+2020-08-11 22:36:24,600 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 046AD85442ADBC3D437008FFE93DE7
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:24,600 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:24,605 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEACgDgWhgawWruPhZQJar2C9w=",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 23,
+    "tmst": 1385975372
+}
+2020-08-11 22:36:24,607 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:24,608 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1385975372, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000A00E05A181AC16AEE3E165025AAF60BDC (Size: 23 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000A00E05A181AC16AEE3E165025AAF60BDC
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000A00E05A181AC16AEE3E165025
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000A00
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 10 (000A)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 5A181AC16AEE3E165025
+==============================================
+MIC: AAF60BDC
+==============================================
+Decrypted FRMPayload: 04A1587608A9E3E22111
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:24,609 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:29,410 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1389964988, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:36:29,411 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800C00E0B8A0334843D548454D0B619DD281
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800C00E0B8A0334843D548454D0B
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800C00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 12 (000C)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: B8A0334843D548454D0B
+==============================================
+MIC: 619DD281
+==============================================
+
+2020-08-11 22:36:29,412 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 04A2597709AAE4E32212
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:29,412 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:29,416 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEACwDgkIulbard19lL2eC36GE=",
+    "datr": "SF8BW125",
+    "freq": 868.1,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 23,
+    "tmst": 1390964988
+}
+2020-08-11 22:36:29,417 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:29,418 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1390964988, freq: 868.1, DR: SF8BW125
+PHYPayload: 6001010101000B00E0908BA56DAADDD7D94BD9E0B7E861 (Size: 23 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000B00E0908BA56DAADDD7D94BD9E0B7E861
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000B00E0908BA56DAADDD7D94BD9
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000B00
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 11 (000B)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 908BA56DAADDD7D94BD9
+==============================================
+MIC: E0B7E861
+==============================================
+Decrypted FRMPayload: 0464E278B94A182C7293
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:29,419 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:34,531 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1394964852, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:36:34,532 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800D00E0BB8ED091B3B30B2EF55B9F96BDA9
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800D00E0BB8ED091B3B30B2EF55B
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800D00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 13 (000D)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: BB8ED091B3B30B2EF55B
+==============================================
+MIC: 9F96BDA9
+==============================================
+
+2020-08-11 22:36:34,533 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 0465E379BA4B192D7394
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:34,534 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Pong response
+2020-08-11 22:36:39,330 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1399944228, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:36:39,330 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800E00E001624124B5B2
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800E00E00162
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800E00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 14 (000E)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 0162
+==============================================
+MIC: 4124B5B2
+==============================================
+
+2020-08-11 22:36:39,332 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 000B
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:39,336 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEADADg+WWKGw0agODlBtdmEf////8=",
+    "datr": "SF8BW125",
+    "freq": 868.5,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 26,
+    "tmst": 1400944228
+}
+2020-08-11 22:36:39,338 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:39,340 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1400944228, freq: 868.5, DR: SF8BW125
+PHYPayload: 6001010101000C00E0F9658A1B0D1A80E0E506D76611FFFFFFFF (Size: 26 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000C00E0F9658A1B0D1A80E0E506D76611FFFFFFFF
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000C00E0F9658A1B0D1A80E0E506D76611
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000C00
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 12 (000C)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: F9658A1B0D1A80E0E506D76611
+==============================================
+MIC: FFFFFFFF
+==============================================
+Decrypted FRMPayload: 04FCB3F966507B55BA901F1371
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:36:39,340 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     Pong requested
+2020-08-11 22:36:44,800 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1404944092, FREQ: 868.3, DATR: SF8BW125.
+2020-08-11 22:36:44,800 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101800F00E0F0771D1A0C00
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101800F00E0F077
+----------------------------------------------
+MAC payload information
+FHDR: 01010101800F00
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 15 (000F)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: F077
+==============================================
+MIC: 1D1A0C00
+==============================================
+
+2020-08-11 22:36:44,802 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 000B
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:49,780 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1409943956, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:36:49,781 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101801000E0551080F74FEF
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101801000E05510
+----------------------------------------------
+MAC payload information
+FHDR: 01010101801000
+----DevAddr: 01010101
+----FCtrl: 10000000
+--------ADR: 1
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 16 (0010)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 5510
+==============================================
+MIC: 80F74FEF
+==============================================
+
+2020-08-11 22:36:49,781 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 000B
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:36:49,784 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     
+<-<-<-
+{
+    "codr": "4/5",
+    "data": "YAEBAQEADQDgm/ngxuY=",
+    "datr": "SF8BW125",
+    "freq": 868.1,
+    "imme": false,
+    "ipol": true,
+    "modu": "LORA",
+    "ncrc": "true",
+    "powe": 14,
+    "rfch": 0,
+    "size": 14,
+    "tmst": 1410943956
+}
+2020-08-11 22:36:49,784 lorawan.parsing.flora_messages    get_printable_str INFO     Getting printable representation of the Gateway Message.
+2020-08-11 22:36:49,786 lorawan.user_agent.messenger.generator  handle_nwk_down_msg INFO     tmst: 1410943956, freq: 868.1, DR: SF8BW125
+PHYPayload: 6001010101000D00E09BF9E0C6E6 (Size: 14 bytes)
+
+----------------------------------------------
+PHY payload:
+6001010101000D00E09BF9E0C6E6
+MHDR bits: 01100000 (UNCONFIRMED_DOWN)
+MACPayload: 01010101000D00E09B
+----------------------------------------------
+MAC payload information
+FHDR: 01010101000D00
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): None
+--------FPending (Only for DL): 0
+--------FOptsLen: 0
+----FCnt: 13 (000D)
+----FOpts: None
+FPort: 224
+Encrypted FRMPayload: 9B
+==============================================
+MIC: F9E0C6E6
+==============================================
+Decrypted FRMPayload: 00
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)
+
+2020-08-11 22:37:03,178 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1423789716, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:37:03,178 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101001100168759FCCD5459FF17BB0FD127277DC1DF08E605BB
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101001100168759FCCD5459FF17BB0FD127277DC1DF
+----------------------------------------------
+MAC payload information
+FHDR: 01010101001100
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 17 (0011)
+----FOpts: None
+FPort: 22
+Encrypted FRMPayload: 8759FCCD5459FF17BB0FD127277DC1DF
+==============================================
+MIC: 08E605BB
+==============================================
+
+2020-08-11 22:37:03,180 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 00000000000000FE3E090D0503AB0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:37:33,225 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1453835740, FREQ: 868.5, DATR: SF8BW125.
+2020-08-11 22:37:33,225 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+4001010101001300162AC97C682F4BB7FA3E1E40360B384F74A4A7CE73
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 01010101001300162AC97C682F4BB7FA3E1E40360B384F74
+----------------------------------------------
+MAC payload information
+FHDR: 01010101001300
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 19 (0013)
+----FOpts: None
+FPort: 22
+Encrypted FRMPayload: 2AC97C682F4BB7FA3E1E40360B384F74
+==============================================
+MIC: A4A7CE73
+==============================================
+
+2020-08-11 22:37:33,226 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 00000000000000FE3E090D0503AB0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
+2020-08-11 22:37:48,569 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+->->->
+Uplink: TMST: 1468858756, FREQ: 868.1, DATR: SF8BW125.
+2020-08-11 22:37:48,569 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     
+----------------------------------------------
+PHY payload:
+400101010100140016E872824257AE84EA47B6A38966280B263B7B4B4B
+MHDR bits: 01000000 (UNCONFIRMED_UP)
+MACPayload: 0101010100140016E872824257AE84EA47B6A38966280B26
+----------------------------------------------
+MAC payload information
+FHDR: 01010101001400
+----DevAddr: 01010101
+----FCtrl: 00000000
+--------ADR: 0
+--------ACK: 0
+--------ADRACKReq (Only for UL): 0
+--------FPending (Only for DL): None
+--------FOptsLen: 0
+----FCnt: 20 (0014)
+----FOpts: None
+FPort: 22
+Encrypted FRMPayload: E872824257AE84EA47B6A38966280B26
+==============================================
+MIC: 3B7B4B4B
+==============================================
+
+2020-08-11 22:37:48,570 lorawan.user_agent.messenger.generator    handle_nwk_up_msg INFO     Decrypted payload: 00000000000000FE3E090D0503AB0000
+(key: ff7e151628aed2a6abf7158809cf4f3c)
