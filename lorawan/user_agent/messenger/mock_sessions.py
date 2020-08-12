@@ -26,11 +26,14 @@ User side simulator auxiliary module: end device mock session information.
 #################################################################################
 import random
 import struct
+import logging
 
 import lorawan.sessions
 import lorawan.lorawan_parameters.general
 import utils
 import conformance_testing.test_errors as test_errors
+
+logger = logging.getLogger(__name__)
 
 
 class EndDeviceMock(lorawan.sessions.EndDevice):
@@ -57,6 +60,16 @@ class EndDeviceMock(lorawan.sessions.EndDevice):
         mhdr_and_payload = lorawan.lorawan_parameters.general.MHDR.JOIN_REQUEST + request_payload
         mic = utils.aes128_cmac(self.appkey, mhdr_and_payload)[:4]
         return mhdr_and_payload + mic
+
+    def analyze_join_request(self, join_request_phypayload_bytes):
+        appeui_bytes = join_request_phypayload_bytes[8:0:-1]
+        deveui_bytes = join_request_phypayload_bytes[16:8:-1]
+        devnonce = join_request_phypayload_bytes[-5:-7:-1]
+        self._used_otaa_devnonces.append(devnonce)
+        app_hex = utils.bytes_to_text(appeui_bytes)
+        dev_hex = utils.bytes_to_text(deveui_bytes)
+        nonce_hex = utils.bytes_to_text(devnonce[::-1])
+        logger.info(f"appEUI: {app_hex}\ndevEUI: {dev_hex}\ndevnonce: {nonce_hex}")
 
     def create_devnonce(self):
         """

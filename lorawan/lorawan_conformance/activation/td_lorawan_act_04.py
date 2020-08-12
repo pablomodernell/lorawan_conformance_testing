@@ -86,7 +86,7 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
         # Step 2, join triggered: the test is waiting for the join request from the DUT.
         self.s2_joinrequest_to_accept = (
             lorawan_steps.JoinRequestHandlerStep(ctx_test_manager=self,
-                                                 step_name="S2JoinrequestToAccept=12",
+                                                 step_name="S2JoinrequestToAccept",
                                                  next_step=self.s3_data_to_activate,
                                                  accept_cflist=general_parameters.get_cflist(
                                                      general_parameters.VALID_FREQ[20],

@@ -30,7 +30,7 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Hash import CMAC
 
 
-def bytes_to_text(inbytes, sep=""):
+def bytes_to_text(inbytes):
     """
     (bytes, str) -> (str)
 
@@ -40,7 +40,10 @@ def bytes_to_text(inbytes, sep=""):
     :param sep: string to be used as a separator.
     :return: string representation of the bytes.
     """
-    return sep.join("{:02x}".format(c) for c in inbytes).upper()
+    ret_hex = ""
+    if inbytes is not None:
+        ret_hex = inbytes.hex().upper()
+    return ret_hex
 
 
 def aes128_cmac(key, message):

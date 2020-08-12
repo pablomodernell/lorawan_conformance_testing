@@ -8,6 +8,11 @@ volumes:
 services:
   message-broker:
     image: rabbitmq:3-management
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 5s
+      retries: 2
     volumes:
       - ./docker_images/rabbitmq/config:/etc/rabbitmq/:ro
 #      - volume_message-broker:/var/lib/rabbitmq
@@ -25,9 +30,10 @@ services:
       - message-broker
       - command-manager
       - notification-displayer
-    image: "${DOCKER_REPO}-test_application_server:${TAS_VERSION}"
+    image: "${DOCKER_REPO}-test_application_server:${TAS_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
+      - "TAS_RESET_ATTEMPTS=${TAS_RESET_ATTEMPTS}"
     env_file:
       - env_var
     restart: on-failure
@@ -36,7 +42,7 @@ services:
   command-manager:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}-command_manager:${CM_VERSION}"
+    image: "${DOCKER_REPO}-command_manager:${CM_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -47,7 +53,7 @@ services:
   notification-displayer:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}-notification_displayer:${ND_VERSION}"
+    image: "${DOCKER_REPO}-notification_displayer:${ND_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -62,7 +68,7 @@ services:
   agent-mock:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}"
+    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -73,7 +79,7 @@ services:
   agent:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}-agent:${A_VERSION}"
+    image: "${DOCKER_REPO}-agent:${A_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:
@@ -88,7 +94,7 @@ services:
   cli:
     depends_on:
       - message-broker
-    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}"
+    image: "${DOCKER_REPO}-agent_mock:${AM_VERSION}${SUFFIX}"
     environment:
       - "AMQP_URL=${AMQP_URL}"
     env_file:

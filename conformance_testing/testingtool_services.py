@@ -25,6 +25,7 @@ This Module define the main services of the Test Session Coordinator in charge o
 # SOFTWARE.
 #################################################################################
 import json
+import logging
 
 import lorawan.sessions as device_sessions
 import lorawan.parsing.configuration as configuration_parser
@@ -35,6 +36,8 @@ import user_interface.ui_reports as ui_reports
 import parameters.message_broker as message_broker
 from parameters.message_broker import routing_keys
 
+logger = logging.getLogger(__name__)
+
 
 class TestSessionCoordinator(message_queueing.MqInterface):
     """
@@ -43,7 +46,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
     messages and send downlink messages to the agent (using the correct routing key).
     """
 
-    def __init__(self):
+    def __init__(self, reset_attemps=3):
         """
         The constructor initializes the downlink counter of the test session (defined in the test application
         protocol) and declares logging queues in the RMQ Broker to avoid the message loss (in case that the clients
@@ -56,7 +59,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self._next_test_index = 0
         self._reset_dut = False
         self._reset_count = 0
-        self._reset_limit = 3
+        self._reset_limit = reset_attemps
         self.downlink_counter = 0
         self.testingtool_on = True
         self.last_deviceid = None
@@ -107,20 +110,20 @@ class TestSessionCoordinator(message_queueing.MqInterface):
     def pop_next_test_name(self):
         """ Returns the name of the next test to be executed."""
         if not self.test_available():
-            print(f"No test available.")
+            logger.info(f"No test available.")
             return None
         if self.reset_dut:
             if self._reset_count >= self._reset_limit:
-                print(
-                    f"Reset attempts exceeded ({self._reset_count}/{self._reset_limit}).")
+                logger.info(
+                   f"Reset attempts exceeded ({self._reset_count}/{self._reset_limit}).")
                 self._next_test_index = len(self.requested_tests)
                 return None
-            print("Resetting device.")
+            logger.info("Resetting device.")
             self.reset_dut = False
             self._reset_count += 1
             return "td_lorawan_reset"
         else:
-            print("Returning new test.")
+            logger.info("Returning new test.")
             self._reset_count = 0
             idx = self._next_test_index
             self._next_test_index += 1
@@ -140,8 +143,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
 
     def wait_press_start(self):
         """ Publishes the Start button in the GUI."""
-        ui_publisher.testingtool_log(msg_str="Showing start button.",
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug("Showing start button.")
         start_request_body = ui_reports.InputFormBody(title="Start LoRaWAN testing tool")
         start_request_body.add_field(ui_reports.ButtonInputField(name="START", value=1))
         request_start = ui_reports.RPCRequest(request_key=routing_keys.ui_all_users + '.request',
@@ -156,16 +158,12 @@ class TestSessionCoordinator(message_queueing.MqInterface):
         self.declare_and_consume(queue_name='testingtool_terminate_tas',
                                  routing_key=routing_keys.testing_terminate,
                                  callback=self.session_terminate_handler)
-        ui_publisher.testingtool_log(
-            msg_str="Starting current test case...",
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug("Starting current test case...")
         self.current_test.start_test()
 
     def session_terminate_handler(self, ch, method, properties, body):
         """ Handles a Sesstion Termination message."""
-        ui_publisher.testingtool_log(
-            msg_str="SESSION TERMINATED BY THE USER.",
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug("SESSION TERMINATED BY THE USER.")
         self.consume_stop()
         self.testingtool_on = False
         raise test_errors.SessionTerminatedError("Terminated by UI request.")
@@ -182,13 +180,9 @@ class TestSessionCoordinator(message_queueing.MqInterface):
                 if len(field_bytes) == number_of_bytes:
                     return field_bytes
                 else:
-                    raise InvalidHexStringInFieldError(
-                        'The field ({0}) must be {1} bytes long.'.format(
-                            field_str,
-                            number_of_bytes)
-                    )
+                    raise InvalidHexStringInFieldError(f'The field ({field_str}) must be {number_of_bytes} bytes long.')
             except ValueError:
-                raise InvalidHexStringInFieldError('{} is an invalid field'.format(field_str))
+                raise InvalidHexStringInFieldError(f'{field_str} is an invalid field')
 
         ###########################################################################################
         while "The user doesn't enter a valid device information":
@@ -206,9 +200,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
                 device_request_body.add_field(ui_reports.TextInputField(name="DevAddr",
                                                                         label="Short address",
                                                                         value="26011cf1"))
-                ui_publisher.testingtool_log(
-                    msg_str="Requesting device credentials: {}.".format(str(device_request_body)),
-                    key_prefix=message_broker.service_names.test_session_coordinator)
+                logger.debug(f"Requesting device credentials: {str(device_request_body)}.")
                 request_device = ui_reports.RPCRequest(
                     request_key=routing_keys.ui_all_users + '.request',
                     channel=self.channel,
@@ -223,8 +215,8 @@ class TestSessionCoordinator(message_queueing.MqInterface):
                                                   field_str=device_reply["AppKey"])
                 device_id.devaddr = validate_bytes(number_of_bytes=4,
                                                    field_str=device_reply["DevAddr"])
-                device_id.appskey = device_id.appkey
-                device_id.nwkskey = device_id.appkey
+                device_id.appskey = bytes.fromhex("ff") + device_id.appkey[1::]
+                device_id.nwkskey = bytes.fromhex("00") + device_id.appkey[1::]
             except InvalidHexStringInFieldError:
                 continue
             else:
@@ -265,17 +257,13 @@ class TestSessionCoordinator(message_queueing.MqInterface):
             -DUT personalization parameters
         """
         self.channel.start_consuming()
-        ui_publisher.testingtool_log(
-            msg_str="Asking the GUI for configuration.",
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug("Asking the GUI for configuration.")
 
         request_config = ui_reports.RPCRequest(request_key=routing_keys.configuration_request,
                                                channel=self.channel,
                                                body='{"_api_version": "1.0.0"}')
         session_configuration_bytes = request_config.wait_response(timeout_seconds=10)
-        ui_publisher.testingtool_log(msg_str="Received configuration from GUI: \n{}".format(
-            json.dumps(session_configuration_bytes.decode(), indent=4, sort_keys=True)),
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug(f"Received configuration from GUI: \n{json.dumps(session_configuration_bytes.decode(), indent=4, sort_keys=True)}")
 
         config = ui_reports.SessionConfigurationBody.build_from_json(
             json_str=session_configuration_bytes.decode())
@@ -285,6 +273,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
             self.requested_tests.extend(config.testcases)
         else:
             self.requested_tests.extend(self.get_testcases())
+
         self.requested_tests.append("td_lorawan_deactivate")
         testcases_display = ui_reports.InputFormBody(title="Test Cases to be excecuted.",
                                                      tag_key="Configuration",
@@ -323,7 +312,7 @@ class TestSessionCoordinator(message_queueing.MqInterface):
                 result_report.add_field(detail_paragraph)
             result_report.level = ui_reports.LEVEL_ERR
         step_error = ui_reports.InputFormBody(
-            title="{TC}: Step Fail".format(TC=test_name),
+            title=f"{test_name}: Step Fail",
             tag_key=test_name,
             tag_value=" ")
         step_error.add_field(fail_message_paragraph)

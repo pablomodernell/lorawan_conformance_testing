@@ -160,7 +160,7 @@ class ActokToMACCommand(lorawan_steps.WaitActokStep):
             received_str=self.received_testscript_msg.get_printable_str(
                 encryption_key=key),
             additional_message="Sending MAC Command: 0x{comm}\nPiggybacked: {p}\nIn FRMPayload: {f}".format(
-                comm=utils.bytes_to_text(self.command_bytes, sep=""),
+                comm=utils.bytes_to_text(self.command_bytes),
                 p=self.piggybacked,
                 f=self.in_frmpayload))
 

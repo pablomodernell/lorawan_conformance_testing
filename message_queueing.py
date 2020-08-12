@@ -207,7 +207,7 @@ class QueueSelectConsumer:
         closed. See the on_connection_closed method.
 
         """
-        logger.warning('Reconnecting in {} seconds...'.format(self.RECONNECT_TIMEOUT_IN_SECS))
+        logger.warning(f'Reconnecting in {self.RECONNECT_TIMEOUT_IN_SECS} seconds...')
         time.sleep(self.RECONNECT_TIMEOUT_IN_SECS)
         # This is the old connection IOLoop instance, stop its ioloop
         self._connection.ioloop.stop()

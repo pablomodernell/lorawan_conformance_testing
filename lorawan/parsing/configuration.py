@@ -65,11 +65,11 @@ class DeviceID(object):
             self.device_id_dict["NwkSKey"] = base64.b64encode(nwkskey_bytes)
         else:
             self.device_id_dict = {
-                "DevAddr": "ASgpnw==",
-                "DevEUI": "AASjCwAa2+U=",
+                "DevAddr": "AQEBAQ==",
+                "DevEUI": "AQEBAQEBAQE=",
                 "AppKey": "K34VFiiu0qar9xWICc9PPA==",
-                "AppSKey": "K34VFiiu0qar9xWICc9PPA==",
-                "NwkSKey": "K34VFiiu0qar9xWICc9PPA=="
+                "AppSKey": "/34VFiiu0qar9xWICc9PPA==",
+                "NwkSKey": "AH4VFiiu0qar9xWICc9PPA=="
             }
 
     @property
@@ -118,10 +118,9 @@ class DeviceID(object):
 
     def to_print_str(self):
         """ Creates a human readable string with the contained information."""
-        temp = "DevAddr: {DevAddr}\nDevEUI: {DevEUI}\nAppKey: {AppKey}\nAppSKey: {AppSKey}\nNwkSKey: {NwkSKey}"
-        retstr = temp.format(DevAddr=bytes_to_text(self.devaddr, sep=""),
-                             DevEUI=bytes_to_text(self.deveui, sep=""),
-                             AppKey=bytes_to_text(self.appkey, sep=""),
-                             AppSKey=bytes_to_text(self.appskey, sep=""),
-                             NwkSKey=bytes_to_text(self.nwkskey, sep=""))
-        return retstr
+        DevAddr = bytes_to_text(self.devaddr),
+        DevEUI = bytes_to_text(self.deveui),
+        AppKey = bytes_to_text(self.appkey),
+        AppSKey = bytes_to_text(self.appskey),
+        NwkSKey = bytes_to_text(self.nwkskey)
+        return f"DevAddr: {DevAddr}\nDevEUI: {DevEUI}\nAppKey: {AppKey}\nAppSKey: {AppSKey}\nNwkSKey: {NwkSKey}"

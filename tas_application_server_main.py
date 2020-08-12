@@ -26,6 +26,7 @@ based in the test cases selected by the user.
 # SOFTWARE.
 ##################################################################################
 import logging
+import os
 
 import conformance_testing.test_errors as test_errors
 from conformance_testing import testingtool_services
@@ -40,6 +41,8 @@ from logger_configurator import LoggerConfigurator
 LoggerConfigurator(level="INFO")
 logger = logging.getLogger(__name__)
 
+TAS_RESET_ATTEMPTS = int(os.environ.get('TAS_RESET_ATTEMPTS', 3))
+
 # Load all the modules of the available tests.
 test_modules = dict()
 for test_group in test_names.keys():
@@ -51,8 +54,8 @@ for test_group in test_names.keys():
 
 def display_agent_tutorial(session_coordinator):
     """
-    Auxiliary function to show instructions in the Graphical User Interface explaining how to download, configure
-    and run the Agent application.
+    Auxiliary function to show instructions in the Graphical User Interface explaining how to
+    download, configure and run the Agent application.
     :param session_coordinator: current session coordinator of the testing session.
     :return: None
     """
@@ -77,10 +80,10 @@ def display_agent_tutorial(session_coordinator):
 
 
 def testing_app_main():
-    test_session_coordinator = testingtool_services.TestSessionCoordinator()
+    test_session_coordinator = testingtool_services.TestSessionCoordinator(
+        reset_attemps=TAS_RESET_ATTEMPTS)
 
-    ui_publisher.testingtool_log(msg_str="\nWaiting for configuration.",
-                                 key_prefix=message_broker.service_names.test_session_coordinator)
+    logger.debug("\nWaiting for configuration.")
     # >> Display agent instructions: -------------------------------------------------------------
     display_agent_tutorial(session_coordinator=test_session_coordinator)
     # << End agent instructions: -----------------------------------------------------------------
@@ -100,15 +103,11 @@ def testing_app_main():
                     test_module = test_modules[test_name]
                 except KeyError:
                     raise test_errors.UnknownTestError(test_name)
-                ui_publisher.testingtool_log(
-                    msg_str="Selected test: {0}".format(test_name),
-                    key_prefix=message_broker.service_names.test_session_coordinator)
+                logger.debug(f"Selected test: {test_name}")
 
                 test_session_coordinator.current_test = test_module.TestAppManager(
                     test_session_coordinator)
-                ui_publisher.testingtool_log(
-                    msg_str="Test manager loaded: {}".format(test_name),
-                    key_prefix=message_broker.service_names.test_session_coordinator)
+                logger.debug(f"Test manager loaded: {test_name}")
                 test_session_coordinator.start_testing()
             ########################################################################
             # Catch Level 3 Errors
@@ -159,3 +158,5 @@ def testing_app_main():
 
 if __name__ == '__main__':
     testing_app_main()
+
+

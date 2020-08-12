@@ -38,40 +38,26 @@ class SemtechUDPMsg:
     # Semtech Packet Forwarder (SPF) Message Types:
     SPF_MESSAGES = ("PUSH_DATA", "PUSH ACK", "PULL_DATA", "PULL_RESP", "PULL_ACK", "TX_ACK")
 
-    def __init__(self, message_bytes):
+    def  __init__(self, message_bytes):
         """
         (SemtechUDPMsg, bytes) -> (None)
         Parses the bytes of a received SPF messages.
         :param message_bytes: byte sequence of the SPF message.
         """
-        self.protocolVer = (message_bytes[0])
-        self.token = message_bytes[1:3]
+        self._message_bytes = message_bytes
         self.msg_id = message_bytes[3]
         self.spf_msg_type = SemtechUDPMsg.SPF_MESSAGES[self.msg_id]
-        assert self.msg_id in (0, 1, 2, 3, 4, 5)
-        self.gwid = None
         self.json_object = None
-        if self.msg_id in (0, 3):  # PUSH_DATA or PULL_RESP
-            self.gwid = message_bytes[4:12]
+        if self.msg_id in (0, 3):  # PUSH_DATA, PULL_RESP
             self.json_object = json.loads(message_bytes[12:].decode())
-        elif self.msg_id == 2:  # PULL_DATA
-            assert len(message_bytes) == 12
-            self.gwid = message_bytes[4:12]
 
     def __str__(self):
         """ Human readable string representation."""
         ret_str = "**********************************************\n"
-        ret_str += "Packet Forwarder Protocol:\n"
-        ret_str += "Protocol Ver.: {0}\n".format(self.protocolVer)
-        ret_str += "Token: {0}\n".format(utils.bytes_to_text(self.token, sep=""))
-        ret_str += "Type of Msg.: {0}\n".format(self.spf_msg_type)
-        ret_str += "Message ID: {0}\n".format(self.msg_id)
-        if self.gwid is None:
-            ret_str += "GW ID: {0}\n".format(self.gwid)
-        else:
-            ret_str += "GW ID: {0}\n".format(utils.bytes_to_text(self.gwid, ":"))
-        ret_str += "JSONObject: {0}\n".format(self.json_object)
-        ret_str += "**********************************************\n"
+        ret_str += f"Packet Forwarder Protocol: {self.spf_msg_type}\n"
+        ret_str += f"{self._message_bytes[:3].hex()}-{self._message_bytes[3:]}\n"
+        if self.json_object is not None:
+            ret_str += f"JSONObject: {self.json_object}\n"
         return ret_str
 
     def print_stats(self):
@@ -97,9 +83,8 @@ class SemtechUDPMsg:
         :return: list of tuples (bytes, str) of the received messages (already decoded, base64)
         """
         decoded_pks = []
-        if self.json_object is not None:
-            rx_pks = self.json_object.get("rxpk")
-            if rx_pks is not None:
-                for pkt in rx_pks:
-                    decoded_pks.append((base64.b64decode(pkt["data"]), json.dumps(pkt)))
+        if self.json_object is None or self.json_object.get("rxpk") is None:
+            return []
+        for pkt in self.json_object.get("rxpk"):
+            decoded_pks.append((base64.b64decode(pkt["data"]), json.dumps(pkt)))
         return decoded_pks

@@ -29,6 +29,10 @@ import click
 import lorawan.user_agent.messenger.generator as gen
 from lorawan.parsing.configuration import DeviceID
 
+from logger_configurator import LoggerConfigurator
+
+LoggerConfigurator(level="INFO")
+
 
 def validate_session_data(field_length, field_str):
     try:
@@ -61,10 +65,10 @@ def validate_devaddr(ctx, param, devaddr_str):
               help='ABP: DevAddr (e.g. 01010101). Default: 01010101')
 @click.option('--appkey', callback=validate_key, default="2b7e151628aed2a6abf7158809cf4f3c", type=str,
               help='ABP: AppKey (e.g. 2b7e151628aed2a6abf7158809cf4f3c). Default: 2b7e151628aed2a6abf7158809cf4f3c')
-@click.option('--appskey', callback=validate_key, default="2b7e151628aed2a6abf7158809cf4f3c", type=str,
-              help='ABP: AppSKey (e.g. 2b7e151628aed2a6abf7158809cf4f3c). Default: 2b7e151628aed2a6abf7158809cf4f3c')
-@click.option('--nwkskey', callback=validate_key, default="2b7e151628aed2a6abf7158809cf4f3c", type=str,
-              help='ABP: NwkSKey (e.g. 2b7e151628aed2a6abf7158809cf4f3c). Default: 2b7e151628aed2a6abf7158809cf4f3c')
+@click.option('--appskey', callback=validate_key, default="ff7e151628aed2a6abf7158809cf4f3c", type=str,
+              help='ABP: AppSKey (e.g. ff7e151628aed2a6abf7158809cf4f3c). Default: ff7e151628aed2a6abf7158809cf4f3c')
+@click.option('--nwkskey', callback=validate_key, default="007e151628aed2a6abf7158809cf4f3c", type=str,
+              help='ABP: NwkSKey (e.g. 007e151628aed2a6abf7158809cf4f3c). Default: 007e151628aed2a6abf7158809cf4f3c')
 @click.option('--tas_appeui', callback=validate_eui, default="0101010101010101", type=str,
               help='Test Application Server AppEUI (e.g. 0101010101010101). Default: 0101010101010101')
 def agent_mock_main(deveui, devaddr, appkey, appskey, nwkskey, tas_appeui):
@@ -82,3 +86,10 @@ def agent_mock_main(deveui, devaddr, appkey, appskey, nwkskey, tas_appeui):
     generator.start_consuming()
 
 
+if __name__ == '__main__':
+    agent_mock_main(deveui="0101010101010101",
+                    devaddr="01010101",
+                    appkey="2b7e151628aed2a6abf7158809cf4f3c",
+                    appskey="ff7e151628aed2a6abf7158809cf4f3c",
+                    nwkskey="007e151628aed2a6abf7158809cf4f3c",
+                    tas_appeui="0101010101010101")
