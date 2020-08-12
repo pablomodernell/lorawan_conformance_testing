@@ -26,6 +26,8 @@ particular technology under test (e.g. LoRaWAN).
 # SOFTWARE.
 #################################################################################
 import abc
+import logging
+
 import conformance_testing.test_errors as test_errors
 import utils
 from user_interface.ui import ui_publisher
@@ -33,6 +35,8 @@ import user_interface.ui_reports as ui_reports
 import parameters.message_broker as message_broker
 from parameters.message_broker import routing_keys
 from conformance_testing.testingtool_messages import TestingToolMessage
+
+logger = logging.getLogger(__name__)
 
 
 class Step(object, metaclass=abc.ABCMeta):
@@ -67,8 +71,7 @@ class Step(object, metaclass=abc.ABCMeta):
         pass
 
     def send_downlink(self, msg, routing_key):
-        ui_publisher.testingtool_log(msg_str=msg,
-                                     key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug(msg)
         self.ctx_test_manager.ctx_test_session_coordinator.publish(msg=msg,
                                                                    routing_key=routing_key)
 
@@ -85,25 +88,22 @@ class Step(object, metaclass=abc.ABCMeta):
             received_str = self.received_testscript_msg.get_printable_str(
                 encryption_key=self.ctx_test_manager.device_under_test.loramac_params.appskey)
         step_report = ui_reports.InputFormBody(
-            title="{TC}: Step information".format(TC=self.ctx_test_manager.tc_name.upper()),
+            title=f"{self.ctx_test_manager.tc_name.upper()}: Step information",
             tag_key=self.ctx_test_manager.tc_name,
             tag_value=" ")
         if self.next_step:
             step_name = self.next_step.name
         else:
             step_name = "No next step."
-        step_info_str = "\nNext step: {NStep}\nReceived from DUT:\n {Rcv}".format(
-            NStep=step_name,
-            Rcv=received_str)
-        step_report.add_field(ui_reports.ParagraphField(name="Completed Step: {}".format(self.name),
+        step_info_str = f"\nNext step: {step_name}\nReceived from DUT:\n {received_str}"
+        step_report.add_field(ui_reports.ParagraphField(name=f"Completed Step: {self.name}",
                                                         value=""))
         for line in step_info_str.split("\n"):
             step_report.add_field(ui_reports.ParagraphField(name="",
                                                             value=line))
         if sending:
             step_report.add_field(ui_reports.ParagraphField(name="Sending to DUT:",
-                                                            value=utils.bytes_to_text(sending,
-                                                                                      sep="")))
+                                                            value=utils.bytes_to_text(sending)))
         if additional_message:
             step_report.add_field(ui_reports.ParagraphField(name="Additional information:",
                                                             value=additional_message))
@@ -118,9 +118,7 @@ class Step(object, metaclass=abc.ABCMeta):
 
         :return: (None)
         """
-        ui_publisher.testingtool_log(
-            msg_str="Test {0}: PASS.\n\n".format(self.ctx_test_manager.tc_name),
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug(f"Test {self.ctx_test_manager.tc_name}: PASS.\n\n")
         self.ctx_test_manager.ctx_test_session_coordinator.consume_stop()
 
 
@@ -137,7 +135,7 @@ class TestManager(object, metaclass=abc.ABCMeta):
         self.tc_name = test_name
         self.device_under_test = ctx_test_session_coordinator.device_under_test
         self.ctx_test_session_coordinator = ctx_test_session_coordinator
-        self.test_label = ui_reports.InputFormBody(title="TEST CASE: {TC}".format(TC=self.tc_name),
+        self.test_label = ui_reports.InputFormBody(title=f"TEST CASE: {self.tc_name}",
                                                    tag_key=self.tc_name,
                                                    tag_value=" ")
         self.ctx_test_session_coordinator.declare_and_consume(queue_name='up_tas',
@@ -145,9 +143,7 @@ class TestManager(object, metaclass=abc.ABCMeta):
                                                               durable=False,
                                                               auto_delete=True,
                                                               callback=self.message_handler)
-        ui_publisher.testingtool_log(
-            msg_str="Init Test Manager, starting test: {0}".format(test_name),
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug(f"Init Test Manager, starting test: {test_name}")
 
     def get_testcase_str(self):
         """ Returns a string with all the information of the tests to be displayed to the user."""

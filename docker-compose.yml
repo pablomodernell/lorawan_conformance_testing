@@ -8,6 +8,11 @@ volumes:
 services:
   message-broker:
     image: rabbitmq:3-management
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 5s
+      retries: 2
     volumes:
       - ./docker_images/rabbitmq/config:/etc/rabbitmq/:ro
 #      - volume_message-broker:/var/lib/rabbitmq

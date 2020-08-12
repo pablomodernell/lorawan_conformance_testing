@@ -60,11 +60,11 @@ class ActokToWrongFCnt(lorawan_steps.WaitActokStep):
             routing_key=message_broker.routing_keys.toAgent + '.gw1')
         # Manually decrease the downlink counter.
         self.ctx_test_manager.ctx_test_session_coordinator.downlink_counter -= 1
+        cnt_d = self.ctx_test_manager.device_under_test.fcnt_down
+        cnt_d_decreased = self.ctx_test_manager.device_under_test.fcnt_down - 2
         self.print_step_info(
             sending=frmpayload_response,
-            additional_message="This message should be ignored.\nBad FCnt dl: {} ->{}\n".format(
-                self.ctx_test_manager.device_under_test.fcnt_down,
-                self.ctx_test_manager.device_under_test.fcnt_down - 2))
+            additional_message=f"This message should be ignored.\nBad FCnt dl: {cnt_d} ->{cnt_d_decreased}\n")
 
 
 class TestAppManager(conformance_testing.test_step_sequence.TestManager):

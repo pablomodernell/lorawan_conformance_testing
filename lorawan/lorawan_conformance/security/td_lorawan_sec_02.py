@@ -54,10 +54,11 @@ class ActokToWrongMIC(lorawan_steps.WaitActokStep):
             routing_key=message_broker.routing_keys.toAgent + '.gw1')
         # Manually decrease the downlink counter.
         self.ctx_test_manager.ctx_test_session_coordinator.downlink_counter -= 1
-        self.print_step_info(sending=send_ping,
-                             additional_message="Modified MIC: {} ->{}\n".format(
-                                 bytes_to_text(lw_response[-4::], sep=""),
-                                 bytes_to_text(b'\xff\xff\xff\xff', sep="")))
+        mic = bytes_to_text(lw_response[-4::])
+        mic_modif = bytes_to_text(b'\xff\xff\xff\xff')
+        self.print_step_info(
+            sending=send_ping,
+            additional_message=f"Modified MIC: {mic} ->{mic_modif}\n")
 
 
 class TestAppManager(conformance_testing.test_step_sequence.TestManager):

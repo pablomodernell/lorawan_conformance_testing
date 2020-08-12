@@ -27,12 +27,15 @@ Testing tool messages specific of the LoRaWAN testing.
 import base64
 import json
 import copy
+import logging
 
 import lorawan.lorawan_parameters.general
 import lorawan.parsing.lorawan
 import utils
 import conformance_testing.test_errors as test_errors
 import conformance_testing.testingtool_messages as test_messages
+
+logger = logging.getLogger(__name__)
 
 
 class GatewayMessage(test_messages.TestingToolMessage):
@@ -259,19 +262,19 @@ class GatewayMessage(test_messages.TestingToolMessage):
 
     def get_printable_str(self, encryption_key=None, ignore_format_errors=False):
         """ Creates a human readable string representation of the message."""
+        logger.info(f"Getting printable representation of the Gateway Message.")
         lorawan_message = self.parse_lorawan_message(ignore_format_errors=ignore_format_errors)
-        ret_str = "tmst: {}, freq: {}, DR: {}\n".format(
-            self.testingtool_msg_dict["tmst"],
-            self.testingtool_msg_dict["freq"],
-            self.testingtool_msg_dict["datr"])
-        ret_str += "PHYPayload: {} (Size: {} bytes)\n".format(
-            utils.bytes_to_text(base64.b64decode(self.testingtool_msg_dict["data"]), sep=""),
-            self.testingtool_msg_dict["size"]
-        )
-        if encryption_key:
-            frmpayload_plaintext = lorawan_message.get_frmpayload_plaintext(key=encryption_key)
-            ret_str += "Decrypted FRMPayload: {frmpay}\n (Key {ekey})\n".format(
-                frmpay=utils.bytes_to_text(frmpayload_plaintext, sep=""),
-                ekey=utils.bytes_to_text(encryption_key, sep=""))
+        ret_str = f"tmst: {self.testingtool_msg_dict['tmst']}, freq: {self.testingtool_msg_dict['freq']}, DR: {self.testingtool_msg_dict['datr']}\n"
+        phypay = utils.bytes_to_text(base64.b64decode(self.testingtool_msg_dict["data"]))
+        ret_str += f"PHYPayload: {phypay} (Size: {self.testingtool_msg_dict['size']} bytes)\n"
         ret_str += str(lorawan_message)
+        if encryption_key is None:
+            return ret_str
+        frmpayload_plaintext = lorawan_message.get_frmpayload_plaintext(key=encryption_key)
+        if frmpayload_plaintext is None:
+            return ret_str
+        frmpay = utils.bytes_to_text(frmpayload_plaintext)
+        ekey = utils.bytes_to_text(encryption_key)
+        ret_str += f"Decrypted FRMPayload: {frmpay}\n (Key {ekey})\n"
         return ret_str
+

@@ -1,7 +1,7 @@
 DOCKER_REGISTRY=pmodernell/lorawan_conformance
 
 # Global version for the testing platform:
-VERSION=0.0.1-demo
+VERSION=0.0.2-demo
 SUFFIX=
 
 NAME_AGENT=agent

@@ -25,11 +25,9 @@ class TestFailError(TestingToolError):
         self.last_message = last_message
         self.step_name = step_name
         self.test_case = test_case
-        error_msg = description + "\n"
-        error_msg += "Test: {0}\n".format(test_case)
-        error_msg += "Step: {0}\n".format(step_name)
+        error_msg = description + f"\nTest: {test_case}\nStep: {step_name}\n"
         if last_message:
-            error_msg += "Last received message: \n{0}".format(last_message)
+            error_msg += f"Last received message: \n{last_message}"
         super().__init__(error_msg)
 
 

@@ -53,7 +53,7 @@ class TestBytesToText(object):
     @pytest.mark.parametrize('bytes_to_convert, expected', bytes_converted_nosep, ids=bytes_nosep_ids)
     def test_bytes_nosep(self, bytes_to_convert, expected):
         """ Tests the utility function with no separator ('')."""
-        assert utils.bytes_to_text(bytes_to_convert, "") == expected
+        assert utils.bytes_to_text(bytes_to_convert) == expected
 
     @pytest.mark.parametrize('bytes_to_convert,expected', bytes_converted_default, ids=bytes_default_ids)
     def test_bytes_defaultsep(self, bytes_to_convert, expected):

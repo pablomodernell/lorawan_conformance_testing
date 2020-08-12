@@ -164,9 +164,9 @@ class MACCommand(object, metaclass=abc.ABCMeta):
     def __str__(self):
         """ Human readable string representation of the MAC Command."""
         ret_str = "{name} MAC Command.\n".format(name=type(self).__name__.split('.')[-1])
-        ret_str += "Command ID (CID): 0x{cid}\n".format(cid=utils.bytes_to_text(self.cid, sep=""))
+        ret_str += "Command ID (CID): 0x{cid}\n".format(cid=utils.bytes_to_text(self.cid))
         ret_str += "Size: {size}\n".format(size=self.command_size)
-        ret_str += "Content: 0x{content}\n".format(content=utils.bytes_to_text(self.content, ""))
+        ret_str += "Content: 0x{content}\n".format(content=utils.bytes_to_text(self.content))
         return ret_str
 
 
@@ -196,9 +196,8 @@ class DevStatusAns(MACCommand):
 
     def __str__(self):
         ret_str = super().__str__()
-        ret_str += "Battery Level: 0x{bat_b}\n".format(bat_b=utils.bytes_to_text(self.battery,
-                                                                                 sep=""))
-        ret_str += "Margin: 0x{mar_b}\n".format(mar_b=utils.bytes_to_text(self.margin, sep=""))
+        ret_str += "Battery Level: 0x{bat_b}\n".format(bat_b=utils.bytes_to_text(self.battery))
+        ret_str += "Margin: 0x{mar_b}\n".format(mar_b=utils.bytes_to_text(self.margin))
         return ret_str
 
 

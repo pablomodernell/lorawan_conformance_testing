@@ -64,13 +64,13 @@ class MessageGenerator(object):
         self.__last_freq_idx = 0
 
         self.mqif.declare_and_consume(queue_name='down_nwk_mock',
-                                      routing_key=message_broker.routing_keys.toAgent+'.#',
+                                      routing_key=message_broker.routing_keys.toAgent + '.#',
                                       durable=False,
                                       auto_delete=True,
                                       callback=self.handle_nwk_down_msg)
 
         self.mqif.declare_and_consume(queue_name='up_nwk_mock',
-                                      routing_key=message_broker.routing_keys.fromAgent+'.#',
+                                      routing_key=message_broker.routing_keys.fromAgent + '.#',
                                       durable=False,
                                       auto_delete=True,
                                       callback=self.handle_nwk_up_msg)
@@ -136,20 +136,22 @@ class MessageGenerator(object):
 
     def handle_mock_configure_node(self, ch, method, properties, body):
         logger.info("Processing configuration request")
-        cli_message = lorawan.user_agent.messenger.mock_parsing.MockMessage(json_mockmsg_str=body.decode())
+        cli_message = lorawan.user_agent.messenger.mock_parsing.MockMessage(
+            json_mockmsg_str=body.decode())
         logger.info(cli_message)
-        logger.info("use_dr: {0}".format(cli_message.use_dr))
-        logger.info("freq: {0}\n\n".format(cli_message.freq))
+        logger.info(f"use_dr: {cli_message.use_dr}")
+        logger.info(f"freq: {cli_message.freq}\n\n")
         self.node.loramac_params.rx1_dr_offset = getattr(lorawan.lorawan_parameters.general.LORA_DR,
                                                          cli_message.use_dr)
         self.node.add_frequency(cli_message.freq())
 
     def handle_mock_up_data(self, ch, method, properties, body):
         logger.info("Processing data message from cli.")
-        cli_message = lorawan.user_agent.messenger.mock_parsing.MockMessage(json_mockmsg_str=body.decode())
+        cli_message = lorawan.user_agent.messenger.mock_parsing.MockMessage(
+            json_mockmsg_str=body.decode())
         logger.info(cli_message)
-        logger.info("FPort: {0}".format(cli_message.fport))
-        logger.info("FRMPayload: {0}\n\n".format(cli_message.frmpayload_bytes))
+        logger.info(f"FPort: {cli_message.fport}")
+        logger.info(f"FRMPayload: {cli_message.frmpayload_bytes}\n\n")
         if cli_message.is_confirmed:
             mac_header = lorawan.lorawan_parameters.general.MHDR.CONFIRMED_UP
         else:
@@ -176,7 +178,7 @@ class MessageGenerator(object):
         self.send_to_testing_tool(broker_channel=ch,
                                   payload=pong,
                                   port=224)
-        logger.info("Pong sent: {0}\n\n".format(utils.bytes_to_text(pong)))
+        logger.info(f"Pong sent: {utils.bytes_to_text(pong)}\n\n")
 
     def handle_mock_up_message_join(self, ch, method, properties, body):
         join_request = self.node.get_join_request(appeui=self.testserver_appeui)
@@ -191,9 +193,8 @@ class MessageGenerator(object):
         n_msg = lorawan.parsing.flora_messages.GatewayMessage(json_ttm_str=body.decode())
         phypayload = n_msg.get_phypaload_bytes()
         global last_sent
-        logger.info(
-            f"\n<-<-<-\nDownlink: TMST: {n_msg.tmst}, FREQ: {n_msg.freq}, DATR: {n_msg.datr}.")
-        logger.debug("Time since last uplink message sent: {} s.".format(time.time() - last_sent))
+        logger.info(f"\n<-<-<-\n{body.decode()}")
+        logger.debug(f"Time since last uplink message sent: {time.time() - last_sent} s.")
 
         if phypayload[0:1] == lorawan.lorawan_parameters.general.MHDR.JOIN_ACCEPT:
             logger.info("Join accept received, updating session.")
@@ -203,16 +204,23 @@ class MessageGenerator(object):
             logger.info(
                 f"\nNEW IDENTIFICATION:\n{str(self.node)}")
         else:
-            lw_msg = n_msg.parse_lorawan_message()
+            lw_msg = n_msg.parse_lorawan_message(ignore_format_errors=True)
+            if lw_msg.macpayload.fport_int == 0:
+                key = self.node.loramac_params.nwkskey
+            else:
+                key = self.node.loramac_params.appskey
 
-            rcv_pay = utils.encrypt_ieee802154(key=self.node.loramac_params.appskey,
-                                               frmpayload=lw_msg.macpayload.frmpayload_bytes,
-                                               direction=1,
-                                               devaddr=lw_msg.macpayload.fhdr.devaddr_bytes,
-                                               fcnt=lw_msg.macpayload.fhdr.get_fcnt_int())
-            logger.info(lw_msg)
-            logger.info("Decrypted payload: {0}".format(utils.bytes_to_text(rcv_pay, sep='')))
-
+            rcv_pay = lw_msg.get_frmpayload_plaintext(key=key)
+            # rcv_pay = utils.encrypt_ieee802154(key=self.node.loramac_params.appskey,
+            #                                    frmpayload=lw_msg.macpayload.frmpayload_bytes,
+            #                                    direction=1,
+            #                                    devaddr=lw_msg.macpayload.fhdr.devaddr_bytes,
+            #                                    fcnt=lw_msg.macpayload.fhdr.get_fcnt_int())
+            # logger.info(lw_msg)
+            # logger.info(f"Decrypted payload: {utils.bytes_to_text(rcv_pay)}(key: {self.node.loramac_params.appskey.hex()})")
+            print_str = n_msg.get_printable_str(encryption_key=key,
+                                                ignore_format_errors=True)
+            logger.info(f"{print_str}")
             if lw_msg.macpayload.fport_int == 224:  # Testing message detected
                 self.node.downlink_counter += 1
                 if rcv_pay == lorawan.lorawan_parameters.testing.FRMPAYLOAD.TEST_ACT:
@@ -230,7 +238,8 @@ class MessageGenerator(object):
         last_sent = time.time()
         nwk_msg = lorawan.parsing.flora_messages.GatewayMessage(json_ttm_str=body.decode())
         phypayload = nwk_msg.get_phypaload_bytes()
-        lw_msg = nwk_msg.parse_lorawan_message()
+        lw_msg = nwk_msg.parse_lorawan_message(ignore_format_errors=True)
+
         logger.info(
             f"\n->->->\nUplink: TMST: {nwk_msg.tmst}, FREQ: {nwk_msg.freq}, DATR: {nwk_msg.datr}.")
 
@@ -240,9 +249,13 @@ class MessageGenerator(object):
             logger.info(f"Current identification:\n{str(self.node)}")
         else:
             logger.info(lw_msg)
-            rcv_pay = lw_msg.get_frmpayload_plaintext(key=self.node.loramac_params.appskey)
-            logger.info("Decrypted payload: {0}".format(
-                utils.bytes_to_text(rcv_pay, sep='')))
+            if lw_msg.macpayload.fport_int == 0:
+                key = self.node.loramac_params.nwkskey
+            else:
+                key = self.node.loramac_params.appskey
+            rcv_pay = lw_msg.get_frmpayload_plaintext(key=key)
+            logger.info(
+                f"Decrypted payload: {utils.bytes_to_text(rcv_pay)}\n(key: {self.node.loramac_params.appskey.hex()})")
 
             if lw_msg.macpayload.fport_int == 224:  # Testing message detected
                 self.node.downlink_counter += 1
@@ -272,7 +285,7 @@ class MessageGenerator(object):
         :return: None
         """
         logger.info("Sending message to testing tool")
-        logger.info("FRMPayload plain text: {0}".format(utils.bytes_to_text(payload)))
+        logger.info(f"FRMPayload plain text: {utils.bytes_to_text(payload)}")
         if mhdr == lorawan.lorawan_parameters.general.MHDR.JOIN_REQUEST:
             phypayload = payload
         else:
@@ -282,7 +295,7 @@ class MessageGenerator(object):
                                                         mhdr=mhdr,
                                                         fctr=fctrl,
                                                         fopts=fopts)
-        logger.info("PHYPayload: {0}\n".format(utils.bytes_to_text(phypayload)))
+        logger.info(f"PHYPayload: {utils.bytes_to_text(phypayload)}\n")
         ulmsg = lorawan.parsing.flora_messages.GatewayMessage()
         ulmsg.data = base64.b64encode(phypayload).decode()
         ulmsg.size = len(phypayload)
@@ -293,5 +306,5 @@ class MessageGenerator(object):
         last_sent = time.time()
         logger.info(str(ulmsg))
         broker_channel.basic_publish(exchange=message_queueing.DEFAULT_EXCHANGE,
-                                     routing_key=message_broker.routing_keys.fromAgent+'.gw1',
+                                     routing_key=message_broker.routing_keys.fromAgent + '.gw1',
                                      body=str(ulmsg))

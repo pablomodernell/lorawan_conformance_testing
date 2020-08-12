@@ -66,9 +66,9 @@ class EndDeviceMock(lorawan.sessions.EndDevice):
         deveui_bytes = join_request_phypayload_bytes[16:8:-1]
         devnonce = join_request_phypayload_bytes[-5:-7:-1]
         self._used_otaa_devnonces.append(devnonce)
-        app_hex = utils.bytes_to_text(appeui_bytes, sep='')
-        dev_hex = utils.bytes_to_text(deveui_bytes, sep='')
-        nonce_hex = utils.bytes_to_text(devnonce[::-1], sep='')
+        app_hex = utils.bytes_to_text(appeui_bytes)
+        dev_hex = utils.bytes_to_text(deveui_bytes)
+        nonce_hex = utils.bytes_to_text(devnonce[::-1])
         logger.info(f"appEUI: {app_hex}\ndevEUI: {dev_hex}\ndevnonce: {nonce_hex}")
 
     def create_devnonce(self):

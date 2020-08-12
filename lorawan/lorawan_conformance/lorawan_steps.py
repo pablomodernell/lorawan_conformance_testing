@@ -28,6 +28,7 @@ This modules includes all the test Steps that are common to all LoRaWAN test gro
 #################################################################################
 import struct
 import utils
+import logging
 
 import lorawan.sessions
 import lorawan.lorawan_parameters.general as general_parameters
@@ -41,6 +42,8 @@ import parameters.message_broker as message_broker
 import lorawan.parsing.lorawan as lorawan_parser
 import lorawan.lorawan_parameters.testing as tests_parameters
 import user_interface.ui_reports as ui_reports
+
+logger = logging.getLogger(__name__)
 
 
 class LorawanStep(conformance_testing.test_step_sequence.Step):
@@ -80,18 +83,19 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
             self.ctx_test_manager.device_under_test.message_to_ack = True
         else:
             self.ctx_test_manager.device_under_test.message_to_ack = False
-
         network_key = self.ctx_test_manager.device_under_test.loramac_params.nwkskey
+        if mtype_str in ('JOIN_REQUEST',):
+            network_key = self.ctx_test_manager.device_under_test.appkey
+        logger.info(f"Checking MIC using key {utils.bytes_to_text(network_key)}.")
         calculated_mic = lorawan_msg.calculate_mic(key=network_key)
 
         if not lorawan_msg.mic_bytes == calculated_mic:
             description_template = "Wrong MIC.\nKey: {key}\nMIC: {received_mic}\nCalculated: {calc}"
             raise lorawan_errors.MICError(description=description_template.format(
-                key=utils.bytes_to_text(network_key, sep=""),
+                key=utils.bytes_to_text(network_key),
                 received_mic=utils.bytes_to_text(
-                    lorawan_msg.mic_bytes,
-                    sep=""),
-                calc=utils.bytes_to_text(calculated_mic, sep="")),
+                    lorawan_msg.mic_bytes),
+                calc=utils.bytes_to_text(calculated_mic)),
                 test_case=self.ctx_test_manager.tc_name,
                 step_name=self.name,
                 last_message=self.received_testscript_msg.get_printable_str())
@@ -109,8 +113,7 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
         downlink_counter = self.ctx_test_manager.ctx_test_session_coordinator.downlink_counter
         if not received_frmpayload == struct.pack('>H', downlink_counter):
             raise lorawan_errors.ActokCounterError(
-                description="Received counter {} -> expected {}.".format(
-                    received_frmpayload, struct.pack('>H', downlink_counter)),
+                description=f"Rcv counter {received_frmpayload} -> expected {struct.pack('>H', downlink_counter)}.",
                 step_name=self.name,
                 test_case=self.ctx_test_manager.tc_name,
                 last_message=self.received_testscript_msg.get_printable_str()
@@ -144,9 +147,7 @@ class LorawanStep(conformance_testing.test_step_sequence.Step):
             step_name=self.name,
             last_message=str(
                 self.received_testscript_msg))
-        ui_publisher.testingtool_log(
-            msg_str=str(exeption_raised),
-            key_prefix=message_broker.service_names.test_session_coordinator)
+        logger.debug(str(exeption_raised))
         raise exeption_raised
 
     def step_handler(self, ch, method, properties, body):
@@ -453,8 +454,7 @@ class CountingStep(WaitActokStep):
         """ Actions performed in this step of the test"""
         super().step_handler(ch, method, properties, body)
         self.message_count += 1
-        self.print_step_info(additional_message="Received {0}/{1}.".format(self.message_count,
-                                                                           self._number_of_msg))
+        self.print_step_info(additional_message=f"Received {self.message_count}/{self._number_of_msg}.")
 
 
 class CountingFinalStep(CountingStep):
@@ -512,18 +512,16 @@ class FrequencyCheck(WaitActokStep):
             self.frequencies_to_check[used_freq] = 1
         else:
             self.frequencies_to_check[used_freq] += 1
-        str_template = "Received:{0}.\n({1})\n Count {2} of {3} limit."
-        self.print_step_info(additional_message=str_template.format(used_freq,
-                                                                    self.frequencies_to_check,
-                                                                    self.message_count,
-                                                                    self._limit_of_msg))
+        check = self.frequencies_to_check
+        self.print_step_info(
+            f"Received:{used_freq}.\n({check})\n Count {self.message_count} of {self._limit_of_msg} limit."
+        )
         if all(self.frequencies_to_check.values()):
             self.next_step = self.step_after_checking
         elif self.message_count >= self._limit_of_msg:
+            check = self.frequencies_to_check
             raise lorawan_errors.FrequencyError(
-                description="Not all the configured freq. were used after {0} messages.\n({1})\n".format(
-                    self.message_count,
-                    self.frequencies_to_check),
+                description=f"Not all the configured freq. were used after {self.message_count} messages.\n({check})\n",
                 step_name=self.name,
                 test_case=self.ctx_test_manager.tc_name,
                 last_message=self.received_testscript_msg.get_printable_str()
@@ -581,20 +579,19 @@ class ForbiddenFrequency(WaitActokStep):
         self.message_count += 1
         used_freq = self.received_testscript_msg.freq
         if used_freq in self.forbidden_freq_list:
+            forb = self.forbidden_freq_list
             raise lorawan_errors.FrequencyError(
-                description="Freq. {0} removed and shouldn't be used.\n(Forbidden: {1})\n".format(
-                    used_freq,
-                    self.forbidden_freq_list),
+                description=f"Freq. {used_freq} removed and shouldn't be used.\n(Forbidden: {forb})\n",
                 step_name=self.name,
                 test_case=self.ctx_test_manager.tc_name,
                 last_message=self.received_testscript_msg.get_printable_str()
             )
         else:
-            str_template = "Received:{0}.\nForbidden: ({1})\n Count {2} of {3} limit."
-            self.print_step_info(additional_message=str_template.format(used_freq,
-                                                                        self.forbidden_freq_list,
-                                                                        self.message_count,
-                                                                        self._limit_of_msg))
+            forb = self.forbidden_freq_list
+            cnt = self.message_count
+            lim = self._limit_of_msg
+            self.print_step_info(
+                additional_message=f"Received:{used_freq}.\nForbidden: ({forb})\n Count {cnt} of {lim} limit.")
         if self.message_count >= self._limit_of_msg:
             self.next_step = self.step_after_checking
 
@@ -638,7 +635,7 @@ class WaitPong(LorawanStep):
                 if not received_frmpayload == self.expected_bytes:
                     raise lorawan_errors.EchoError(
                         description="PONG {0} received when expecting {1}.".format(
-                            utils.bytes_to_text(received_frmpayload, sep=""),
+                            utils.bytes_to_text(received_frmpayload),
                             self.expected_bytes),
                         step_name=self.name,
                         test_case=self.ctx_test_manager.tc_name,

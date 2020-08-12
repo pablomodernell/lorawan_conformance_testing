@@ -67,9 +67,7 @@ class LoRaWANMessage(ConditionalRaiser):
         super().__init__(ignore_format_errors=ignore_format_errors)
         if not len(phypayload) >= 12:
             raise lorawan_errors.MessageFormatError(
-                description="Wrong LoRaWAN message length, {}: {}\n".format(
-                    len(phypayload),
-                    utils.bytes_to_text(phypayload, sep="")),
+                description=f"Wrong LoRaWAN msg length, {len(phypayload)}: {utils.bytes_to_text(phypayload)}\n",
                 step_name=None,
                 test_case=None)
         self.phypayload_bytes = phypayload
@@ -92,17 +90,15 @@ class LoRaWANMessage(ConditionalRaiser):
         ret_str = ''
         ret_str += "\n----------------------------------------------\n"
         ret_str += "PHY payload:\n"
-        ret_str += f"{utils.bytes_to_text(self.phypayload_bytes, sep='')}\n"
-        ret_str += "MHDR bits: {0} ({1})\n".format(self.mhdr,
-                                                   self.mhdr.mtype_str)
-        ret_str += "MACPayload: {0}\n".format(utils.bytes_to_text(
-            self.macpayload.macpayload_bytes, sep=""))
+        ret_str += f"{utils.bytes_to_text(self.phypayload_bytes)}\n"
+        ret_str += f"MHDR bits: {self.mhdr} ({self.mhdr.mtype_str})\n"
+        ret_str += f"MACPayload: {utils.bytes_to_text(self.macpayload.macpayload_bytes)}\n"
         ret_str += str(self.macpayload)
         if self.piggybacked_commands:
             ret_str += "Piggybacked MAC commands:\n"
             for command in self.piggybacked_commands:
                 ret_str += str(command)
-        ret_str += "MIC: {0}\n".format(utils.bytes_to_text(self.mic_bytes, sep=""))
+        ret_str += f"MIC: {utils.bytes_to_text(self.mic_bytes)}\n"
         ret_str += "==============================================\n"
         return ret_str
 
@@ -132,18 +128,17 @@ class LoRaWANMessage(ConditionalRaiser):
         :param key: byte sequence of the AppSKey used to encrypt the message (16 bytes).
         :return: byte sequence of the decrypted FRMPayload.
         """
-        if self.mhdr.mtype_str in (
+        if self.macpayload.frmpayload_bytes is None or self.mhdr.mtype_str not in (
                 'UNCONFIRMED_UP', 'UNCONFIRMED_DOWN', 'CONFIRMED_UP', 'CONFIRMED_DOWN'):
-            devaddr = self.macpayload.fhdr.devaddr_bytes
-            fcnt = self.macpayload.fhdr.get_fcnt_int()
-            plain_frmpayload = utils.encrypt_ieee802154(key=key,
-                                                        frmpayload=self.macpayload.frmpayload_bytes,
-                                                        direction=self.mhdr.message_dir,
-                                                        devaddr=devaddr,
-                                                        fcnt=fcnt)
-            return plain_frmpayload
-        else:
             return None
+        devaddr = self.macpayload.fhdr.devaddr_bytes
+        fcnt = self.macpayload.fhdr.get_fcnt_int()
+        plain_frmpayload = utils.encrypt_ieee802154(key=key,
+                                                    frmpayload=self.macpayload.frmpayload_bytes,
+                                                    direction=self.mhdr.message_dir,
+                                                    devaddr=devaddr,
+                                                    fcnt=fcnt)
+        return plain_frmpayload
 
 
 class LoRaWANMHDR(ConditionalRaiser):
@@ -158,7 +153,7 @@ class LoRaWANMHDR(ConditionalRaiser):
         """
         super().__init__(ignore_format_errors=ignore_format_errors)
         if self.raise_if_not_ok(len(mhdr) == 1):
-            raise lorawan_errors.MHDRError(description="Wrong MHDR length: {}\n".format(mhdr),
+            raise lorawan_errors.MHDRError(description=f"Wrong MHDR length: {mhdr}\n",
                                            step_name=None,
                                            test_case=None)
         self.mhdr_bytes = mhdr[0:1]
@@ -170,7 +165,7 @@ class LoRaWANMHDR(ConditionalRaiser):
     def mtype_int(self):
         if self.raise_if_not_ok(0 <= self._mtype_int < 7):
             raise lorawan_errors.MHDRError(
-                description="Wrong MType: {}\n".format(utils.bytes_to_text(self.mhdr_bytes)),
+                description=f"Wrong MType: {utils.bytes_to_text(self.mhdr_bytes)}\n",
                 step_name=None,
                 test_case=None)
         return self._mtype_int
@@ -195,7 +190,7 @@ class LoRaWANMHDR(ConditionalRaiser):
                 self._message_dir = 1
             elif self.raise_if_not_ok(self.mtype_int == 6):
                 raise lorawan_errors.MHDRError(
-                    description="Unknown (RFU) MType: {}\n".format(self.mtype_int),
+                    description=f"Unknown (RFU) MType: {self.mtype_int}\n",
                     step_name=None,
                     test_case=None)
         return self._message_dir
@@ -218,12 +213,12 @@ class LoRaWANMACPayload(ConditionalRaiser):
         super().__init__(ignore_format_errors=ignore_format_errors)
         if self.raise_if_not_ok(len(macpayload) >= 7):
             raise lorawan_errors.MACPayloadError(
-                description="Wrong MACPayload lenght: {}\n".format(macpayload),
+                description=f"Wrong MACPayload lenght: {macpayload}\n",
                 step_name=None,
                 test_case=None)
         if self.raise_if_not_ok(str_mtype in MESSAGE_TYPES):
             raise lorawan_errors.MACPayloadError(
-                description="Unknown requested MType: {}\n".format(str_mtype),
+                description=f"Unknown requested MType: {str_mtype}\n",
                 step_name=None,
                 test_case=None)
 
@@ -241,7 +236,7 @@ class LoRaWANMACPayload(ConditionalRaiser):
         if str_mtype in ('JOIN_REQUEST',):
             if self.raise_if_not_ok(len(macpayload) == 18):
                 raise lorawan_errors.MHDRError(
-                    description="Wrong MACPayload length: {}\n".format(macpayload),
+                    description=f"Wrong MACPayload length: {macpayload}\n",
                     step_name=None,
                     test_case=None)
             self.appeui_bytes = macpayload[7::-1]
@@ -275,19 +270,17 @@ class LoRaWANMACPayload(ConditionalRaiser):
         ret_str += "----------------------------------------------\n"
         if self.str_mtype in ('JOIN_REQUEST',):
             ret_str += "Join Request information\n"
-            ret_str += "AppEUI: {0}\n".format(utils.bytes_to_text(self.appeui_bytes, sep=":"))
-            ret_str += "DevEUI: {0}\n".format(utils.bytes_to_text(self.deveui_bytes, sep=":"))
-            ret_str += "DevNonce: {0}\n".format(utils.bytes_to_text(self.devnonce_bytes, ":"))
+            ret_str += f"AppEUI: {utils.bytes_to_text(self.appeui_bytes)}\n"
+            ret_str += f"DevEUI: {utils.bytes_to_text(self.deveui_bytes)}\n"
+            ret_str += f"DevNonce: {utils.bytes_to_text(self.devnonce_bytes)}\n"
         elif self.str_mtype in (
                 'UNCONFIRMED_UP', 'UNCONFIRMED_DOWN', 'CONFIRMED_UP', 'CONFIRMED_DOWN'):
             ret_str += "MAC payload information\n"
-            ret_str += "FHDR: {0}\n".format(utils.bytes_to_text(self.fhdr.fhdr_bytes, sep=""))
+            ret_str += f"FHDR: {utils.bytes_to_text(self.fhdr.fhdr_bytes)}\n"
             ret_str += str(self.fhdr)
-            ret_str += "FPort: {0}\n".format(self.fport_int)
+            ret_str += f"FPort: {self.fport_int}\n"
             if self.frmpayload_bytes:
-                ret_str += "Encrypted FRMPayload: {0}\n".format(
-                    utils.bytes_to_text(self.frmpayload_bytes,
-                                        sep=""))
+                ret_str += f"Encrypted FRMPayload: {utils.bytes_to_text(self.frmpayload_bytes)}\n"
             else:
                 ret_str += "No FRMPayload detected.\n"
         ret_str += "==============================================\n"
@@ -340,13 +333,11 @@ class LoRaWANFHDR(ConditionalRaiser):
     def __str__(self):
         """ Human readable string representation."""
         retstr = ''
-        retstr += "----DevAddr: {0}\n".format(utils.bytes_to_text(self.devaddr_bytes,
-                                                                  sep=""))
+        retstr += "----DevAddr: {0}\n".format(utils.bytes_to_text(self.devaddr_bytes))
         retstr += "----FCtrl: {0}\n".format(self.fctrl.fctrl_binary_str())
         retstr += str(self.fctrl)
         retstr += "----FCnt: {0} ({1})\n".format(self.get_fcnt_int(),
-                                                 utils.bytes_to_text(self.fcnt_bytes,
-                                                                     sep=""))
+                                                 utils.bytes_to_text(self.fcnt_bytes))
         retstr += "----FOpts: {0}\n".format(self.fopts_to_str())
         return retstr
 
@@ -365,7 +356,7 @@ class LoRaWANFHDR(ConditionalRaiser):
         if self.fopts_bytes is None:
             return None
         else:
-            return utils.bytes_to_text(self.fopts_bytes, sep="")
+            return utils.bytes_to_text(self.fopts_bytes)
 
 
 class LoRaWANFCtrl(ConditionalRaiser):

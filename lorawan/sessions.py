@@ -203,6 +203,7 @@ class EndDevice(object):
         self._used_otaa_devnonces = []
 
     def set_default_loramac(self):
+        logger.info(f"Restoring default LoRa MAC parameters.")
         self.loramac_previous_session = copy.deepcopy(self.loramac_params)
         self.loramac_params = copy.deepcopy(self.loramac_defaults)
 
@@ -320,7 +321,7 @@ class EndDevice(object):
         fhdr = self.loramac_params.devaddr[::-1] + fctr + struct.pack('<H', fcnt_down) + fopts
         mhdr_fhdr = mhdr + fhdr
         assert mhdr in (
-        b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
+            b'\x00', b'\x40', b'\x80', b'\x20', b'\x60', b'\xA0', b'\xC0'), "Unrecognized MHDR."
         if mhdr in (b'\x00', b'\x40', b'\x80'):
             direction = 0
         else:
@@ -357,12 +358,10 @@ class EndDevice(object):
         :return: None
         """
         if not (len(appskey) == 16 and len(nwkskey) == 16 and len(devaddr) == 4):
-            description_template = "Wrong session info.\nDevAddr={da}\nAppSkey={ak}\nNwkSKey={nk}\n"
-            raise test_errors.SessionError(description=description_template.format(ak=appskey,
-                                                                                   nk=nwkskey,
-                                                                                   da=devaddr),
-                                           step_name=None,
-                                           test_case=None)
+            raise test_errors.SessionError(
+                description=f"Wrong session info.\nDevAddr={appskey}\nAppSkey={nwkskey}\nNwkSKey={devaddr}\n",
+                step_name=None,
+                test_case=None)
         self.loramac_previous_session = copy.deepcopy(self.loramac_params)
         self.loramac_params = copy.deepcopy(self.loramac_defaults)
         self.loramac_params.devaddr = devaddr
@@ -372,7 +371,7 @@ class EndDevice(object):
         self.fcnt_down = 0
         prev_str = str(self.loramac_previous_session)
         new_str = str(self.loramac_params)
-        logger.debug(
+        logger.info(
             f"Updating Session\nOld session:\n{prev_str}\nNEW session:\n{new_str}")
 
     def store_used_devnonce(self, devnonce):
@@ -410,13 +409,10 @@ class EndDevice(object):
         return json.dumps(device_id)
 
     def __str__(self):
-        retstr = ''
-        retstr += "\tDevAddr: {0}\n".format(utils.bytes_to_text(self.loramac_params.devaddr,
-                                                                sep=""))
-        retstr += "\tDevEUI: {0}\n".format(utils.bytes_to_text(self.deveui, sep=""))
-        retstr += "\tAppSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.appskey,
-                                                                sep=""))
-        retstr += "\tNwkSKey: {0}\n".format(utils.bytes_to_text(self.loramac_params.nwkskey,
-                                                                sep=""))
-        retstr += "\tAppKey: {0}\n".format(utils.bytes_to_text(self.appkey, sep=""))
-        return retstr
+        dadd = utils.bytes_to_text(self.loramac_params.devaddr)
+        deui = utils.bytes_to_text(self.deveui)
+        ask = utils.bytes_to_text(self.loramac_params.appskey)
+        nsk = utils.bytes_to_text(self.loramac_params.nwkskey)
+        ak = utils.bytes_to_text(self.appkey)
+
+        return f"\tDevAddr: {dadd}\n\tDevEUI: {deui}\n\tAppSKey: {ask}\n\tNwkSKey: {nsk}\n\tAppKey: {ak}\n"
