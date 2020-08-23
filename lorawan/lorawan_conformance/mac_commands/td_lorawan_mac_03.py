@@ -44,6 +44,7 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
     def __init__(self, test_session_coordinator):
         super().__init__(test_name=__name__.split(".")[-1],
                          ctx_test_session_coordinator=test_session_coordinator)
+        self.ch_to_disable = [(0, 0), (0, 1)]
         # -----------------------------------------------------------------------------------------
         self.s3_actok_to_check_frequency = lorawan_steps.FrequencyCheckFinal(
             ctx_test_manager=self,
@@ -64,7 +65,7 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
             ctx_test_manager=self,
             step_name="S2NewChannelRejectedCheck",
             next_step=self.s3_actok_to_check_frequency,
-            number_of_requests=3,
+            number_of_requests=len(self.ch_to_disable),
             is_accept_expected=False)
         self.add_step_description(
             step_name="Step 2: S2NewChannelRejectedCheck",
@@ -78,7 +79,7 @@ class TestAppManager(conformance_testing.test_step_sequence.TestManager):
             ctx_test_manager=self,
             step_name="S1ActokToNewChannelReq_DisableDefault",
             next_step=self.s2_config_rejected,
-            freq_idx_tuple_list=[(0, 0), (0, 1), (0, 2)],
+            freq_idx_tuple_list=self.ch_to_disable,
             piggybacked=False,
             in_frmpayload=True)
         self.add_step_description(
