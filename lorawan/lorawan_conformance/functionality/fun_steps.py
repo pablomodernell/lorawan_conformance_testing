@@ -26,11 +26,15 @@ This modules includes all the test Steps that are common to the FUN group.
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #################################################################################
+import logging
+
 import lorawan.lorawan_conformance.lorawan_errors as lorawan_errors
 import lorawan.lorawan_conformance.lorawan_steps as lorawan_steps
 import lorawan.lorawan_parameters.testing as tests_parameters
 import lorawan.lorawan_parameters.general as lorawan_parameters
 import parameters.message_broker as message_broker
+
+logger = logging.getLogger(__name__)
 
 
 class CountCheckFCntUp(lorawan_steps.CountingStep):
@@ -74,10 +78,15 @@ class CountCheckFCntUp(lorawan_steps.CountingStep):
         lorawan_received = self.received_testscript_msg.parse_lorawan_message()
 
         received_fcntup_int = lorawan_received.macpayload.fhdr.get_fcnt_int()
-        if not self.last_fcntup:
+        logger.debug(f"Received FCnt: {received_fcntup_int}")
+        if self.last_fcntup is None:
+            logger.debug("Saving first")
             self.last_fcntup = received_fcntup_int
         else:
+            logger.debug(
+                f"Verifying {self.last_fcntup} + {self.sequence_increment} = {received_fcntup_int}?")
             if (self.last_fcntup + self.sequence_increment) == received_fcntup_int:
+                logger.debug("FCntUp incremented ok.")
                 self.last_fcntup = received_fcntup_int
             else:
                 appskey = self.ctx_test_manager.device_under_test.loramac_params.appskey

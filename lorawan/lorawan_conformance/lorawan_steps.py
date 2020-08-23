@@ -636,7 +636,7 @@ class WaitPong(LorawanStep):
                     raise lorawan_errors.EchoError(
                         description="PONG {0} received when expecting {1}.".format(
                             utils.bytes_to_text(received_frmpayload),
-                            self.expected_bytes),
+                            utils.bytes_to_text(self.expected_bytes)),
                         step_name=self.name,
                         test_case=self.ctx_test_manager.tc_name,
                         last_message=self.received_testscript_msg.get_printable_str(

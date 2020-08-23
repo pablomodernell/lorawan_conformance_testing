@@ -28,11 +28,15 @@ This modules includes all the test Steps that are common to the MAC group.
 #################################################################################
 import utils
 import struct
+import logging
+
 import lorawan.lorawan_conformance.lorawan_steps as lorawan_steps
 import parameters.message_broker as message_broker
 import lorawan.lorawan_parameters.general as lorawan_parameters
 import lorawan.parsing.mac_commands as mac_commands
 import lorawan.lorawan_conformance.lorawan_errors as lorawan_errors
+
+logger = logging.getLogger(__name__)
 
 
 class NoMACCommandCheck(lorawan_steps.LorawanStep):
@@ -241,37 +245,41 @@ class NewChannelAnsCheck(MACCommandAnsCheck):
             key = self.ctx_test_manager.device_under_test.loramac_params.nwkskey
         else:
             key = self.ctx_test_manager.device_under_test.loramac_params.appskey
-        if len(self.received_commands) >= self.number_of_requests:
-            ans_checked = 0
-            for command in self.received_commands:
-                if type(command).__name__ == "NewChannelAns" and command.is_ok == self.accept_expected:
-                    ans_checked += 1
-            if ans_checked >= self.number_of_requests:
-                self.print_step_info(received_str=self.received_testscript_msg.get_printable_str(
-                    encryption_key=key))
-            else:
-                if self.accept_expected:
-                    description_str = "Received {rec} NewChannelAns, expecting {exp}.\n".format(
-                        rec=ans_checked,
-                        exp=self.number_of_requests)
-                else:
-                    description_str = "The channel configuration asking to remove a default channel must be rejected.\n"
-                    description_str += "Received {rec} rejection NewChannelAns, expecting {exp}.\n".format(
-                        rec=ans_checked,
-                        exp=self.number_of_requests)
-                raise lorawan_errors.MACConfigurationExchangeError(
-                    description=description_str,
-                    test_case=self.ctx_test_manager.tc_name,
-                    step_name=self.name,
-                    last_message=self.received_testscript_msg.get_printable_str(
-                                        encryption_key=key))
-        else:
+        logger.info(f"Rcv cmd {self.received_commands} ({len(self.received_commands)}).")
+        if len(self.received_commands) < self.number_of_requests:
+            logger.info(
+                f"Nbr of req {self.number_of_requests} > rcv cmd {len(self.received_commands)}")
             raise lorawan_errors.NoMACResponseError(
                 description="Expecting {} NewChannelAns.".format(self.number_of_requests),
                 test_case=self.ctx_test_manager.tc_name,
                 step_name=self.name,
                 last_message=self.received_testscript_msg.get_printable_str(
                             encryption_key=key))
+        ans_checked = 0
+        for command in self.received_commands:
+            if type(command).__name__ == "NewChannelAns" and command.is_ok == self.accept_expected:
+                logger.info(f"{type(command).__name__} is ok? {command.is_ok}")
+                ans_checked += 1
+        if ans_checked >= self.number_of_requests:
+            logger.info("Received at lest the same commands as expected.")
+            self.print_step_info(received_str=self.received_testscript_msg.get_printable_str(
+                encryption_key=key))
+        else:
+            if self.accept_expected:
+                description_str = "Received {rec} NewChannelAns, expecting {exp}.\n".format(
+                    rec=ans_checked,
+                    exp=self.number_of_requests)
+            else:
+                description_str = "The channel configuration asking to remove a default channel must be rejected.\n"
+                description_str += "Received {rec} rejection NewChannelAns, expecting {exp}.\n".format(
+                    rec=ans_checked,
+                    exp=self.number_of_requests)
+            raise lorawan_errors.MACConfigurationExchangeError(
+                description=description_str,
+                test_case=self.ctx_test_manager.tc_name,
+                step_name=self.name,
+                last_message=self.received_testscript_msg.get_printable_str(
+                                    encryption_key=key))
 
 
 class NewChannelAnsCheckFinal(NewChannelAnsCheck):
