@@ -1,0 +1,772 @@
+2020-08-12 22:00:12,966 pika.adapters.base_connection _create_and_connect_to_socket INFO     Pika version 0.12.0 connecting to 192.168.96.3:5672
+2020-08-12 22:00:12,971 pika.adapters.blocking_connection             __init__ INFO     Created channel=1
+2020-08-12 22:00:12,974 pika.adapters.base_connection _create_and_connect_to_socket INFO     Pika version 0.12.0 connecting to 192.168.96.3:5672
+2020-08-12 22:00:12,983 pika.adapters.blocking_connection             __init__ INFO     Created channel=1
+2020-08-12 22:00:12,992 __main__               agent_main INFO     Starting agent...
+2020-08-12 22:00:14,052 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+027d70-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:14,052 __main__               agent_main INFO     Ready to forward.
+2020-08-12 22:00:24,378 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+025a38-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:27,833 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+020a00-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4024041020,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.8,"rssi":-57,"size":29,"data":"QAEBAQEAAAAWSju26Ppyu8ERpuGD3AQYB4Q6/uE="}]}'
+JSONObject: {'rxpk': [{'tmst': 4024041020, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.8, 'rssi': -57, 'size': 29, 'data': 'QAEBAQEAAAAWSju26Ppyu8ERpuGD3AQYB4Q6/uE='}]}
+
+2020-08-12 22:00:27,844 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.011865854263305664
+<<<<<<
+
+2020-08-12 22:00:27,845 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YAEBAQEAAADg2JksxUshhmI=", "datr": "SF8BW125", "freq": 868.5, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4025041020}}'
+2020-08-12 22:00:27,876 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+025302-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:28,986 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02e41d-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4025247572,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.5,"rssi":-62,"size":15,"data":"QAEBAQGAAQDg/VHUt7vq"}]}'
+JSONObject: {'rxpk': [{'tmst': 4025247572, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.5, 'rssi': -62, 'size': 15, 'data': 'QAEBAQGAAQDg/VHUt7vq'}]}
+
+2020-08-12 22:00:33,981 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02b1f2-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4030247436,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-62,"size":15,"data":"QAEBAQGAAgDg4MJ7c1Ex"}]}'
+JSONObject: {'rxpk': [{'tmst': 4030247436, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -62, 'size': 15, 'data': 'QAEBAQGAAgDg4MJ7c1Ex'}]}
+
+2020-08-12 22:00:33,985 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.003506898880004883
+<<<<<<
+
+2020-08-12 22:00:33,985 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YAEBAQEAAQDgf/1ydJA=", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4031247436}}'
+2020-08-12 22:00:34,037 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+022ac4-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:34,950 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+028e84-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:35,308 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02f7fa-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4031499324,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.8,"rssi":-60,"size":23,"data":"AAEBAQEBAQEBAQEBAQEBAQFtP4SKrqg="}]}'
+JSONObject: {'rxpk': [{'tmst': 4031499324, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.8, 'rssi': -60, 'size': 23, 'data': 'AAEBAQEBAQEBAQEBAQEBAQFtP4SKrqg='}]}
+
+2020-08-12 22:00:35,319 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.011179447174072266
+<<<<<<
+
+2020-08-12 22:00:35,320 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "IGg2ddeqVscmrWdDhzfNy92Cx60eWJMxRWynWGu1Rojk", "datr": "SF8BW125", "freq": 868.5, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 33, "tmst": 4036499324}}'
+2020-08-12 22:00:35,331 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02ad67-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:36,272 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0237f3-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:00:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":4,"rxok":4,"rxfw":4,"ackr":80.0,"dwnb":3,"txnb":2,"temp":64,"cpur":12.5,"memr":16.1}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:00:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 4, 'rxok': 4, 'rxfw': 4, 'ackr': 80.0, 'dwnb': 3, 'txnb': 2, 'temp': 64, 'cpur': 12.5, 'memr': 16.1}}
+
+2020-08-12 22:00:42,900 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+024f00-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4039058180,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-57,"size":29,"data":"QMW42p0AAAAWpczhpLIJd7kgREAdprg/SgpV3wo="}]}'
+JSONObject: {'rxpk': [{'tmst': 4039058180, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -57, 'size': 29, 'data': 'QMW42p0AAAAWpczhpLIJd7kgREAdprg/SgpV3wo='}]}
+
+2020-08-12 22:00:42,910 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.010555744171142578
+<<<<<<
+
+2020-08-12 22:00:42,911 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YMW42p0AAADgjUJwynsA2LY=", "datr": "SF10BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4040058180}}'
+2020-08-12 22:00:42,921 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02eff6-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:44,464 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029682-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4040505932,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":8.0,"rssi":-60,"size":15,"data":"QMW42p2AAQDgn98V9jBz"}]}'
+JSONObject: {'rxpk': [{'tmst': 4040505932, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 8.0, 'rssi': -60, 'size': 15, 'data': 'QMW42p2AAQDgn98V9jBz'}]}
+
+2020-08-12 22:00:44,467 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.003319263458251953
+<<<<<<
+
+2020-08-12 22:00:44,467 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YMW42p0AAQDgibyozJ8SmvidX4CQS3w9wb0=", "datr": "SF10BW125", "freq": 868.3, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 26, "tmst": 4041505932}}'
+2020-08-12 22:00:44,480 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+0286d2-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:44,483 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02ea5b-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:49,685 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0298a8-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4045526276,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-57,"size":26,"data":"QMW42p2AAgDg3jkDnkrPior0fRRkwzVLVdo="}]}'
+JSONObject: {'rxpk': [{'tmst': 4045526276, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -57, 'size': 26, 'data': 'QMW42p2AAgDg3jkDnkrPior0fRRkwzVLVdo='}]}
+
+2020-08-12 22:00:54,292 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+025c7e-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4050505660,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":8.2,"rssi":-60,"size":15,"data":"QMW42p2AAwDgyYXTecUV"}]}'
+JSONObject: {'rxpk': [{'tmst': 4050505660, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 8.2, 'rssi': -60, 'size': 15, 'data': 'QMW42p2AAwDgyYXTecUV'}]}
+
+2020-08-12 22:00:54,304 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.011870384216308594
+<<<<<<
+
+2020-08-12 22:00:54,305 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YMW42p0AAgDgEn3vcWs=", "datr": "SF10BW125", "freq": 868.3, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4051505660}}'
+2020-08-12 22:00:54,341 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+029203-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:00:54,532 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+021670-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:04,960 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+0236a6-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:06,253 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02dab4-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:01:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":4,"rxok":4,"rxfw":4,"ackr":20.0,"dwnb":3,"txnb":4,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:01:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 4, 'rxok': 4, 'rxfw': 4, 'ackr': 20.0, 'dwnb': 3, 'txnb': 4, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:01:07,826 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+021734-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4064084828,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-57,"size":29,"data":"QMW42p0ABAAWKRu2MVGxIqwdZpLV+IQwVXRCq8U="}]}'
+JSONObject: {'rxpk': [{'tmst': 4064084828, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -57, 'size': 29, 'data': 'QMW42p0ABAAWKRu2MVGxIqwdZpLV+IQwVXRCq8U='}]}
+
+2020-08-12 22:01:07,838 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.013016223907470703
+<<<<<<
+
+2020-08-12 22:01:07,839 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YMW42p0AAwDgarRRtRP4mEk=", "datr": "SF10BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4065084828}}'
+2020-08-12 22:01:07,850 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02d445-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:09,269 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02ec21-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4065532588,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-58,"size":15,"data":"QMW42p2ABQDgpebSqRsO"}]}'
+JSONObject: {'rxpk': [{'tmst': 4065532588, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -58, 'size': 15, 'data': 'QMW42p2ABQDgpebSqRsO'}]}
+
+2020-08-12 22:01:14,268 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0234d1-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4070532444,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-58,"size":15,"data":"QMW42p2ABgDgTfVuda8U"}]}'
+JSONObject: {'rxpk': [{'tmst': 4070532444, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -58, 'size': 15, 'data': 'QMW42p2ABgDgTfVuda8U'}]}
+
+2020-08-12 22:01:14,271 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.003434896469116211
+<<<<<<
+
+2020-08-12 22:01:14,271 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YMW42p0ABADgSZis0TQ=", "datr": "SF10BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4071532444}}'
+2020-08-12 22:01:14,286 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02feeb-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:14,953 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+023ee5-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:15,975 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02c3cd-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4071996252,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-60,"size":23,"data":"AAEBAQEBAQEBAQEBAQEBAQHy3VCaUZ8="}]}'
+JSONObject: {'rxpk': [{'tmst': 4071996252, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -60, 'size': 23, 'data': 'AAEBAQEBAQEBAQEBAQEBAQHy3VCaUZ8='}]}
+
+2020-08-12 22:01:15,981 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.005503654479980469
+<<<<<<
+
+2020-08-12 22:01:15,981 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "IOpFCzNX3psbTr52v8W9XoC81tlEG4D++Vmyo4J4K2n6", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 33, "tmst": 4076996252}}'
+2020-08-12 22:01:15,992 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02dcc6-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:22,967 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+026aba-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4079101996,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.2,"rssi":-58,"size":29,"data":"QKuskDQAAAAW1qXp1HXEsWqE8sz2EaZHoNSUU7g="}]}'
+JSONObject: {'rxpk': [{'tmst': 4079101996, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.2, 'rssi': -58, 'size': 29, 'data': 'QKuskDQAAAAW1qXp1HXEsWqE8sz2EaZHoNSUU7g='}]}
+
+2020-08-12 22:01:22,975 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.008806228637695312
+<<<<<<
+
+2020-08-12 22:01:22,975 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YKuskDQAAADgUmud5jvYEeA=", "datr": "SF12BW125", "freq": 869.525, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4083101996}}'
+2020-08-12 22:01:22,988 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+0248ad-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:24,972 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02c7a1-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:28,134 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02ad16-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4084397300,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.5,"rssi":-57,"size":15,"data":"QKuskDSAAQDgaCEtQgmt"}]}'
+JSONObject: {'rxpk': [{'tmst': 4084397300, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.5, 'rssi': -57, 'size': 15, 'data': 'QKuskDSAAQDgaCEtQgmt'}]}
+
+2020-08-12 22:01:28,142 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.008327960968017578
+<<<<<<
+
+2020-08-12 22:01:28,143 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YKuskDQAAQDgNKRVgwBmt0Vxma/fnSRk/mj+f3By", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 30, "tmst": 4087397300}}'
+2020-08-12 22:01:28,185 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+021c44-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:33,166 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02a143-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4089427876,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-58,"size":30,"data":"QKuskDSAAgDg39ZbhYg8FHICxj9ojFIRXS7KZgei"}]}'
+JSONObject: {'rxpk': [{'tmst': 4089427876, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -58, 'size': 30, 'data': 'QKuskDSAAgDg39ZbhYg8FHICxj9ojFIRXS7KZgei'}]}
+
+2020-08-12 22:01:35,142 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02998b-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:36,267 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029f31-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:01:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":7,"rxok":7,"rxfw":7,"ackr":75.0,"dwnb":5,"txnb":5,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:01:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 7, 'rxok': 7, 'rxfw': 7, 'ackr': 75.0, 'dwnb': 5, 'txnb': 5, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:01:43,134 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0233fb-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4099396884,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-58,"size":15,"data":"QKuskDSAAwDgtLTw/lo+"}]}'
+JSONObject: {'rxpk': [{'tmst': 4099396884, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -58, 'size': 15, 'data': 'QKuskDSAAwDgtLTw/lo+'}]}
+
+2020-08-12 22:01:43,144 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.009591817855834961
+<<<<<<
+
+2020-08-12 22:01:43,144 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YKuskDQAAgDgRcod7iA=", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4102396884}}'
+2020-08-12 22:01:43,159 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+021ff5-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:45,469 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02af49-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:52,952 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+026be6-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4109128500,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.2,"rssi":-58,"size":29,"data":"QKuskDQABAAWbwIDS448WgnPnc1Gp0ic4vvld+U="}]}'
+JSONObject: {'rxpk': [{'tmst': 4109128500, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.2, 'rssi': -58, 'size': 29, 'data': 'QKuskDQABAAWbwIDS448WgnPnc1Gp0ic4vvld+U='}]}
+
+2020-08-12 22:01:52,956 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.004139900207519531
+<<<<<<
+
+2020-08-12 22:01:52,956 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YKuskDQAAwDgdqwhdG5mLHM=", "datr": "SF8BW125", "freq": 868.5, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4112128500}}'
+2020-08-12 22:01:52,969 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+023961-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:55,428 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02f045-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:01:56,958 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029a07-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4112334996,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.5,"rssi":-58,"size":15,"data":"QKuskDSABQDgbVvRmdzG"}]}'
+JSONObject: {'rxpk': [{'tmst': 4112334996, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.5, 'rssi': -58, 'size': 15, 'data': 'QKuskDSABQDgbVvRmdzG'}]}
+
+2020-08-12 22:02:05,951 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+027a86-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:06,077 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0228ae-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4122334724,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-58,"size":15,"data":"QKuskDSABgDgaL+CQz26"}]}'
+JSONObject: {'rxpk': [{'tmst': 4122334724, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -58, 'size': 15, 'data': 'QKuskDSABgDgaL+CQz26'}]}
+
+2020-08-12 22:02:06,080 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.003239154815673828
+<<<<<<
+
+2020-08-12 22:02:06,080 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YKuskDQABADgrLFmWJI=", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4125334724}}'
+2020-08-12 22:02:06,095 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02d7db-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:06,278 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+025767-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:02:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":4,"rxok":4,"rxfw":4,"ackr":80.0,"dwnb":3,"txnb":2,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:02:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 4, 'rxok': 4, 'rxfw': 4, 'ackr': 80.0, 'dwnb': 3, 'txnb': 2, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:02:09,322 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02941a-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4125587532,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.8,"rssi":-58,"size":23,"data":"AAEBAQEBAQEBAQEBAQEBAQF1BzmLeQ8="}]}'
+JSONObject: {'rxpk': [{'tmst': 4125587532, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.8, 'rssi': -58, 'size': 23, 'data': 'AAEBAQEBAQEBAQEBAQEBAQF1BzmLeQ8='}]}
+
+2020-08-12 22:02:09,336 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.013844013214111328
+<<<<<<
+
+2020-08-12 22:02:09,337 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "IPCKUs8bQNztBwb1INUin9V4PMdSbB8c1KWbA9DNLPlq", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 33, "tmst": 4130587532}}'
+2020-08-12 22:02:09,347 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02f844-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:15,762 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+0234fe-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:17,962 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02d4fb-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4134149300,"chan":0,"rfch":0,"freq":867.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-62,"size":29,"data":"QBIMBC0AAAAWcinw0g06XIF69RhFP01ywSyxlDU="}]}'
+JSONObject: {'rxpk': [{'tmst': 4134149300, 'chan': 0, 'rfch': 0, 'freq': 867.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -62, 'size': 29, 'data': 'QBIMBC0AAAAWcinw0g06XIF69RhFP01ywSyxlDU='}]}
+
+2020-08-12 22:02:17,974 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.012326717376708984
+<<<<<<
+
+2020-08-12 22:02:17,974 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YBIMBC0AAADgVnyPRy/59Pw=", "datr": "SF12BW125", "freq": 869.525, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4136149300}}'
+2020-08-12 22:02:17,997 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02c542-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:21,182 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029f82-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4137443676,"chan":1,"rfch":0,"freq":867.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-62,"size":15,"data":"QBIMBC2AAQDgL+Y5L7Ig"}]}'
+JSONObject: {'rxpk': [{'tmst': 4137443676, 'chan': 1, 'rfch': 0, 'freq': 867.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AAQDgL+Y5L7Ig'}]}
+
+2020-08-12 22:02:25,372 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+021141-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:26,995 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02c5aa-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4142443540,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-62,"size":15,"data":"QBIMBC2AAgDgBXBd0jWH"}]}'
+JSONObject: {'rxpk': [{'tmst': 4142443540, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AAgDgBXBd0jWH'}]}
+
+2020-08-12 22:02:31,187 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02cc64-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4147443404,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":9.0,"rssi":-58,"size":15,"data":"QBIMBC2AAwDg3RwTkoNd"}]}'
+JSONObject: {'rxpk': [{'tmst': 4147443404, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 9.0, 'rssi': -58, 'size': 15, 'data': 'QBIMBC2AAwDg3RwTkoNd'}]}
+
+2020-08-12 22:02:35,952 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02dc00-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:36,342 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+025f8b-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4152443268,"chan":4,"rfch":0,"freq":867.900000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-62,"size":15,"data":"QBIMBC2ABADgezhg7qPA"}]}'
+JSONObject: {'rxpk': [{'tmst': 4152443268, 'chan': 4, 'rfch': 0, 'freq': 867.9, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ABADgezhg7qPA'}]}
+
+2020-08-12 22:02:36,345 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0249ca-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:02:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":6,"rxok":6,"rxfw":6,"ackr":71.4,"dwnb":2,"txnb":3,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:02:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 6, 'rxok': 6, 'rxfw': 6, 'ackr': 71.4, 'dwnb': 2, 'txnb': 3, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:02:41,983 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+027139-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4157443124,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.5,"rssi":-60,"size":15,"data":"QBIMBC2ABQDgPSXX8gXB"}]}'
+JSONObject: {'rxpk': [{'tmst': 4157443124, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.5, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2ABQDgPSXX8gXB'}]}
+
+2020-08-12 22:02:46,675 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02100b-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:46,675 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02408a-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4162442988,"chan":1,"rfch":0,"freq":867.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-60,"size":15,"data":"QBIMBC2ABgDgpjlt78Q7"}]}'
+JSONObject: {'rxpk': [{'tmst': 4162442988, 'chan': 1, 'rfch': 0, 'freq': 867.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2ABgDgpjlt78Q7'}]}
+
+2020-08-12 22:02:51,183 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029269-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4167442844,"chan":2,"rfch":0,"freq":867.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":8.8,"rssi":-62,"size":15,"data":"QBIMBC2ABwDgec5XjeK4"}]}'
+JSONObject: {'rxpk': [{'tmst': 4167442844, 'chan': 2, 'rfch': 0, 'freq': 867.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 8.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ABwDgec5XjeK4'}]}
+
+2020-08-12 22:02:55,970 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+0238e9-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:02:56,177 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02d0cc-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4172442708,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-62,"size":15,"data":"QBIMBC2ACADg//rublV1"}]}'
+JSONObject: {'rxpk': [{'tmst': 4172442708, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ACADg//rublV1'}]}
+
+2020-08-12 22:03:01,422 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+020404-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4177442572,"chan":0,"rfch":0,"freq":867.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-63,"size":15,"data":"QBIMBC2ACQDgJrWG9LID"}]}'
+JSONObject: {'rxpk': [{'tmst': 4177442572, 'chan': 0, 'rfch': 0, 'freq': 867.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -63, 'size': 15, 'data': 'QBIMBC2ACQDgJrWG9LID'}]}
+
+2020-08-12 22:03:05,972 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02ff6a-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:03:06,454 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+025a10-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4182442436,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-60,"size":15,"data":"QBIMBC2ACgDgRhZe9Wzt"}]}'
+JSONObject: {'rxpk': [{'tmst': 4182442436, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2ACgDgRhZe9Wzt'}]}
+
+2020-08-12 22:03:06,456 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02ab20-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:03:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":7,"rxok":6,"rxfw":6,"ackr":28.6,"dwnb":0,"txnb":0,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:03:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 7, 'rxok': 6, 'rxfw': 6, 'ackr': 28.6, 'dwnb': 0, 'txnb': 0, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:03:11,969 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02bb77-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4187442292,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":8.2,"rssi":-62,"size":15,"data":"QBIMBC2ACwDgfC52AaPn"}]}'
+JSONObject: {'rxpk': [{'tmst': 4187442292, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 8.2, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ACwDgfC52AaPn'}]}
+
+2020-08-12 22:03:16,173 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+028497-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:03:16,187 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0277e4-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4192442156,"chan":4,"rfch":0,"freq":867.900000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.0,"rssi":-62,"size":15,"data":"QBIMBC2ADADg+BmdkH4P"}]}'
+JSONObject: {'rxpk': [{'tmst': 4192442156, 'chan': 4, 'rfch': 0, 'freq': 867.9, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.0, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ADADg+BmdkH4P'}]}
+
+2020-08-12 22:03:21,492 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0222c1-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4197442020,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-60,"size":15,"data":"QBIMBC2ADQDgCRwTvWVR"}]}'
+JSONObject: {'rxpk': [{'tmst': 4197442020, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2ADQDgCRwTvWVR'}]}
+
+2020-08-12 22:03:26,564 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02ae94-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4202441876,"chan":1,"rfch":0,"freq":867.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-62,"size":15,"data":"QBIMBC2ADgDgMGdr2rBO"}]}'
+JSONObject: {'rxpk': [{'tmst': 4202441876, 'chan': 1, 'rfch': 0, 'freq': 867.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2ADgDgMGdr2rBO'}]}
+
+2020-08-12 22:03:26,565 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02fabe-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:03:31,176 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+029f3b-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4207441732,"chan":2,"rfch":0,"freq":867.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":9.2,"rssi":-58,"size":15,"data":"QBIMBC2ADwDgyDTSsR7h"}]}'
+JSONObject: {'rxpk': [{'tmst': 4207441732, 'chan': 2, 'rfch': 0, 'freq': 867.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 9.2, 'rssi': -58, 'size': 15, 'data': 'QBIMBC2ADwDgyDTSsR7h'}]}
+
+2020-08-12 22:03:36,563 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+024831-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4212441596,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-60,"size":15,"data":"QBIMBC2AEADgnkxG71ak"}]}'
+JSONObject: {'rxpk': [{'tmst': 4212441596, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2AEADgnkxG71ak'}]}
+
+2020-08-12 22:03:36,567 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02a481-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:03:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":6,"rxok":6,"rxfw":6,"ackr":28.6,"dwnb":0,"txnb":0,"temp":65,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:03:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 6, 'rxok': 6, 'rxfw': 6, 'ackr': 28.6, 'dwnb': 0, 'txnb': 0, 'temp': 65, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:03:36,577 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+021b74-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:03:41,966 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+027818-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4217441460,"chan":1,"rfch":0,"freq":867.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-60,"size":15,"data":"QBIMBC2AEQDgz4llwnCD"}]}'
+JSONObject: {'rxpk': [{'tmst': 4217441460, 'chan': 1, 'rfch': 0, 'freq': 867.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2AEQDgz4llwnCD'}]}
+
+2020-08-12 22:03:46,978 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02f777-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4222441324,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":7.8,"rssi":-62,"size":15,"data":"QBIMBC2AEgDgRgeYKPis"}]}'
+JSONObject: {'rxpk': [{'tmst': 4222441324, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 7.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AEgDgRgeYKPis'}]}
+
+2020-08-12 22:03:46,979 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+028252-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:03:52,212 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02872d-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4227441180,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-62,"size":15,"data":"QBIMBC2AEwDgQtV5PSNq"}]}'
+JSONObject: {'rxpk': [{'tmst': 4227441180, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AEwDgQtV5PSNq'}]}
+
+2020-08-12 22:03:56,974 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+027242-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4232441044,"chan":4,"rfch":0,"freq":867.900000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-62,"size":15,"data":"QBIMBC2AFADg63XukkLP"}]}'
+JSONObject: {'rxpk': [{'tmst': 4232441044, 'chan': 4, 'rfch': 0, 'freq': 867.9, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AFADg63XukkLP'}]}
+
+2020-08-12 22:03:56,975 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02a4f6-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:01,639 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02d91c-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4237440916,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.5,"rssi":-58,"size":15,"data":"QBIMBC2AFQDghAZo2tr9"}]}'
+JSONObject: {'rxpk': [{'tmst': 4237440916, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.5, 'rssi': -58, 'size': 15, 'data': 'QBIMBC2AFQDghAZo2tr9'}]}
+
+2020-08-12 22:04:06,180 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02dafc-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4242440772,"chan":1,"rfch":0,"freq":867.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-62,"size":15,"data":"QBIMBC2AFgDg3Qc0KHCX"}]}'
+JSONObject: {'rxpk': [{'tmst': 4242440772, 'chan': 1, 'rfch': 0, 'freq': 867.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AFgDg3Qc0KHCX'}]}
+
+2020-08-12 22:04:06,502 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02dd89-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:04:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":7,"rxok":6,"rxfw":6,"ackr":14.3,"dwnb":0,"txnb":0,"temp":64,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:04:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 7, 'rxok': 6, 'rxfw': 6, 'ackr': 14.3, 'dwnb': 0, 'txnb': 0, 'temp': 64, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:04:07,002 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+0290d7-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:11,176 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02472f-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4247440628,"chan":2,"rfch":0,"freq":867.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":9.0,"rssi":-62,"size":15,"data":"QBIMBC2AFwDgjvGkgDrN"}]}'
+JSONObject: {'rxpk': [{'tmst': 4247440628, 'chan': 2, 'rfch': 0, 'freq': 867.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 9.0, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AFwDgjvGkgDrN'}]}
+
+2020-08-12 22:04:16,640 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+021290-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4252440492,"chan":0,"rfch":0,"freq":867.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.8,"rssi":-62,"size":15,"data":"QBIMBC2AGADgY43YfZR8"}]}'
+JSONObject: {'rxpk': [{'tmst': 4252440492, 'chan': 0, 'rfch': 0, 'freq': 867.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.8, 'rssi': -62, 'size': 15, 'data': 'QBIMBC2AGADgY43YfZR8'}]}
+
+2020-08-12 22:04:17,002 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+0261b6-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:21,962 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02117c-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4257440356,"chan":0,"rfch":0,"freq":867.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-63,"size":15,"data":"QBIMBC2AGQDgKif3em+p"}]}'
+JSONObject: {'rxpk': [{'tmst': 4257440356, 'chan': 0, 'rfch': 0, 'freq': 867.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -63, 'size': 15, 'data': 'QBIMBC2AGQDgKif3em+p'}]}
+
+2020-08-12 22:04:26,983 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+022a5e-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4262440220,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-60,"size":15,"data":"QBIMBC2AGgDgoyylyojH"}]}'
+JSONObject: {'rxpk': [{'tmst': 4262440220, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2AGgDgoyylyojH'}]}
+
+2020-08-12 22:04:27,276 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+029ba2-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:31,184 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+027692-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4267440076,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":9.2,"rssi":-58,"size":15,"data":"QBIMBC2AGwDgX43sPwor"}]}'
+JSONObject: {'rxpk': [{'tmst': 4267440076, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 9.2, 'rssi': -58, 'size': 15, 'data': 'QBIMBC2AGwDgX43sPwor'}]}
+
+2020-08-12 22:04:36,181 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0219f8-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4272439940,"chan":3,"rfch":0,"freq":867.700000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-58,"size":15,"data":"QBIMBC2AHADg4MiJubAO"}]}'
+JSONObject: {'rxpk': [{'tmst': 4272439940, 'chan': 3, 'rfch': 0, 'freq': 867.7, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -58, 'size': 15, 'data': 'QBIMBC2AHADg4MiJubAO'}]}
+
+2020-08-12 22:04:36,347 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02e4a1-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:04:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":6,"rxok":6,"rxfw":6,"ackr":42.9,"dwnb":0,"txnb":0,"temp":64,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:04:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 6, 'rxok': 6, 'rxfw': 6, 'ackr': 42.9, 'dwnb': 0, 'txnb': 0, 'temp': 64, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:04:37,757 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+022556-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:41,963 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02e3ca-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4277439804,"chan":4,"rfch":0,"freq":867.900000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-60,"size":15,"data":"QBIMBC2AHQDgp0zyk4qV"}]}'
+JSONObject: {'rxpk': [{'tmst': 4277439804, 'chan': 4, 'rfch': 0, 'freq': 867.9, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -60, 'size': 15, 'data': 'QBIMBC2AHQDgp0zyk4qV'}]}
+
+2020-08-12 22:04:41,975 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.011905908584594727
+<<<<<<
+
+2020-08-12 22:04:41,975 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YBIMBC0AAQDgraskGC0=", "datr": "SF8BW125", "freq": 867.9, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 4278439804}}'
+2020-08-12 22:04:41,987 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+022963-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:42,431 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+024dbd-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4278691692,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.5,"rssi":-62,"size":23,"data":"AAEBAQEBAQEBAQEBAQEBAQEMAn+YXOE="}]}'
+JSONObject: {'rxpk': [{'tmst': 4278691692, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.5, 'rssi': -62, 'size': 23, 'data': 'AAEBAQEBAQEBAQEBAQEBAQEMAn+YXOE='}]}
+
+2020-08-12 22:04:42,436 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.004767417907714844
+<<<<<<
+
+2020-08-12 22:04:42,436 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "IBu2nH9Z67+Jq2Z59B2QkAqqYdSwI3Q31pqQ9eODY7SZ", "datr": "SF12BW125", "freq": 869.525, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 33, "tmst": 4284691692}}'
+2020-08-12 22:04:42,450 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+027b25-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:47,442 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02e627-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:52,969 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02b9c3-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4289215308,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.0,"rssi":-62,"size":29,"data":"QH++zNkAAAAW/jPJtHK3sGcEXEmR62y1iK3bCys="}]}'
+JSONObject: {'rxpk': [{'tmst': 4289215308, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.0, 'rssi': -62, 'size': 29, 'data': 'QH++zNkAAAAW/jPJtHK3sGcEXEmR62y1iK3bCys='}]}
+
+2020-08-12 22:04:52,977 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.007827281951904297
+<<<<<<
+
+2020-08-12 22:04:52,977 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YH++zNkAAADga7CzaNBtuLE=", "datr": "SF12BW125", "freq": 869.525, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 4291215308}}'
+2020-08-12 22:04:52,989 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02decf-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:56,960 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02b049-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":4292509692,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":10.2,"rssi":-58,"size":15,"data":"QH++zNmAAQDgu9T4S0Rp"}]}'
+JSONObject: {'rxpk': [{'tmst': 4292509692, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 10.2, 'rssi': -58, 'size': 15, 'data': 'QH++zNmAAQDgu9T4S0Rp'}]}
+
+2020-08-12 22:04:56,965 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.0042459964752197266
+<<<<<<
+
+2020-08-12 22:04:56,965 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YH++zNkAAQDgY9/VjdHq0h7cvwe79Q==", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 22, "tmst": 4293509692}}'
+2020-08-12 22:04:56,976 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+0243f4-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:04:57,747 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+029af8-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:01,844 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0278ad-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":2552508,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.2,"rssi":-60,"size":22,"data":"QH++zNmAAgDg8dzKPKF0pMpUwcK7UA=="}]}'
+JSONObject: {'rxpk': [{'tmst': 2552508, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.2, 'rssi': -60, 'size': 22, 'data': 'QH++zNmAAgDg8dzKPKF0pMpUwcK7UA=='}]}
+
+2020-08-12 22:05:06,247 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+0288d9-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":7542116,"chan":6,"rfch":0,"freq":868.300000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":8.2,"rssi":-58,"size":15,"data":"QH++zNmAAwDg/2NPXvSn"}]}'
+JSONObject: {'rxpk': [{'tmst': 7542116, 'chan': 6, 'rfch': 0, 'freq': 868.3, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 8.2, 'rssi': -58, 'size': 15, 'data': 'QH++zNmAAwDg/2NPXvSn'}]}
+
+2020-08-12 22:05:06,268 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.02166152000427246
+<<<<<<
+
+2020-08-12 22:05:06,269 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YH++zNkAAgDgdN8VbRY=", "datr": "SF8BW125", "freq": 868.3, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 8542116}}'
+2020-08-12 22:05:06,288 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+022395-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:06,372 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+026399-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:05:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":6,"rxok":6,"rxfw":6,"ackr":57.1,"dwnb":5,"txnb":4,"temp":64,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:05:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 6, 'rxok': 6, 'rxfw': 6, 'ackr': 57.1, 'dwnb': 5, 'txnb': 4, 'temp': 64, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:05:07,740 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02558e-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:17,949 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02f7f0-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:17,985 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02306e-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":19274668,"chan":5,"rfch":0,"freq":868.100000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.8,"rssi":-60,"size":29,"data":"QH++zNkABAAWxEiQgLhzupH6/Cwi7WFPMWhsjJ8="}]}'
+JSONObject: {'rxpk': [{'tmst': 19274668, 'chan': 5, 'rfch': 0, 'freq': 868.1, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.8, 'rssi': -60, 'size': 29, 'data': 'QH++zNkABAAWxEiQgLhzupH6/Cwi7WFPMWhsjJ8='}]}
+
+2020-08-12 22:05:17,988 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.003551959991455078
+<<<<<<
+
+2020-08-12 22:05:17,988 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YH++zNkAAwDgXTbfSrtHCe4=", "datr": "SF8BW125", "freq": 868.1, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 17, "tmst": 20274668}}'
+2020-08-12 22:05:18,002 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02d1b6-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:19,182 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02834a-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":20481220,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":12.0,"rssi":-60,"size":15,"data":"QH++zNmABQDgxrQ7LLKC"}]}'
+JSONObject: {'rxpk': [{'tmst': 20481220, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 12.0, 'rssi': -60, 'size': 15, 'data': 'QH++zNmABQDgxrQ7LLKC'}]}
+
+2020-08-12 22:05:24,326 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+026667-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"rxpk":[{"tmst":25481076,"chan":7,"rfch":0,"freq":868.500000,"stat":1,"modu":"LORA","datr":"SF8BW125","codr":"4/5","lsnr":11.0,"rssi":-60,"size":15,"data":"QH++zNmABgDguZ+q9p5S"}]}'
+JSONObject: {'rxpk': [{'tmst': 25481076, 'chan': 7, 'rfch': 0, 'freq': 868.5, 'stat': 1, 'modu': 'LORA', 'datr': 'SF8BW125', 'codr': '4/5', 'lsnr': 11.0, 'rssi': -60, 'size': 15, 'data': 'QH++zNmABgDguZ+q9p5S'}]}
+
+2020-08-12 22:05:24,338 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     
+
+<<<<<<
+Time since the last uplink: 0.012007951736450195
+<<<<<<
+
+2020-08-12 22:05:24,339 lorawan.user_agent.bridge.agent_bridge        process_dlmsg INFO     Sending DL to GW: 
+b'{"txpk": {"codr": "4/5", "data": "YH++zNkABADgUxv7k3g=", "datr": "SF8BW125", "freq": 868.5, "imme": false, "ipol": true, "modu": "LORA", "ncrc": "true", "powe": 14, "rfch": 0, "size": 14, "tmst": 26481076}}'
+2020-08-12 22:05:24,366 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: TX_ACK
+02da99-b'\x05d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:27,942 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02eb8c-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:36,992 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02bece-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:05:36 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":3,"rxok":3,"rxfw":3,"ackr":75.0,"dwnb":2,"txnb":3,"temp":64,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:05:36 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 3, 'rxok': 3, 'rxfw': 3, 'ackr': 75.0, 'dwnb': 2, 'txnb': 3, 'temp': 64, 'cpur': 12.5, 'memr': 16.0}}
+
+2020-08-12 22:05:38,142 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+02560b-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:48,948 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+028b3c-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:05:58,558 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PULL_DATA
+023244-b'\x02d\x7f\xda\xff\xfe\x00t\x17'
+
+2020-08-12 22:06:06,785 lorawan.user_agent.bridge.agent_bridge  process_uplink_data INFO     **********************************************
+Packet Forwarder Protocol: PUSH_DATA
+02ffe3-b'\x00d\x7f\xda\xff\xfe\x00t\x17{"stat":{"time":"2020-08-12 22:06:06 GMT","lati":0.00000,"long":0.00000,"alti":0,"rxnb":0,"rxok":0,"rxfw":0,"ackr":0.0,"dwnb":0,"txnb":0,"temp":64,"cpur":12.5,"memr":16.0}}'
+JSONObject: {'stat': {'time': '2020-08-12 22:06:06 GMT', 'lati': 0.0, 'long': 0.0, 'alti': 0, 'rxnb': 0, 'rxok': 0, 'rxfw': 0, 'ackr': 0.0, 'dwnb': 0, 'txnb': 0, 'temp': 64, 'cpur': 12.5, 'memr': 16.0}}
+

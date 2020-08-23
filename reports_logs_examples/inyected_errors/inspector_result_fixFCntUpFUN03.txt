@@ -1,0 +1,6 @@
+2020-08-13 22:27:49,642 lorawan.sessions  set_default_loramac INFO     Restoring default LoRa MAC parameters.
+2020-08-13 22:27:49,645 pika.adapters.base_connection _create_and_connect_to_socket INFO     Pika version 0.12.0 connecting to 172.19.0.3:5672
+2020-08-13 22:27:49,649 pika.adapters.blocking_connection             __init__ INFO     Created channel=1
+
+
+Agent mock started and ready to interact with the Testing App Server.

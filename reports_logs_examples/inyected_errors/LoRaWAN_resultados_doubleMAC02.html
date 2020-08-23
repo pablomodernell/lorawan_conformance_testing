@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8081/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LoRaWAN Conformance Testing</title>
+    <link rel="shortcut icon" href="http://localhost:8081/static/favicon.ico">
+
+    <script type="text/javascript" src="./LoRaWAN_resultados_doubleMAC02_files/socket.io.min.js"></script>
+    <script src="./LoRaWAN_resultados_doubleMAC02_files/handlebars.min.js"></script>
+    <link rel="stylesheet" href="./LoRaWAN_resultados_doubleMAC02_files/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="./LoRaWAN_resultados_doubleMAC02_files/application.js"></script>
+
+
+    <style>
+        .send {
+            float: left;
+        }
+
+        .post {
+            background-color: cyan;
+            padding: 5px;
+            margin: 5px;
+            animation-name: hide;
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
+            animation-play-state: paused;
+        }
+
+        body {
+            padding-bottom: 50px;
+        }
+
+        .row > div {
+            padding: 5px;
+            background-color: teal;
+            border: 2px solid black;
+        }
+
+        @keyframes hide {
+            0% {
+                opacity: 1;
+                padding: 5px;
+                margin-bottom: 5px;
+            }
+            75% {
+                opacity: 0;
+                padding: 5px;
+                margin-bottom: 5px;
+            }
+            100% {
+                opacity: 0;
+                height: 0px;
+                line-height: 0px;
+                padding: 0px;
+                margin-bottom: 0px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="main_window">
+    <div class="row" id="show_controls" hidden="">
+        <div class="col-3">
+            <button id="show_controls_button">Show Controls</button>
+        </div>
+    </div>
+    <div class="row" id="commands">
+        <div class="col-3">
+            <button class="send" id="config_button" disabled="">Send Config</button>
+            <button class="send" id="device_button" disabled="">Personalize DUT</button>
+            <button class="send" id="start_button" disabled="">Start Session</button>
+            <button class="send" id="hide_controls">Hide Controls</button>
+        </div>
+        <div class="col-5">
+
+            <label for="form-eui">DevEUI:</label>
+            <input class="form-control" id="form-eui" name="eui" placeholder="0101010101010101" value="0101010101010101" disabled="">
+
+            <label for="form-devaddr">Device Address:</label>
+            <input class="form-control" id="form-devaddr" name="devaddr" placeholder="01010101" value="01010101" disabled="">
+
+            <label for="form-appkey">Application Key:</label>
+            <input class="form-control" id="form-appkey" name="appkey" placeholder="2b7e151628aed2a6abf7158809cf4f3c" value="2b7e151628aed2a6abf7158809cf4f3c" disabled="">
+        </div>
+        <div class="col-4">
+            <select id="test-list" multiple="" disabled="">
+                <option value="" disabled="">Select Tests</option>
+<!--                <option value="ALL" selected>ALL</option>-->
+<!--                <option value="ACT__GROUP">ACT__GROUP</option>-->
+<!--                <option value="FUN_GROUP">FUN_GROUP</option>-->
+<!--                <option value="MAC_GROUP">MAC_GROUP</option>-->
+<!--                <option value="SEC_GROUP">SEC_GROUP</option>-->
+                <option value="td_lorawan_act_02">ACT_02</option>
+                <option value="td_lorawan_act_03">ACT_03</option>
+                <option value="td_lorawan_act_04">ACT_04</option>
+                <option value="td_lorawan_act_05">ACT_05</option>
+                <option value="td_lorawan_fun_01">FUN_01</option>
+                <option value="td_lorawan_fun_02">FUN_02</option>
+                <option value="td_lorawan_fun_03">FUN_03</option>
+                <option value="td_lorawan_fun_04">FUN_04</option>
+                <option value="td_lorawan_fun_05">FUN_05</option>
+                <option value="td_lorawan_fun_06">FUN_06</option>
+                <option value="td_lorawan_sec_01">SEC_01</option>
+                <option value="td_lorawan_sec_02">SEC_02</option>
+                <option value="td_lorawan_mac_01">MAC_01</option>
+                <option value="td_lorawan_mac_02">MAC_02</option>
+                <option value="td_lorawan_mac_03">MAC_03</option>
+                <option value="td_lorawan_mac_04">MAC_04</option>
+                <option value="td_lorawan_mac_05">MAC_05</option>
+            </select>
+        </div>
+    </div>
+    <div class="row" id="center_alerts">
+        <h3>Alerts:</h3>
+
+        <div class="col-12" id="user_alerts"><div class="post"> Ready to start: make launch_test_session <button class="hide">Hide</button> </div></div>
+    </div>
+
+    <div class="row" id="main_messages">
+        <h3>Tests details:</h3>
+        <div class="col-12" id="test_details"><div class="post"> <div id="Test_Results"><p>Results summary of the tests.</p><p id="td_lorawan_act_01" type="p" name="td_lorawan_act_01">td_lorawan_act_01
+PASS</p><p id="td_lorawan_mac_01" type="p" name="td_lorawan_mac_01">td_lorawan_mac_01
+PASS</p><p id="td_lorawan_mac_02" type="p" name="td_lorawan_mac_02">td_lorawan_mac_02
+Test td_lorawan_mac_02 failed with MACError error.</p><p id=":" type="p" name=":">:
+No MAC command expected, but received:</p><p id=":" type="p" name=":">:
+DevStatusAns MAC Command.</p><p id=":" type="p" name=":">:
+Command ID (CID): 0x06</p><p id=":" type="p" name=":">:
+Size: 3</p><p id=":" type="p" name=":">:
+Content: 0xFE1D</p><p id=":" type="p" name=":">:
+Battery Level: 0xFE</p><p id=":" type="p" name=":">:
+Margin: 0x1D</p><p id=":" type="p" name=":">:
+</p><p id=":" type="p" name=":">:
+Test: td_lorawan_mac_02</p><p id=":" type="p" name=":">:
+Step: S2NoMACCommandCheck</p><p id=":" type="p" name=":">:
+</p><p id="td_lorawan_reset" type="p" name="td_lorawan_reset">td_lorawan_reset
+PASS</p><p id="td_lorawan_mac_03" type="p" name="td_lorawan_mac_03">td_lorawan_mac_03
+PASS</p><p id="td_lorawan_mac_04" type="p" name="td_lorawan_mac_04">td_lorawan_mac_04
+PASS</p><p id="td_lorawan_mac_05" type="p" name="td_lorawan_mac_05">td_lorawan_mac_05
+PASS</p><p id="td_lorawan_deactivate" type="p" name="td_lorawan_deactivate">td_lorawan_deactivate
+PASS</p><p id="TEST VERDICT: FAIL" type="p" name="TEST VERDICT: FAIL">TEST VERDICT: FAIL
+ </p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_deactivate_ "><p>TD_LORAWAN_DEACTIVATE: Step information</p><p id="Completed Step: S1ActOkToDeactivate" type="p" name="Completed Step: S1ActOkToDeactivate">Completed Step: S1ActOkToDeactivate
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2128425564, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802A00E073A3E76F2D5C (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802A00E073A3E76F2D5C</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802A00E073A3</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802A00</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 42 (002A)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 73A3</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: E76F2D5C</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Sending to DUT:" type="p" name="Sending to DUT:">Sending to DUT:
+00</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_deactivate_ "><p>TEST CASE: td_lorawan_deactivate</p><p id="Step 1: S1ActOkToDeactivate" type="p" name="Step 1: S1ActOkToDeactivate">Step 1: S1ActOkToDeactivate
+</p><p id="" type="p" name="">
+Verifies TAOK and deactivates Test Mode.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: Test Mode deactivation (payload 0x00).</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_DEACTIVATE" type="p" name="Test ID: TD_LoRaWAN_DEACTIVATE">Test ID: TD_LoRaWAN_DEACTIVATE
+</p><p id="" type="p" name="">
+Objective: Deactivates test mode.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S7ActokFinalStep" type="p" name="Completed Step: S7ActokFinalStep">Completed Step: S7ActokFinalStep
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2123425700, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802900E0D27E28522FAD (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802900E0D27E28522FAD</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802900E0D27E</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802900</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 41 (0029)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: D27E</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 28522FAD</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2118425836, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802800E0BBDFBD0C9F0D (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802800E0BBDFBD0C9F0D</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802800E0BBDF</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802800</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 40 (0028)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: BBDF</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: BD0C9F0D</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 9 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2113425980, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802700E0C447768310A9 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802700E0C447768310A9</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802700E0C447</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802700</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 39 (0027)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: C447</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 768310A9</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 8 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2108426108, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802600E0168BF6177391 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802600E0168BF6177391</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802600E0168B</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802600</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 38 (0026)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 168B</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: F6177391</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 7 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2103426244, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802500E03D173C742DBC (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802500E03D173C742DBC</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802500E03D17</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802500</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 37 (0025)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 3D17</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 3C742DBC</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 6 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2098426380, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802400E0DB972FD2FEE4 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802400E0DB972FD2FEE4</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802400E0DB97</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802400</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 36 (0024)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: DB97</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 2FD2FEE4</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 5 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2093426524, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802300E0A70AD2E00303 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802300E0A70AD2E00303</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802300E0A70A</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802300</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 35 (0023)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: A70A</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: D2E00303</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.3.
+Forbidden: ([867.5])
+ Count 4 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2088426652, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802200E08453DFEEC6BB (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802200E08453DFEEC6BB</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802200E08453</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802200</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 34 (0022)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 8453</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: DFEEC6BB</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.5.
+Forbidden: ([867.5])
+ Count 3 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2083426796, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802100E051514962EFA8 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802100E051514962EFA8</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802100E05151</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802100</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 33 (0021)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 5151</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 4962EFA8</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.3.
+Forbidden: ([867.5])
+ Count 2 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S6ForbiddenFrequencyCheck" type="p" name="Completed Step: S6ForbiddenFrequencyCheck">Completed Step: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2078426940, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101802000E0ACD71061F84D (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101802000E0ACD71061F84D</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101802000E0ACD7</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101802000</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 32 (0020)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: ACD7</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 1061F84D</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Received:868.1.
+Forbidden: ([867.5])
+ Count 1 of 9 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S5NewChannelAnsAcceptCheck" type="p" name="Completed Step: S5NewChannelAnsAcceptCheck">Completed Step: S5NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S6ForbiddenFrequencyCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2073427068, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A21F000703E0551B9367AB1B (Size: 17 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A21F000703E0551B9367AB1B</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A21F000703E0551B</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A21F000703</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100010</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 2</p><p id="" type="p" name="">
+----FCnt: 31 (001F)</p><p id="" type="p" name="">
+----FOpts: 0703</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 551B</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+MIC: 9367AB1B</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0005</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S4ActokToNewChannelReq_RemoveChannel" type="p" name="Completed Step: S4ActokToNewChannelReq_RemoveChannel">Completed Step: S4ActokToNewChannelReq_RemoveChannel
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S5NewChannelAnsAcceptCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2068427204, freq: 867.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101801E00E0A42A8439AE0C (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101801E00E0A42A8439AE0C</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101801E00E0A42A</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101801E00</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 30 (001E)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: A42A</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 8439AE0C</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0004</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x070300000000
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.5.</p><p id="" type="p" name="">
+({868.1: 1, 868.3: 1, 868.5: 1, 867.5: 1})</p><p id="" type="p" name="">
+ Count 4 of 20 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.3.</p><p id="" type="p" name="">
+({868.1: 1, 868.3: 1, 868.5: 0, 867.5: 1})</p><p id="" type="p" name="">
+ Count 3 of 20 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.1.</p><p id="" type="p" name="">
+({868.1: 1, 868.3: 0, 868.5: 0, 867.5: 1})</p><p id="" type="p" name="">
+ Count 2 of 20 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:867.5.</p><p id="" type="p" name="">
+({868.1: 0, 868.3: 0, 868.5: 0, 867.5: 1})</p><p id="" type="p" name="">
+ Count 1 of 20 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S2NewChannelAnsAcceptCheck" type="p" name="Completed Step: S2NewChannelAnsAcceptCheck">Completed Step: S2NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2043427892, freq: 867.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A219000703E0D43501A52D85 (Size: 17 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A219000703E0D43501A52D85</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A219000703E0D435</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A219000703</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100010</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 2</p><p id="" type="p" name="">
+----FCnt: 25 (0019)</p><p id="" type="p" name="">
+----FOpts: 0703</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: D435</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+MIC: 01A52D85</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0004</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TD_LORAWAN_MAC_05: Step information</p><p id="Completed Step: S1ActokToNewChannelReq_AddChannel" type="p" name="Completed Step: S1ActokToNewChannelReq_AddChannel">Completed Step: S1ActokToNewChannelReq_AddChannel
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2NewChannelAnsAcceptCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2038428028, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101801800E0DB507BEE4827 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101801800E0DB507BEE4827</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101801800E0DB50</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101801800</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 24 (0018)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: DB50</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 7BEE4827</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0003</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x0703B85E8450
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_05_ "><p>TEST CASE: td_lorawan_mac_05</p><p id="Step 7: S7ActokFinalStep" type="p" name="Step 7: S7ActokFinalStep">Step 7: S7ActokFinalStep
+</p><p id="" type="p" name="">
+Final step, check the last TAOK message.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 6: S6ForbiddenFrequencyCheck" type="p" name="Step 6: S6ForbiddenFrequencyCheck">Step 6: S6ForbiddenFrequencyCheck
+</p><p id="" type="p" name="">
+Verifies that the removed frequency is not used after the reception of a given number of downlink messages.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 5: S5NewChannelAnsAcceptCheck" type="p" name="Step 5: S5NewChannelAnsAcceptCheck">Step 5: S5NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+Verifies that the DUT accepted the channel removal.</p><p id="" type="p" name="">
+- Reception from DUT: NewChannelAns MAC Command with Status OK.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 4: S4ActokToNewChannelReq_RemoveChannel" type="p" name="Step 4: S4ActokToNewChannelReq_RemoveChannel">Step 4: S4ActokToNewChannelReq_RemoveChannel
+</p><p id="" type="p" name="">
+Removes the previously added channel. - Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: NewChannelReq removing the previously added channels.</p><p id="" type="p" name="">
+</p><p id="Step 3: S3VerifyFrequencies." type="p" name="Step 3: S3VerifyFrequencies.">Step 3: S3VerifyFrequencies.
+</p><p id="" type="p" name="">
+Count TAOK messages to check that the new frequency is used.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK messages until all the configured frequencies (including the newly added) are used.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 2: S2NewChannelAnsAcceptCheck." type="p" name="Step 2: S2NewChannelAnsAcceptCheck.">Step 2: S2NewChannelAnsAcceptCheck.
+</p><p id="" type="p" name="">
+Verifies that the DUT accepted the new added channel.</p><p id="" type="p" name="">
+- Reception from DUT: NewChannelAns MAC Command with Status OK.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 1: S1ActokToNewChannelReq_AddChannel." type="p" name="Step 1: S1ActokToNewChannelReq_AddChannel.">Step 1: S1ActokToNewChannelReq_AddChannel.
+</p><p id="" type="p" name="">
+Adds a single new channel in the channel index 3.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: NewChannelReq MAC Command adding a new channel.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_MAC_05" type="p" name="Test ID: TD_LoRaWAN_MAC_05">Test ID: TD_LoRaWAN_MAC_05
+</p><p id="" type="p" name="">
+Objective: Checks the channel addition implementation verifying that the new added frequencies are used. Addition of a single channel.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode and supports Over The Air Activation (OTAA).</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_04_ "><p>TD_LORAWAN_MAC_04: Step information</p><p id="Completed Step: S4NewChannelAnsAcceptCheck" type="p" name="Completed Step: S4NewChannelAnsAcceptCheck">Completed Step: S4NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2033438396, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A61700070307030703E0FB151FB51EE4 (Size: 21 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A61700070307030703E0FB151FB51EE4</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A61700070307030703E0FB15</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A61700070307030703</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100110</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 6</p><p id="" type="p" name="">
+----FCnt: 23 (0017)</p><p id="" type="p" name="">
+----FOpts: 070307030703</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: FB15</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+MIC: 1FB51EE4</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0003</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_04_ "><p>TD_LORAWAN_MAC_04: Step information</p><p id="Completed Step: S3ActokToNewChannelReq_RemoveChannels" type="p" name="Completed Step: S3ActokToNewChannelReq_RemoveChannels">Completed Step: S3ActokToNewChannelReq_RemoveChannels
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S4NewChannelAnsAcceptCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2028428300, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101801600E009F10F36B15A (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101801600E009F10F36B15A</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101801600E009F1</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101801600</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 22 (0016)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 09F1</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 0F36B15A</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0002</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x070300000000070400000000070500000000
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_04_ "><p>TD_LORAWAN_MAC_04: Step information</p><p id="Completed Step: S2NewChannelAnsAcceptCheck" type="p" name="Completed Step: S2NewChannelAnsAcceptCheck">Completed Step: S2NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3ActokToNewChannelReq_RemoveChannels</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2023438676, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A61500070307030703E0542B9340A4A7 (Size: 21 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A61500070307030703E0542B9340A4A7</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A61500070307030703E0542B</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A61500070307030703</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100110</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 6</p><p id="" type="p" name="">
+----FCnt: 21 (0015)</p><p id="" type="p" name="">
+----FOpts: 070307030703</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 542B</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x03</p><p id="" type="p" name="">
+DR OK: 1</p><p id="" type="p" name="">
+Freq OK: 1</p><p id="" type="p" name="">
+COMMAND SUCCEEDED</p><p id="" type="p" name="">
+MIC: 9340A4A7</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0002</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_04_ "><p>TD_LORAWAN_MAC_04: Step information</p><p id="Completed Step: S1ActokToNewChannelReq_AddChannels" type="p" name="Completed Step: S1ActokToNewChannelReq_AddChannels">Completed Step: S1ActokToNewChannelReq_AddChannels
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2NewChannelAnsAcceptCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 2018428572, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101801400E0E873713D6EE5 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101801400E0E873713D6EE5</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101801400E0E873</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101801400</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 20 (0014)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: E873</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 713D6EE5</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0001</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x0703B85E84500704886684500705586E8450
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_04_ "><p>TEST CASE: td_lorawan_mac_04</p><p id="Step 4: S4NewChannelAnsAcceptCheck" type="p" name="Step 4: S4NewChannelAnsAcceptCheck">Step 4: S4NewChannelAnsAcceptCheck
+</p><p id="" type="p" name="">
+Verifies that the DUT sends a NewChannelAns MAC Command accepting the removed frequencies.</p><p id="" type="p" name="">
+- Reception from DUT: message with NewChannelAns answer from the DUT accepting the removed channels (Status OK).</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 3: S3ActokToNewChannelReq_RemoveChannels" type="p" name="Step 3: S3ActokToNewChannelReq_RemoveChannels">Step 3: S3ActokToNewChannelReq_RemoveChannels
+</p><p id="" type="p" name="">
+Removes the previously added channels.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: NewChannelReq removing the previously added channels.</p><p id="" type="p" name="">
+</p><p id="Step 2: S2NewChannelAnsAcceptCheck." type="p" name="Step 2: S2NewChannelAnsAcceptCheck.">Step 2: S2NewChannelAnsAcceptCheck.
+</p><p id="" type="p" name="">
+Verifies that the DUT sends a NewChannelAns MAC Command accepting the new added frequencies.</p><p id="" type="p" name="">
+- Reception from DUT: message with NewChannelAns answer from the DUT accepting the added channels (Status OK).</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 1: S1ActokToNewChannelReq_AddChannels." type="p" name="Step 1: S1ActokToNewChannelReq_AddChannels.">Step 1: S1ActokToNewChannelReq_AddChannels.
+</p><p id="" type="p" name="">
+Adds new frequencies using NewChannelReq MAC Commands.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: message with multiple NewChannelReq MAC Commands.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_MAC_04" type="p" name="Test ID: TD_LoRaWAN_MAC_04">Test ID: TD_LoRaWAN_MAC_04
+</p><p id="" type="p" name="">
+Objective: Checks the channel addition implementation verifying that the new added frequencies are used. Adds multiple channels in a single message.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.5.</p><p id="" type="p" name="">
+({868.1: 4, 868.3: 2, 868.5: 1})</p><p id="" type="p" name="">
+ Count 7 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.1.</p><p id="" type="p" name="">
+({868.1: 4, 868.3: 2, 868.5: 0})</p><p id="" type="p" name="">
+ Count 6 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.3.</p><p id="" type="p" name="">
+({868.1: 3, 868.3: 2, 868.5: 0})</p><p id="" type="p" name="">
+ Count 5 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.1.</p><p id="" type="p" name="">
+({868.1: 3, 868.3: 1, 868.5: 0})</p><p id="" type="p" name="">
+ Count 4 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.3.</p><p id="" type="p" name="">
+({868.1: 2, 868.3: 1, 868.5: 0})</p><p id="" type="p" name="">
+ Count 3 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.1.</p><p id="" type="p" name="">
+({868.1: 2, 868.3: 0, 868.5: 0})</p><p id="" type="p" name="">
+ Count 2 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S3VerifyFrequencies" type="p" name="Completed Step: S3VerifyFrequencies">Completed Step: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ Received:868.1.</p><p id="" type="p" name="">
+({868.1: 1, 868.3: 0, 868.5: 0})</p><p id="" type="p" name="">
+ Count 1 of 15 limit.</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S2NewChannelRejectedCheck" type="p" name="Completed Step: S2NewChannelRejectedCheck">Completed Step: S2NewChannelRejectedCheck
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3VerifyFrequencies</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1978439908, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A60C00070007000700E0BC0351337846 (Size: 21 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A60C00070007000700E0BC0351337846</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A60C00070007000700E0BC03</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A60C00070007000700</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100110</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 6</p><p id="" type="p" name="">
+----FCnt: 12 (000C)</p><p id="" type="p" name="">
+----FOpts: 070007000700</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: BC03</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x00</p><p id="" type="p" name="">
+DR OK: 0</p><p id="" type="p" name="">
+Freq OK: 0</p><p id="" type="p" name="">
+COMMAND FAILED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x00</p><p id="" type="p" name="">
+DR OK: 0</p><p id="" type="p" name="">
+Freq OK: 0</p><p id="" type="p" name="">
+COMMAND FAILED</p><p id="" type="p" name="">
+NewChannelAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x07</p><p id="" type="p" name="">
+Size: 2</p><p id="" type="p" name="">
+Content: 0x00</p><p id="" type="p" name="">
+DR OK: 0</p><p id="" type="p" name="">
+Freq OK: 0</p><p id="" type="p" name="">
+COMMAND FAILED</p><p id="" type="p" name="">
+MIC: 51337846</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0001</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TD_LORAWAN_MAC_03: Step information</p><p id="Completed Step: S1ActokToNewChannelReq_DisableDefault" type="p" name="Completed Step: S1ActokToNewChannelReq_DisableDefault">Completed Step: S1ActokToNewChannelReq_DisableDefault
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2NewChannelRejectedCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1973429804, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800B00E09C3D47B02C7F (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800B00E09C3D47B02C7F</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800B00E09C3D</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800B00</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 11 (000B)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 9C3D</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 47B02C7F</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x070000000000070100000000070200000000
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_03_ "><p>TEST CASE: td_lorawan_mac_03</p><p id="Step 2: S3VerifyFrequencies" type="p" name="Step 2: S3VerifyFrequencies">Step 2: S3VerifyFrequencies
+</p><p id="" type="p" name="">
+The previous step had verified that the NewChannelAns contained a Not OK status. Now, this step checks a set of messages and all the configured frequencies must be used.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends:  None.</p><p id="" type="p" name="">
+</p><p id="Step 2: S2NewChannelRejectedCheck" type="p" name="Step 2: S2NewChannelRejectedCheck">Step 2: S2NewChannelRejectedCheck
+</p><p id="" type="p" name="">
+Verifies that the default channel deletion was rejected by the DUT.</p><p id="" type="p" name="">
+- Reception from DUT: message with the NewChannelAns with status Not OK.</p><p id="" type="p" name="">
+- TAS sends: None.</p><p id="" type="p" name="">
+</p><p id="Step 1: S1ActokToNewChannelReq_DisableDefault." type="p" name="Step 1: S1ActokToNewChannelReq_DisableDefault.">Step 1: S1ActokToNewChannelReq_DisableDefault.
+</p><p id="" type="p" name="">
+Checks the TAOK message and tries to disable a default channel of the current LoRaWAN region.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends:  NewChannelReq MAC Command disabling a default channel.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_MAC_03" type="p" name="Test ID: TD_LoRaWAN_MAC_03">Test ID: TD_LoRaWAN_MAC_03
+</p><p id="" type="p" name="">
+Objective: Check the channel addition implementation, try to remove a read-only default channel.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode and supports Over The Air Activation (OTAA).</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_reset_ "><p>TD_LORAWAN_RESET: Step information</p><p id="Completed Step: S3ActokFinalStep" type="p" name="Completed Step: S3ActokFinalStep">Completed Step: S3ActokFinalStep
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1968429940, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800A00E06DE897FA1982 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800A00E06DE897FA1982</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800A00E06DE8</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800A00</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 10 (000A)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 6DE8</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 97FA1982</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_reset_ "><p>TD_LORAWAN_RESET: Step information</p><p id="Completed Step: S2DataToActivate" type="p" name="Completed Step: S2DataToActivate">Completed Step: S2DataToActivate
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3ActokFinalStep</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1967223396, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 40010101010009001642B8083F0D8F4FA7588DAA7538D7F0182F7889D4 (Size: 29 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+40010101010009001642B8083F0D8F4FA7588DAA7538D7F0182F7889D4</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 010101010009001642B8083F0D8F4FA7588DAA7538D7F018</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101000900</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 00000000</p><p id="" type="p" name="">
+--------ADR: 0</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 9 (0009)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 22</p><p id="" type="p" name="">
+Encrypted FRMPayload: 42B8083F0D8F4FA7588DAA7538D7F018</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 2F7889D4</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 00000000000000FE3E090D0503AB0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Sending to DUT:" type="p" name="Sending to DUT:">Sending to DUT:
+01010101</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_reset_ "><p>TD_LORAWAN_RESET: Step information</p><p id="Completed Step: S1AnyToDeactivate" type="p" name="Completed Step: S1AnyToDeactivate">Completed Step: S1AnyToDeactivate
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2DataToActivate</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1953393244, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800800E00EDEA54D5C64 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800800E00EDEA54D5C64</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800800E00EDE</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800800</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 8 (0008)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 0EDE</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: A54D5C64</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0003</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Sending to DUT:" type="p" name="Sending to DUT:">Sending to DUT:
+00</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_reset_ "><p>TEST CASE: td_lorawan_reset</p><p id="Step 3: S3ActokFinalStep" type="p" name="Step 3: S3ActokFinalStep">Step 3: S3ActokFinalStep
+</p><p id="" type="p" name="">
+The test is expecting a Test Activation Ok message with the current</p><p id="" type="p" name="">
+downlink counter</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.- TAS sends: none</p><p id="Step 2: S2DataToActivate" type="p" name="Step 2: S2DataToActivate">Step 2: S2DataToActivate
+</p><p id="" type="p" name="">
+Wait any data from the DUT to activate Test Mode.</p><p id="" type="p" name="">
+- Reception from DUT: DATA packet.</p><p id="" type="p" name="">
+- TAS sends: Test Mode activation message to the DUT(DL packet with payload 0x01010101 sent to port 224)</p><p id="" type="p" name="">
+The payload is encrypted with the AppSKey.</p><p id="" type="p" name="">
+</p><p id="Step 1: S1AnyToDeactivate" type="p" name="Step 1: S1AnyToDeactivate">Step 1: S1AnyToDeactivate
+</p><p id="" type="p" name="">
+Sends the Test Mode deactivation message after any received message.</p><p id="" type="p" name="">
+- Reception from DUT: Any LoRaWAN message.</p><p id="" type="p" name="">
+- TAS sends:  Test Mode deactivation (payload 0x00).</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_RESET" type="p" name="Test ID: TD_LoRaWAN_RESET">Test ID: TD_LoRaWAN_RESET
+</p><p id="" type="p" name="">
+Objective: Resets the DUT to a known state after a test fails, deactivating and activating again the Test Mode.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions:</p><p id="" type="p" name="">
+The end device has a pre-configured DevAddr, NwkSKey and AppSKey.</p><p id="" type="p" name="">
+The Test Application Server has the end device registered in its ABP device list and knows its NwkSkey, AppSKey and DevAddr.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_02_ "><p>td_lorawan_mac_02: Step Fail</p><p id="td_lorawan_mac_02" type="p" name="td_lorawan_mac_02">td_lorawan_mac_02
+Test td_lorawan_mac_02 failed with MACError error.</p><p id=":" type="p" name=":">:
+No MAC command expected, but received:</p><p id=":" type="p" name=":">:
+DevStatusAns MAC Command.</p><p id=":" type="p" name=":">:
+Command ID (CID): 0x06</p><p id=":" type="p" name=":">:
+Size: 3</p><p id=":" type="p" name=":">:
+Content: 0xFE1D</p><p id=":" type="p" name=":">:
+Battery Level: 0xFE</p><p id=":" type="p" name=":">:
+Margin: 0x1D</p><p id=":" type="p" name=":">:
+</p><p id=":" type="p" name=":">:
+Test: td_lorawan_mac_02</p><p id=":" type="p" name=":">:
+Step: S2NoMACCommandCheck</p><p id=":" type="p" name=":">:
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_02_ "><p>TD_LORAWAN_MAC_02: Step information</p><p id="Completed Step: S1ActokToDevStatusReq_double" type="p" name="Completed Step: S1ActokToDevStatusReq_double">Completed Step: S1ActokToDevStatusReq_double
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2NoMACCommandCheck</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1943393516, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800600E0F2BA68EEDC5E (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800600E0F2BA68EEDC5E</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800600E0F2BA</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800600</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 6 (0006)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: F2BA</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 68EEDC5E</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0002</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x06
+Piggybacked: True
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_02_ "><p>TEST CASE: td_lorawan_mac_02</p><p id="Step 4: S4NoMACCommandCheck." type="p" name="Step 4: S4NoMACCommandCheck.">Step 4: S4NoMACCommandCheck.
+</p><p id="" type="p" name="">
+Verifies that the TAOK message doesn't have a DevStatusAns and sends other DevStatusReq in FRMPayload and in FOpts field. This message must be ignored.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: -</p><p id="" type="p" name="">
+</p><p id="Step 3: S3ActokToDevStatusReq_double" type="p" name="Step 3: S3ActokToDevStatusReq_double">Step 3: S3ActokToDevStatusReq_double
+</p><p id="" type="p" name="">
+After receiving a TAOK, two DevStatusReq are sent in the FRMPayload and in FOpts field. This message must be ignored.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: Two DevStatusReq mac commands, one in FRMPayload and other piggybacked.</p><p id="" type="p" name="">
+</p><p id="Step 2: S2NoMACCommandCheck." type="p" name="Step 2: S2NoMACCommandCheck.">Step 2: S2NoMACCommandCheck.
+</p><p id="" type="p" name="">
+Verifies that the TAOK message doesn't have a DevStatusAns and sends another DevStatusReq in FRMPayload and in FOpts field. This message must be ignored.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: -</p><p id="" type="p" name="">
+</p><p id="Step 1: S1ActokToDevStatusReq_double" type="p" name="Step 1: S1ActokToDevStatusReq_double">Step 1: S1ActokToDevStatusReq_double
+</p><p id="" type="p" name="">
+After receiving a TAOK, two DevStatusReq are sent in the FRMPayload and in FOpts field. This message must be ignored.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: Two DevStatusReq mac commands, one in FRMPayload and other piggybacked.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_MAC_02" type="p" name="Test ID: TD_LoRaWAN_MAC_02">Test ID: TD_LoRaWAN_MAC_02
+</p><p id="" type="p" name="">
+Objective: Test that the DUT ignores a frame if MAC commands are present both in payload and in FOpts field.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_01_ "><p>TD_LORAWAN_MAC_01: Step information</p><p id="Completed Step: S4DevStatusAnsFinal" type="p" name="Completed Step: S4DevStatusAnsFinal">Completed Step: S4DevStatusAnsFinal
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1938393652, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A3050006FE20E0A0DFFF31E884 (Size: 18 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A3050006FE20E0A0DFFF31E884</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A3050006FE20E0A0DF</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A3050006FE20</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100011</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 3</p><p id="" type="p" name="">
+----FCnt: 5 (0005)</p><p id="" type="p" name="">
+----FOpts: 06FE20</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: A0DF</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+DevStatusAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x06</p><p id="" type="p" name="">
+Size: 3</p><p id="" type="p" name="">
+Content: 0xFE20</p><p id="" type="p" name="">
+Battery Level: 0xFE</p><p id="" type="p" name="">
+Margin: 0x20</p><p id="" type="p" name="">
+MIC: FF31E884</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0002</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_01_ "><p>TD_LORAWAN_MAC_01: Step information</p><p id="Completed Step: S3ActokToDevStatusReq_FRMPayload" type="p" name="Completed Step: S3ActokToDevStatusReq_FRMPayload">Completed Step: S3ActokToDevStatusReq_FRMPayload
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S4DevStatusAnsFinal</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1933393796, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800400E0000095DAC741 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800400E0000095DAC741</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800400E00000</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800400</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 4 (0004)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 0000</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 95DAC741</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0001</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x06
+Piggybacked: False
+In FRMPayload: True</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_01_ "><p>TD_LORAWAN_MAC_01: Step information</p><p id="Completed Step: S2DevStatusAns" type="p" name="Completed Step: S2DevStatusAns">Completed Step: S2DevStatusAns
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S3ActokToDevStatusReq_FRMPayload</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1928393924, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101A3030006FE20E04A5D613765CF (Size: 18 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101A3030006FE20E04A5D613765CF</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101A3030006FE20E04A5D</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101A3030006FE20</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10100011</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 1</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 3</p><p id="" type="p" name="">
+----FCnt: 3 (0003)</p><p id="" type="p" name="">
+----FOpts: 06FE20</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: 4A5D</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Piggybacked MAC commands:</p><p id="" type="p" name="">
+DevStatusAns MAC Command.</p><p id="" type="p" name="">
+Command ID (CID): 0x06</p><p id="" type="p" name="">
+Size: 3</p><p id="" type="p" name="">
+Content: 0xFE20</p><p id="" type="p" name="">
+Battery Level: 0xFE</p><p id="" type="p" name="">
+Margin: 0x20</p><p id="" type="p" name="">
+MIC: 613765CF</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0001</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_01_ "><p>TD_LORAWAN_MAC_01: Step information</p><p id="Completed Step: S1ActokToDevStatusReq_Piggybacked" type="p" name="Completed Step: S1ActokToDevStatusReq_Piggybacked">Completed Step: S1ActokToDevStatusReq_Piggybacked
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2DevStatusAns</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1923394068, freq: 868.3, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800200E0E0C27B735131 (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800200E0E0C27B735131</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800200E0E0C2</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800200</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 2 (0002)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: E0C2</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 7B735131</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Additional information:" type="p" name="Additional information:">Additional information:
+Sending MAC Command: 0x06
+Piggybacked: True
+In FRMPayload: False</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_mac_01_ "><p>TEST CASE: td_lorawan_mac_01</p><p id="Step 4: S4DevStatusAnsFinal" type="p" name="Step 4: S4DevStatusAnsFinal">Step 4: S4DevStatusAnsFinal
+</p><p id="" type="p" name="">
+Verifies the reception of the DevStatusAns.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with a DevStatusAns MAC Command.</p><p id="" type="p" name="">
+- TAS sends:  None.</p><p id="" type="p" name="">
+</p><p id="Step 3: S3ActokToDevStatusReq_FRMPayload" type="p" name="Step 3: S3ActokToDevStatusReq_FRMPayload">Step 3: S3ActokToDevStatusReq_FRMPayload
+</p><p id="" type="p" name="">
+After receiving a Act Ok message, a DevStatusReq is sent in FRMPayload using FPort=0.</p><p id="" type="p" name="">
+- Reception from DUT:After receiving a Act Ok message, a DevStatusReq is sent in FRMPayload using FPort=0.</p><p id="" type="p" name="">
+- TAS sends: DevStatusReq MAC command in FRMPayload using port 0.</p><p id="" type="p" name="">
+</p><p id="Step 2: S2DevStatusAns" type="p" name="Step 2: S2DevStatusAns">Step 2: S2DevStatusAns
+</p><p id="" type="p" name="">
+Verifies the reception of the DevStatusAns.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with a DevStatusAns MAC Command.</p><p id="" type="p" name="">
+- TAS sends:  None.</p><p id="" type="p" name="">
+</p><p id="Step 1: S1ActokToDevStatusReq_Piggybacked" type="p" name="Step 1: S1ActokToDevStatusReq_Piggybacked">Step 1: S1ActokToDevStatusReq_Piggybacked
+</p><p id="" type="p" name="">
+After receiving a Act Ok message, a DevStatusReq is sent piggybacked using the FOpts field.</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends:  DevStatusReq MAC command piggybacked in FOpts field.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_" type="p" name="Test ID: TD_LoRaWAN_">Test ID: TD_LoRaWAN_
+</p><p id="" type="p" name="">
+Objective: Test the DevStatusReq MAC Command, both piggybacked in FOpts field and sent in the FRMPayload using port 0.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions: The DUT is in Test Mode.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_act_01_ "><p>TD_LORAWAN_ACT_01: Step information</p><p id="Completed Step: S2ActokFinalStep" type="p" name="Completed Step: S2ActokFinalStep">Completed Step: S2ActokFinalStep
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: No next step.</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1918394204, freq: 868.5, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101800100E0FD51D4B7BBEA (Size: 15 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101800100E0FD51D4B7BBEA</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101800100E0FD51</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101800100</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 10000000</p><p id="" type="p" name="">
+--------ADR: 1</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 1 (0001)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 224</p><p id="" type="p" name="">
+Encrypted FRMPayload: FD51</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: D4B7BBEA</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_act_01_ "><p>TD_LORAWAN_ACT_01: Step information</p><p id="Completed Step: S1DataToActivate" type="p" name="Completed Step: S1DataToActivate">Completed Step: S1DataToActivate
+</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+Next step: S2ActokFinalStep</p><p id="" type="p" name="">
+Received from DUT:</p><p id="" type="p" name="">
+ tmst: 1917187660, freq: 868.1, DR: SF8BW125</p><p id="" type="p" name="">
+PHYPayload: 4001010101000000164A3BB6E8FA72BBC111A6E183DC041807843AFEE1 (Size: 29 bytes)</p><p id="" type="p" name="">
+</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+PHY payload:</p><p id="" type="p" name="">
+4001010101000000164A3BB6E8FA72BBC111A6E183DC041807843AFEE1</p><p id="" type="p" name="">
+MHDR bits: 01000000 (UNCONFIRMED_UP)</p><p id="" type="p" name="">
+MACPayload: 01010101000000164A3BB6E8FA72BBC111A6E183DC041807</p><p id="" type="p" name="">
+----------------------------------------------</p><p id="" type="p" name="">
+MAC payload information</p><p id="" type="p" name="">
+FHDR: 01010101000000</p><p id="" type="p" name="">
+----DevAddr: 01010101</p><p id="" type="p" name="">
+----FCtrl: 00000000</p><p id="" type="p" name="">
+--------ADR: 0</p><p id="" type="p" name="">
+--------ACK: 0</p><p id="" type="p" name="">
+--------ADRACKReq (Only for UL): 0</p><p id="" type="p" name="">
+--------FPending (Only for DL): None</p><p id="" type="p" name="">
+--------FOptsLen: 0</p><p id="" type="p" name="">
+----FCnt: 0 (0000)</p><p id="" type="p" name="">
+----FOpts: None</p><p id="" type="p" name="">
+FPort: 22</p><p id="" type="p" name="">
+Encrypted FRMPayload: 4A3BB6E8FA72BBC111A6E183DC041807</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+MIC: 843AFEE1</p><p id="" type="p" name="">
+==============================================</p><p id="" type="p" name="">
+Decrypted FRMPayload: 00000000000000FE3E090D0503AB0000</p><p id="" type="p" name="">
+ (Key FF7E151628AED2A6ABF7158809CF4F3C)</p><p id="" type="p" name="">
+</p><p id="Sending to DUT:" type="p" name="Sending to DUT:">Sending to DUT:
+01010101</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="td_lorawan_act_01_ "><p>TEST CASE: td_lorawan_act_01</p><p id="Step 2: S2ActokFinalStep" type="p" name="Step 2: S2ActokFinalStep">Step 2: S2ActokFinalStep
+</p><p id="" type="p" name="">
+The test is expecting a Test Activation Ok message with the current downlink counter</p><p id="" type="p" name="">
+- Reception from DUT: TAOK message with the downlink counter.</p><p id="" type="p" name="">
+- TAS sends: none</p><p id="Step 1: S1DataToActivate" type="p" name="Step 1: S1DataToActivate">Step 1: S1DataToActivate
+</p><p id="" type="p" name="">
+Wait any data from the DUT to activate Test Mode.</p><p id="" type="p" name="">
+- Reception from DUT: DATA packet.</p><p id="" type="p" name="">
+- TAS sends: Test Mode activation message to the DUT (DL packet with payload 0x01010101 sent to port 224). The payload is encrypted with the AppSKey.</p><p id="" type="p" name="">
+</p><p id="Test ID: TD_LoRaWAN_ACT_01" type="p" name="Test ID: TD_LoRaWAN_ACT_01">Test ID: TD_LoRaWAN_ACT_01
+</p><p id="" type="p" name="">
+Objective: Check that the node can join using ABP and enter Test Mode Activation.</p><p id="" type="p" name="">
+References: LoRaWAN Specification v1.0.2.</p><p id="" type="p" name="">
+Pre-test conditions:</p><p id="" type="p" name="">
+The end device has a pre-configured DevAddr, NwkSKey and AppSKey.</p><p id="" type="p" name="">
+The Test Application Server has the end device registered in its device list</p><p id="" type="p" name="">
+and knows its NwkSkey, AppSKey and DevAddr.</p><p id="" type="p" name="">
+</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="Configuration_Information"><p>Device Personalization Information.</p><p id=" " type="p" name=" "> 
+DevAddr: ('01010101',)
+DevEUI: ('0101010101010101',)
+AppKey: ('2B7E151628AED2A6ABF7158809CF4F3C',)
+AppSKey: ('FF7E151628AED2A6ABF7158809CF4F3C',)
+NwkSKey: 007E151628AED2A6ABF7158809CF4F3C</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="Configuration_Information"><p>Test Cases to be excecuted.</p><p id="TCs list:" type="p" name="TCs list:">TCs list:
+td_lorawan_act_01
+td_lorawan_mac_01
+td_lorawan_mac_02
+td_lorawan_mac_03
+td_lorawan_mac_04
+td_lorawan_mac_05
+td_lorawan_deactivate</p></div> <button class="hide">Hide</button> </div><div class="post"> <div id="Agent_Instructions"><p>Agent configuration tutorial.</p><p id="1-Configure the Packet Forwarder on the LoRa Gateway.:" type="p" name="1-Configure the Packet Forwarder on the LoRa Gateway.:">1-Configure the Packet Forwarder on the LoRa Gateway.:
+e.g. Agent UDP port (default 1700) and the host IP on gateway's local.conf file</p><p id="2-Set AMQP Broker URL:" type="p" name="2-Set AMQP Broker URL:">2-Set AMQP Broker URL:
+e.g.: export AMQP_URL=amqp://guest:guest@localhost:5672/</p><p id="3-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): " type="p" name="3-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): ">3-Set Packet Forwarder UDP PORT (LoRa Gateway UDP Port): 
+e.g.: export AGENT_PORT=1700</p><p id="4-Start Agent Service:" type="p" name="4-Start Agent Service:">4-Start Agent Service:
+make start_agent</p></div> <button class="hide">Hide</button> </div>
+        </div>
+    </div>
+</div>
+
+</body></html>
