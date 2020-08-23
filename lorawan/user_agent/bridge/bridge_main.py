@@ -4,7 +4,8 @@ Main module containing the main entry point of the Agent Bridge.
 #################################################################################
 # MIT License
 #
-# Copyright (c) 2018, Pablo D. Modernell, Universitat Oberta de Catalunya (UOC).
+# Copyright (c) 2018, Pablo D. Modernell, Universitat Oberta de Catalunya (UOC),
+# Universidad de la Republica Oriental del Uruguay (UdelaR).
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
